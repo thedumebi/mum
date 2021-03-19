@@ -1,0 +1,33 @@
+{
+  "name": "nkadi",
+  "version": "1.0.0",
+  "description": "Tessy Fabric Stores",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app",
+    "init-seq": "sequelize init"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nkadi.git"
+  },
+  "keywords": [
+    "fabric",
+    "ankara"
+  ],
+  "author": "Daniel Chiwuzoh",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.7",
+    "sequelize": "^6.5.1",
+    "sequelize-cli": "^6.2.0",
+    "sqlite3": "^5.0.2"
+  }
+}
