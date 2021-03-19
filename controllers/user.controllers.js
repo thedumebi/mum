@@ -117,7 +117,26 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get a User
+// @route GET /api/users/:id
+// @access Public
+const getUser = asyncHandler(async (req, res) => {
+  console.log(req.params);
+  const user = await User.findByPk(req.params.id, {
+    include: ["items"],
+    attributes: { exclude: ["password"] },
+  });
+
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
 module.exports = {
   authUser,
   registerUser,
+  getUser,
 };

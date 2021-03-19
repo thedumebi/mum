@@ -37,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      role: {
+        type: DataTypes.ENUM,
+        values: ["customer", "admin"],
+        defaultValue: "customer",
+      },
       createdAt: {
         type: "TIMESTAMP",
         defaultValue: DataTypes.NOW,
@@ -60,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = function (models) {
-    User.hasMany(models.Item, { foreignKey: "userId" });
+    User.hasMany(models.Item, { foreignKey: "userId", as: "items" });
   };
 
   User.prototype.validPassword = function (password) {

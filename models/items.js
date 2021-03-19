@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       price: DataTypes.INTEGER,
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       description: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -41,7 +45,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Item.associate = function (models) {
-    Item.belongsTo(models.User, { foreignKey: "userId", targetKey: "id" });
+    Item.belongsTo(models.User, {
+      foreignKey: "userId",
+      targetKey: "id",
+      as: "user",
+    });
   };
 
   return Item;
