@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Link,
-  Route,
-  useHistory,
-  useRouteMatch,
-  useLocation,
-} from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { Button, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,24 +8,11 @@ import {
   unFavoriteItem,
 } from "../actions/item.actions";
 import Message from "../components/Message";
-import Request from "./Request";
 import { getUserDetails } from "../actions/user.actions";
-import {
-  Favorite,
-  FavoriteBorder,
-  PostAdd,
-  Edit,
-  Delete,
-  ExposureRounded,
-  BorderColor,
-  LaunchRounded,
-} from "@material-ui/icons";
-import { Fab } from "@material-ui/core";
 
 const Items = ({ item }) => {
   const url = useRouteMatch();
   const history = useHistory();
-  const location = useLocation();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -46,7 +27,7 @@ const Items = ({ item }) => {
 
   useEffect(() => {
     if (!user && userInfo) {
-      dispatch(getUserDetails(userInfo._id));
+      dispatch(getUserDetails(userInfo.id));
     }
     if (success) {
       history.push("/profile");
@@ -56,17 +37,17 @@ const Items = ({ item }) => {
   const deleteHandler = () => {
     if (window.confirm("This is an ireversible act. Are you sure?")) {
       if (window.confirm("LAST WARNING, DELETE ITEM?")) {
-        dispatch(deleteItem(item._id, item.store._id));
+        dispatch(deleteItem(item.id, item.store.id));
       }
     }
   };
 
   const favorite = () => {
-    dispatch(favoriteItem(item._id, user._id));
+    dispatch(favoriteItem(item.id, user.id));
   };
 
   const unfavorite = () => {
-    dispatch(unFavoriteItem(item._id, user._id));
+    dispatch(unFavoriteItem(item.id, user.id));
   };
 
   const [overlay, setOverlay] = useState({
@@ -126,7 +107,7 @@ const Items = ({ item }) => {
                   onClick={() => overlayHandler(`/${item.image}`)}
                 />
               ) : (
-                <Link to={`/item/${item._id}`}>
+                <Link to={`/item/${item.id}`}>
                   <Image src={`/${item.image}`} alt={item.name} />
                 </Link>
               )}
@@ -140,161 +121,72 @@ const Items = ({ item }) => {
 
           <hr />
 
-          <Route exact path={`${url.path}/request`}>
-            <Request item={item} user={user && user} />
-          </Route>
-
-          <Route exact path={`${url.path}/edit-request`}>
-            <Request item={item} user={user && user} />
-          </Route>
-
-          {item._id &&
+          {item.id &&
             url.path === "/item/:id" &&
             user &&
-            user._id === item.store.owner._id && (
+            user.role === "admin" && (
               <>
                 {/* edit item button */}
-                <Link to={`/item/${item._id}/edit`}>
-                  <Fab
-                    style={{
-                      backgroundColor: "#343a40",
-                      borderColor: "#343a40",
-                    }}
-                  >
-                    <BorderColor style={{ color: "white" }} />
-                  </Fab>
+                <Link to={`/item/${item.id}/edit`}>
+                  <Button className="btn-dark">Edit</Button>
                 </Link>
 
                 {/* delete button */}
-                <Fab
-                  onClick={deleteHandler}
-                  style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-                >
-                  <Delete style={{ color: "white" }} />
-                </Fab>
+                <Button onClick={deleteHandler} className="btn-dark">
+                  Delete
+                </Button>
               </>
             )}
 
           {/* favorite button */}
-          {item._id &&
+          {item.id &&
             url.path === "/item/:id" &&
             user &&
-            user._id !== item.store.owner._id &&
+            user.role === "customer" &&
             !user.favorites.includes(
-              user.favorites.find((el) => el._id === item._id)
+              user.favorites.find((el) => el.id === item.id)
             ) && (
-              <Fab
-                onClick={favorite}
-                style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-              >
-                <FavoriteBorder
-                  style={{ color: "#d60b0b" }}
-                  fontSize="default"
-                />
-              </Fab>
+              <Button onClick={favorite} className="btn-dark">
+                Favorite
+              </Button>
             )}
 
           {/* unfavorite button */}
-          {item._id &&
+          {item.id &&
             url.path === "/item/:id" &&
             user &&
-            user._id !== item.store.owner._id &&
+            user.id !== item.store.owner.id &&
             user.favorites.includes(
-              user.favorites.find((el) => el._id === item._id)
+              user.favorites.find((el) => el.id === item.id)
             ) && (
-              <Fab
-                onClick={unfavorite}
-                style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-              >
-                <Favorite style={{ color: "#d60b0b" }} fontSize="default" />
-              </Fab>
-            )}
-
-          {/* make request */}
-          {item._id &&
-            location.pathname === url.url &&
-            url.path === "/item/:id" &&
-            user &&
-            user._id !== item.store.owner._id &&
-            !user.outgoingRequests.includes(
-              user.outgoingRequests
-                .filter((el) => el.status === "pending")
-                .find((el) => el.item._id === item._id)
-            ) && (
-              <Link to={`${url.url}/request`}>
-                <Fab
-                  style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-                >
-                  <PostAdd style={{ color: "white" }} />
-                </Fab>
-              </Link>
-            )}
-
-          {/* edit request */}
-          {item._id &&
-            location.pathname === url.url &&
-            url.path === "/item/:id" &&
-            user &&
-            user._id !== item.store.owner._id &&
-            user.outgoingRequests.includes(
-              user.outgoingRequests
-                .filter((el) => el.status === "pending")
-                .find((el) => el.item._id === item._id)
-            ) && (
-              <Link to={`${url.url}/edit-request`}>
-                <Fab
-                  style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-                >
-                  <Edit style={{ color: "white" }} />
-                </Fab>
-              </Link>
+              <Button onClick={unfavorite} className="btn-dark">
+                Unfavorite
+              </Button>
             )}
 
           {/* visit item button */}
-          {item._id &&
+          {item.id &&
             (url.path === "/store/:id" ||
               url.path === "/favorites" ||
               url.path === "/items") && (
-              <Link to={`/item/${item._id}`}>
-                <Fab
-                  style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-                >
-                  <LaunchRounded style={{ color: "white" }} />
-                </Fab>
+              <Link to={`/item/${item.id}`}>
+                <Button className="btn-dark">View</Button>
               </Link>
             )}
 
           {/* add/remove item quantity */}
           {item.store &&
             user &&
-            user._id === item.store.owner._id &&
+            user.id === item.store.owner.id &&
             url.path === "/item/:id" && (
-              <Link to={`/item/${item._id}/quantity`}>
-                <Fab
-                  style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-                >
-                  <ExposureRounded style={{ color: "white" }} />
-                </Fab>
+              <Link to={`/item/${item.id}/quantity`}>
+                <Button className="btn-dark">Add/Remove</Button>
               </Link>
             )}
 
           {!user && url.path === "/item/:id" && (
-            <Link to={`/login?redirect=/item/${item._id}`}>
-              <Fab
-                style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-              >
-                <PostAdd style={{ color: "white" }} />
-              </Fab>
-            </Link>
-          )}
-
-          {!user && url.path === "/item/:id" && (
-            <Link to={`/login?redirect=/item/${item._id}`}>
-              <Fab
-                style={{ backgroundColor: "#343a40", borderColor: "#343a40" }}
-              >
-                <FavoriteBorder style={{ color: "white" }} fontSize="default" />
-              </Fab>
+            <Link to={`/login?redirect=/item/${item.id}`}>
+              <Button className="btn-dark">Favorite</Button>
             </Link>
           )}
         </>

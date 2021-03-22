@@ -10,11 +10,11 @@ const Categories = ({ category }) => {
   const url = useRouteMatch();
   const history = useHistory();
 
-  const userLogin = useSelector((state) => state.loginUser);
+  const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const storeDelete = useSelector((state) => state.deleteCategory);
-  const { success, error } = storeDelete;
+  const categoryDelete = useSelector((state) => state.categoryDelete);
+  const { success, error } = categoryDelete;
 
   const dispatch = useDispatch();
 
@@ -54,24 +54,27 @@ const Categories = ({ category }) => {
               Delete Category
             </Button>
 
-            <Link to={`/store/${category.id}/edit`}>
+            <Link to={`/category/${category.id}/edit`}>
               <Button className="btn-dark" type="button">
                 Edit Category
               </Button>
             </Link>
-
-            <Link
-              to={
-                url.path === "/categories"
-                  ? `/items/newitem?category=${category.id}`
-                  : `/items/newitem`
-              }
-            >
-              <Button className="btn-dark" type="button">
-                Add a new item
-              </Button>
-            </Link>
           </>
+        )}
+
+      {category.id &&
+        (url.path === "/category/:id" || url.path === "/profile") && (
+          <Link
+            to={
+              url.path === "/profile"
+                ? `/items/newitem?category=${category.id}`
+                : `/items/newitem`
+            }
+          >
+            <Button className="btn-dark" type="button">
+              Add a new item
+            </Button>
+          </Link>
         )}
 
       {category.id && url.path !== "/category/:id" && (

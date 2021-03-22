@@ -32,6 +32,7 @@ const getCategoryByPk = asyncHandler(async (req, res) => {
 // @route POST /api/categories/
 // @access Private
 const createCategory = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const { name, price, description } = req.body;
 
   const categoryExists = await Category.findOne({
@@ -67,19 +68,22 @@ const createCategory = asyncHandler(async (req, res) => {
 const updateCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
-  const categoryExists = await Category.findOne({
-    where: {
-      name: sequelize.where(
-        sequelize.fn("LOWER", sequelize.col("name")),
-        "LIKE",
-        `%${name.toLowerCase()}%`
-      ),
-    },
-  });
+  if (name) {
+    console.log({ name });
+    const categoryExists = await Category.findOne({
+      where: {
+        name: sequelize.where(
+          sequelize.fn("LOWER", sequelize.col("name")),
+          "LIKE",
+          `${name.toLowerCase()}`
+        ),
+      },
+    });
 
-  if (categoryExists) {
-    res.status(400);
-    throw new Error("Sorry, you already have a category with that name");
+    if (categoryExists) {
+      res.status(400);
+      throw new Error("Sorry, you already have a category with that name");
+    }
   }
 
   const category = await Category.findByPk(req.params.id);

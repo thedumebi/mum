@@ -7,6 +7,10 @@ import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
 import Profile from "./screens/Profile";
+import NewCategory from "./screens/NewCategory";
+import CategoriesList from "./screens/CategoriesList";
+import Category from "./screens/Category";
+import CategoryEdit from "./screens/CategoryEditScreen";
 
 const App = () => {
   const getCookie = (name) => {
@@ -55,6 +59,10 @@ const App = () => {
             <Route exact path="/register" component={Login} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/profile" component={Profile} />
+            <Route exact path="/createcategory" component={NewCategory} />
+            <Route exact path="/categories" component={CategoriesList} />
+            <Route exact path="/category/:id" component={Category} />
+            <Route exact path="/category/:id/edit" component={CategoryEdit} />
             <Route component={NotFound} />
           </Switch>
         </Container>

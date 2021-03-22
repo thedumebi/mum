@@ -4,7 +4,7 @@ import { Button, Col, Image, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 const Home = () => {
-  const userLogin = useSelector((state) => state.loginUser);
+  const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   return (

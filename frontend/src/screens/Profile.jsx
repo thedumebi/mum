@@ -7,6 +7,7 @@ import { getUserDetails } from "../actions/user.actions";
 import { getCategories } from "../actions/category.actions";
 import { Link } from "react-router-dom";
 import Categories from "../components/Categories";
+import { CREATE_CATEGORY_RESET } from "../constants/category.constants";
 
 const Profile = ({ history }) => {
   const dispatch = useDispatch();
@@ -17,24 +18,25 @@ const Profile = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const categoryDetails = useSelector((state) => state.categoryDetails);
-  const { categories } = categoryDetails;
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
 
-  const createCategoryState = useSelector((state) => state.createCategory);
+  const createCategoryState = useSelector((state) => state.categoryCreate);
   const { status: categoryCreated } = createCategoryState;
 
-  const categoryDelete = useSelector((state) => state.deleteCategory);
+  const categoryDelete = useSelector((state) => state.categoryDelete);
   const { message: deleteStoreMessage } = categoryDelete;
 
-  const itemDelete = useSelector((state) => state.deleteItem);
+  const itemDelete = useSelector((state) => state.itemDelete);
   const { message: deleteItemMessage } = itemDelete;
 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login?redirect=/profile");
     } else {
-      dispatch(getUserDetails(userInfo._id));
+      dispatch(getUserDetails(userInfo.id));
       dispatch(getCategories());
+      dispatch({ type: CREATE_CATEGORY_RESET });
     }
   }, [history, userInfo, dispatch]);
 
@@ -51,7 +53,7 @@ const Profile = ({ history }) => {
         <>
           {categoryCreated && (
             <Message variant="success">
-              Your shop was created successfully
+              Your category was created successfully
             </Message>
           )}
           {deleteStoreMessage && (
@@ -60,9 +62,9 @@ const Profile = ({ history }) => {
           {deleteItemMessage && (
             <Message variant="success">{deleteItemMessage}</Message>
           )}
-          <h1 className="sub-heading"> Welcome {user && user.name} </h1>
-          <p>{user && user.username}</p>
-          <p>{user && user.phoneNumber}</p>
+          <h1 className="sub-heading"> Welcome {user && user.fullName} </h1>
+          <p>{user && `Username: ${user.username}`}</p>
+          <p>{user && `phone number: ${user.phoneNumber}`}</p>
         </>
       )}
       <hr />
@@ -71,6 +73,7 @@ const Profile = ({ history }) => {
           <h2>Manage Categories</h2>
           <Row>
             {user &&
+              categories &&
               categories.map((category) => {
                 return (
                   <Col lg={4} key={category.id}>
@@ -79,11 +82,11 @@ const Profile = ({ history }) => {
                 );
               })}
           </Row>
+          <Link className="btn btn-dark my-3" to="/createcategory">
+            New Category
+          </Link>
         </div>
       )}
-      <Link className="btn btn-dark my-3" to="/registerstore">
-        New Store
-      </Link>
     </div>
   );
 };

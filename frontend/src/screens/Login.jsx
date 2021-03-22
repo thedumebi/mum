@@ -24,9 +24,9 @@ const Login = ({ location, history, match }) => {
   });
 
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.loginUser);
+  const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
-  const userRegister = useSelector((state) => state.registerUser);
+  const userRegister = useSelector((state) => state.userRegister);
   const { loading: registerLoading, error: registerError } = userRegister;
 
   const redirect = location.search ? location.search.split("=")[1] : "/";

@@ -6,7 +6,7 @@ import DarkModeButton from "./DarkModeButton";
 
 function Header({ mode }) {
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.loginUser);
+  const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const logoutHandler = () => {
@@ -31,7 +31,7 @@ function Header({ mode }) {
             <Nav className="ml-auto">
               <DarkModeButton mode={mode} />
               <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/stores">Categories</Nav.Link>
+              <Nav.Link href="/categories">Categories</Nav.Link>
               <Nav.Link href="/items">Items</Nav.Link>
               {userInfo ? (
                 <NavDropdown
