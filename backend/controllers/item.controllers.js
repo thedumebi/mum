@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const db = require("../models");
 const Item = db.Item;
+const Category = db.Category;
 const sequelize = db.sequelize;
 
 // @desc Get all items
@@ -15,7 +16,7 @@ const getItems = asyncHandler(async (req, res) => {
 // @route GET /api/items/:id
 // @access Public
 const getItemByPk = asyncHandler(async (req, res) => {
-  const item = await Item.findByPk(req.params.id);
+  const item = await Item.findByPk(req.params.id, { include: ["category"] });
   if (item) {
     res.status(200).json(item);
   } else {
@@ -28,7 +29,9 @@ const getItemByPk = asyncHandler(async (req, res) => {
 // @route POST /api/items/
 // @access Private
 const createItem = asyncHandler(async (req, res) => {
-  const { name, price, quantity, description, image } = req.body;
+  const { name, price, quantity, description, image, categoryId } = req.body;
+
+  const category = await Category.findByPk(categoryId);
 
   const itemExists = await Item.findOne({
     where: {
@@ -51,12 +54,16 @@ const createItem = asyncHandler(async (req, res) => {
     description,
     image,
   });
-  item.setUser(req.user);
+  if (item.price === null) {
+    await item.update({ price: category.price });
+  }
+  await item.setCategory(category);
+  await item.setUser(req.user);
   if (item) {
     res.status(200).json(item);
   } else {
     res.status(401);
-    throw new Error("invalid input");
+    throw new Error("Invalid input");
   }
 });
 

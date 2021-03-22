@@ -5,7 +5,11 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app",
+    "start": "node backend/server",
+    "client": "npm start --prefix frontend",
+    "server": "nodemon backend/server",
+    "dev": " concurrently \"npm run server\"  \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIF_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend",
     "init-seq": "sequelize init"
   },
   "repository": {

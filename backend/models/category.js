@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Item = sequelize.define(
-    "Item",
+  const Category = sequelize.define(
+    "Category",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,20 +11,15 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
-      price: DataTypes.INTEGER,
-      quantity: {
+      price: {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
       description: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "upload/photos/d-avatar.jpg",
       },
       createdAt: {
         type: "TIMESTAMP",
@@ -40,17 +35,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      tableName: "Item",
+      tableName: "Category",
     }
   );
 
-  Item.associate = function (models) {
-    Item.belongsTo(models.User, {
-      foreignKey: "userId",
-      targetKey: "id",
-      as: "user",
+  Category.associate = function (models) {
+    Category.belongsToMany(models.Item, {
+      through: "Category_Item",
+      as: "items",
     });
   };
 
-  return Item;
+  return Category;
 };
