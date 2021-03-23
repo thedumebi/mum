@@ -1,4 +1,4 @@
 /node_modules
 database.sqlite3
 .env
-/backend/uploads/*.jpg
+/backend/uploads/*

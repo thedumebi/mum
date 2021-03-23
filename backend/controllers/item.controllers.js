@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const fs = require("fs");
 const db = require("../models");
 const Item = db.Item;
 const Category = db.Category;
@@ -64,7 +65,7 @@ const createItem = asyncHandler(async (req, res) => {
     image,
   });
   if (item.price === undefined) {
-    await item.update({ price: category.price });
+    await item.update({ price: itemCategories[0].price });
   }
   await item.setUser(req.user);
   await item.addCategories(itemCategories);
@@ -82,27 +83,42 @@ const createItem = asyncHandler(async (req, res) => {
 const updateItem = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
-  const itemExists = await Item.findOne({
-    where: {
-      userId: req.user.dataValues.id,
-      name: sequelize.where(
-        sequelize.fn("LOWER", sequelize.col("name")),
-        "LIKE",
-        `${name.toLowerCase()}`
-      ),
-    },
-  });
-  if (itemExists) {
-    res.status(400);
-    throw new Error("Sorry, you already have an item with that name!");
+  if (name) {
+    const itemExists = await Item.findOne({
+      where: {
+        name: sequelize.where(
+          sequelize.fn("LOWER", sequelize.col("name")),
+          "LIKE",
+          `${name.toLowerCase()}`
+        ),
+      },
+    });
+    if (itemExists) {
+      res.status(400);
+      throw new Error("Sorry, you already have an item with that name!");
+    }
   }
 
-  const item = await Item.findOne({
-    where: { id: req.params.id, userId: req.user.dataValues.id },
-  });
+  const item = await Item.findByPk(req.params.id);
   if (item) {
-    const updatedItem = await item.update(req.body);
-    res.status(200).json(updatedItem);
+    if (req.body.image) {
+      try {
+        fs.unlinkSync(item.image);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    const { categories, ...itemUpdate } = req.body;
+    await item.update(itemUpdate);
+    const itemCategories = await Category.findAll({
+      where: {
+        id: { [Op.in]: categories },
+      },
+    });
+    await item.setCategories([]);
+    await item.addCategories(itemCategories);
+
+    res.status(200).json(item);
   } else {
     res.status(404);
     throw new Error("Item not found");
@@ -113,9 +129,7 @@ const updateItem = asyncHandler(async (req, res) => {
 // @route   DELETE /api/items/:id
 // @access  Private/Admin
 const deleteItem = asyncHandler(async (req, res) => {
-  const item = await Item.findOne({
-    where: { id: req.params.id, userId: req.user.dataValues.id },
-  });
+  const item = await Item.findByPk(req.params.id);
   if (item) {
     await item.destroy();
     res.status(200).json({ message: "Item Deleted" });
@@ -142,9 +156,7 @@ const getItemOfTheDay = asyncHandler(async (req, res) => {
 // @access Private
 const addItem = asyncHandler(async (req, res) => {
   const { count } = req.body;
-  const item = await Item.findOne({
-    where: { id: req.params.id, userId: req.user.dataValues.id },
-  });
+  const item = await Item.findByPk(req.params.id);
   if (item) {
     await item.increment(["quantity"], { by: count });
     await item.reload();
@@ -160,9 +172,7 @@ const addItem = asyncHandler(async (req, res) => {
 // @access Private
 const removeItem = asyncHandler(async (req, res) => {
   const { count } = req.body;
-  const item = await Item.findOne({
-    where: { id: req.params.id, userId: req.user.dataValues.id },
-  });
+  const item = await Item.findByPk(req.params.id);
   if (item) {
     await item.decrement(["quantity"], { by: count });
     await item.reload();

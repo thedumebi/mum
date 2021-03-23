@@ -146,10 +146,12 @@ const Items = ({ item }) => {
             )}
 
           {/* favorite button */}
-          {item.id &&
+          {item &&
+            item.id &&
             url.path === "/item/:id" &&
             user &&
             user.role === "customer" &&
+            user.favorites &&
             !user.favorites.includes(
               user.favorites.find((el) => el.id === item.id)
             ) && (
@@ -159,10 +161,11 @@ const Items = ({ item }) => {
             )}
 
           {/* unfavorite button */}
-          {item.id &&
+          {item &&
+            item.id &&
             url.path === "/item/:id" &&
             user &&
-            user.id !== item.userId &&
+            user.role === "customer" &&
             user.favorites.includes(
               user.favorites.find((el) => el.id === item.id)
             ) && (

@@ -52,17 +52,6 @@ router.post(
       } else if (err) {
         return res.end(err.toString());
       } else {
-        if (req.body.itemId) {
-          const item = await Item.findByPk(req.body.itemId);
-          if (item.image !== "upload/photos/d-avatar.jpg") {
-            try {
-              fs.unlinkSync(item.image);
-            } catch (error) {
-              console.error(error);
-            }
-          }
-        }
-
         res.send(`${req.file.path}`);
       }
     });

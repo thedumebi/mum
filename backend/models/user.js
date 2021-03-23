@@ -60,6 +60,9 @@ module.exports = (sequelize, DataTypes) => {
         beforeSave: (user, options) => {
           user.fullName = [user.firstName, user.lastName].join(" ");
         },
+        beforeUpdate: (user, options) => {
+          user.fullName = [user.firstName, user.lastName].join(" ");
+        },
       },
     }
   );

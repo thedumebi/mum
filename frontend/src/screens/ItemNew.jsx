@@ -170,7 +170,7 @@ const NewItem = ({ history, location }) => {
 
           <Form.Row>
             <Form.Group as={Col}>
-              <Form.Label>Select Categoy</Form.Label>
+              <Form.Label>Select Category</Form.Label>
               <Form.Control
                 as="select"
                 name="categories"

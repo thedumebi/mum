@@ -15,6 +15,7 @@ import NewItem from "./screens/ItemNew";
 import ItemsList from "./screens/ItemsList";
 import ItemEdit from "./screens/ItemEditScreen";
 import Item from "./screens/ItemSingle";
+import Settings from "./screens/Settings";
 
 const App = () => {
   const getCookie = (name) => {
@@ -76,6 +77,7 @@ const App = () => {
             <Route exact path="/items" component={ItemsList} />
             <Route exact path="/item/:id/edit" component={ItemEdit} />
             <Route exact path="/item/:id" component={Item} />
+            <Route exact path="/settings" component={Settings} />
             <Route component={NotFound} />
           </Switch>
         </Container>

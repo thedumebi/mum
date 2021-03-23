@@ -36,7 +36,7 @@ if (process.env.NODE_ENV !== "development") {
 
 // middleware
 app.use(notFound);
-// app.use(errorHandler);
+app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 db.sequelize

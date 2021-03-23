@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Col, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import { ITEM_UPDATE_RESET } from "../constants/item.constants";
 import { getItemDetails, updateItem } from "../actions/item.actions";
+import { getCategories } from "../actions/category.actions";
 
 const ItemEdit = ({ history, match }) => {
   const [item, setItem] = useState({
-    id: "",
     name: "",
+    price: "",
+    quantity: "",
+    description: "",
     image: "",
-    storeId: "",
+    categories: "",
   });
 
   const [successMessage, setSuccessMessage] = useState(null);
 
   const dispatch = useDispatch();
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
 
   const itemDetails = useSelector((state) => state.itemDetails);
   const { loading, error, item: itemDetail } = itemDetails;
@@ -35,6 +41,7 @@ const ItemEdit = ({ history, match }) => {
     if (!userInfo) {
       history.push(`/login?redirect=/item/${match.params.id}/edit`);
     } else {
+      dispatch(getCategories());
       if (success) {
         setSuccessMessage(success);
       }
@@ -45,18 +52,40 @@ const ItemEdit = ({ history, match }) => {
         setItem((prevValue) => {
           return {
             ...prevValue,
-            id: itemDetail.id,
             name: itemDetail.name,
+            price: itemDetail.price,
+            quantity: itemDetail.quantity,
+            description: itemDetail.description,
             image: itemDetail.image,
-            categoryId: itemDetail.category[0].id,
+            categories: itemDetail.categories.map((category) => category.id),
           };
         });
-        if (userInfo.id !== itemDetail.userId) {
+        if (userInfo.role !== "admin") {
           history.push("/profile");
         }
       }
     }
   }, [dispatch, history, userInfo, itemDetail, success, match]);
+
+  const addToCategoryArray = (event) => {
+    const { name, value } = event.target;
+    setItem((prevValue) => {
+      return {
+        ...prevValue,
+        [name]: [...prevValue.categories, Number(value)],
+      };
+    });
+  };
+
+  const removeFromCategoryArray = (event) => {
+    const { name, value } = event.target;
+    setItem((prevvalues) => {
+      return {
+        ...prevvalues,
+        [name]: [...prevvalues.categories.filter((el) => el !== Number(value))],
+      };
+    });
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -70,7 +99,7 @@ const ItemEdit = ({ history, match }) => {
     const file = files[0];
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("itemId", item.id);
+    formData.append("itemId", itemDetail.id);
 
     try {
       const config = {
@@ -95,9 +124,9 @@ const ItemEdit = ({ history, match }) => {
     if (uploadError === null) {
       if (itemDetail.name === item.name) {
         const { name, ...otherfields } = item;
-        dispatch(updateItem(otherfields));
+        dispatch(updateItem(itemDetail.id, otherfields));
       } else {
-        dispatch(updateItem(item));
+        dispatch(updateItem(itemDetail.id, item));
       }
     }
     event.preventDefault();
@@ -129,8 +158,119 @@ const ItemEdit = ({ history, match }) => {
           </Form.Group>
 
           <Form.Group>
+            <Form.Label>Price(NGN)</Form.Label>
+            <Form.Control
+              type="number"
+              name="price"
+              value={item.price}
+              onChange={handleChange}
+              placeholder="Price of items in this category"
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Quantity</Form.Label>
+            <Form.Control
+              type="number"
+              onChange={handleChange}
+              name="quantity"
+              value={item.quantity}
+              placeholder="Number of Item."
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              onChange={handleChange}
+              name="description"
+              value={item.description}
+              rows={3}
+              placeholder="Brief Description of the Item."
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Item Categories</Form.Label>
+            <Form.Control
+              type="text"
+              value={
+                categories
+                  ? categories
+                      .filter(
+                        (category) =>
+                          item.categories &&
+                          item.categories.find(
+                            (el) => Number(el) === category.id
+                          )
+                      )
+                      .map((category) => {
+                        return category.name;
+                      })
+                  : ""
+              }
+              readOnly
+            />
+          </Form.Group>
+
+          <Form.Row>
+            <Form.Group as={Col}>
+              <Form.Label>Select Category</Form.Label>
+              <Form.Control
+                as="select"
+                name="categories"
+                onChange={addToCategoryArray}
+              >
+                <option value="">Select Category ...</option>
+                {categories &&
+                  categories
+                    .filter(
+                      (category) =>
+                        item.categories &&
+                        !item.categories.find(
+                          (el) => Number(el) === category.id
+                        )
+                    )
+                    .map((category) => {
+                      return (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      );
+                    })}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group as={Col}>
+              <Form.Label>Remove Category</Form.Label>
+              <Form.Control
+                as="select"
+                name="categories"
+                onChange={removeFromCategoryArray}
+              >
+                <option value="">Select Category ...</option>
+                {categories &&
+                  categories
+                    .filter(
+                      (category) =>
+                        item.categories &&
+                        item.categories.find((el) => Number(el) === category.id)
+                    )
+                    .map((category) => {
+                      return (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      );
+                    })}
+              </Form.Control>
+            </Form.Group>
+          </Form.Row>
+
+          <Form.Group>
             <Form.Label>Item Image</Form.Label>
-            <Form.Control type="text" value={item.image} readOnly />
+            <Form.Control as={Image} src={`/${item.image}`} alt={item.name} />
             <Form.File
               name="image"
               label="Choose Image"

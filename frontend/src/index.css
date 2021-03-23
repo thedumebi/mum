@@ -369,3 +369,8 @@ body.light-theme .list-group-item {
   right: 10%;
   height: 100%;
 }
+
+.form-group img {
+  height: 150px;
+  object-fit: cover;
+}

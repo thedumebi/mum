@@ -29,6 +29,13 @@ import {
   removeFromItemReducer,
   unfavoriteItemReducer,
 } from "./reducers/item.reducers";
+import {
+  carouselDeleteReducer,
+  carouselDetailsReducer,
+  carouselListReducer,
+  carouselUpdateReducer,
+  createCarouselReducer,
+} from "./reducers/carousel.reducers";
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -53,6 +60,11 @@ const reducer = combineReducers({
   itemOfTheDay: itemOfTheDayReducer,
   itemFavorite: favoriteItemReducer,
   itemUnfavorite: unfavoriteItemReducer,
+  carouselCreate: createCarouselReducer,
+  carouselList: carouselListReducer,
+  carouselDelete: carouselDeleteReducer,
+  carouselDetails: carouselDetailsReducer,
+  carouselUpate: carouselUpdateReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

@@ -50,9 +50,10 @@ module.exports = (sequelize, DataTypes) => {
 
   Item.associate = function (models) {
     Item.belongsTo(models.User, {
-      foreignKey: { name: "userId", allowNull: true },
+      foreignKey: "userId",
       targetKey: "id",
       as: "user",
+      onDelete: "SET NULL",
     });
     Item.belongsToMany(models.Category, {
       through: "Category_Item",
