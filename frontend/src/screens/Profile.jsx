@@ -8,6 +8,7 @@ import { getCategories } from "../actions/category.actions";
 import { Link } from "react-router-dom";
 import Categories from "../components/Categories";
 import { CREATE_CATEGORY_RESET } from "../constants/category.constants";
+import { ITEM_DELETE_RESET } from "../constants/item.constants";
 
 const Profile = ({ history }) => {
   const dispatch = useDispatch();
@@ -36,8 +37,11 @@ const Profile = ({ history }) => {
     } else {
       dispatch(getUserDetails(userInfo.id));
       dispatch(getCategories());
-      dispatch({ type: CREATE_CATEGORY_RESET });
     }
+    return () => {
+      dispatch({ type: CREATE_CATEGORY_RESET });
+      dispatch({ type: ITEM_DELETE_RESET });
+    };
   }, [history, userInfo, dispatch]);
 
   return (

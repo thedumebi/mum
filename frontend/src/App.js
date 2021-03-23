@@ -7,10 +7,14 @@ import Home from "./screens/Home";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
 import Profile from "./screens/Profile";
-import NewCategory from "./screens/NewCategory";
+import NewCategory from "./screens/CategoryNew";
 import CategoriesList from "./screens/CategoriesList";
-import Category from "./screens/Category";
+import Category from "./screens/CategorySingle";
 import CategoryEdit from "./screens/CategoryEditScreen";
+import NewItem from "./screens/ItemNew";
+import ItemsList from "./screens/ItemsList";
+import ItemEdit from "./screens/ItemEditScreen";
+import Item from "./screens/ItemSingle";
 
 const App = () => {
   const getCookie = (name) => {
@@ -63,6 +67,15 @@ const App = () => {
             <Route exact path="/categories" component={CategoriesList} />
             <Route exact path="/category/:id" component={Category} />
             <Route exact path="/category/:id/edit" component={CategoryEdit} />
+            <Route
+              exact
+              path="/items/newitem?category=:id"
+              component={NewItem}
+            />
+            <Route exact path="/items/newitem" component={NewItem} />
+            <Route exact path="/items" component={ItemsList} />
+            <Route exact path="/item/:id/edit" component={ItemEdit} />
+            <Route exact path="/item/:id" component={Item} />
             <Route component={NotFound} />
           </Switch>
         </Container>

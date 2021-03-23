@@ -37,7 +37,7 @@ const Items = ({ item }) => {
   const deleteHandler = () => {
     if (window.confirm("This is an ireversible act. Are you sure?")) {
       if (window.confirm("LAST WARNING, DELETE ITEM?")) {
-        dispatch(deleteItem(item.id, item.store.id));
+        dispatch(deleteItem(item.id));
       }
     }
   };
@@ -74,6 +74,7 @@ const Items = ({ item }) => {
             top: 0,
             left: 0,
             width: "100vw",
+            height: "100vw",
             padding: "2%",
             zIndex: 10,
             display: overlay.display,
@@ -92,7 +93,7 @@ const Items = ({ item }) => {
         </div>
       ) : (
         <>
-          {error && <Message variant="error">{error}</Message>}
+          {error && <Message variant="danger">{error}</Message>}
           {url.path === "/item/:id" && (
             <Message variant="info">
               Tap the image tile to view the full item image
@@ -115,8 +116,14 @@ const Items = ({ item }) => {
           )}
           <div className="content">
             <h1 className="sub-heading">{item.name}</h1>
-            {item.store && <small>{item.store.category}</small>}
-            <p>There are {item.quantity} left in stock</p>
+            {item.category && <small>{item.category.name}</small>}
+            <p>
+              {item.quantity === null || 0
+                ? "Item is out of stock"
+                : item.quantity === 1
+                ? `There is ${item.quantity} left in stock`
+                : `There are ${item.quantity} left in stock`}
+            </p>
           </div>
 
           <hr />
@@ -155,7 +162,7 @@ const Items = ({ item }) => {
           {item.id &&
             url.path === "/item/:id" &&
             user &&
-            user.id !== item.store.owner.id &&
+            user.id !== item.userId &&
             user.favorites.includes(
               user.favorites.find((el) => el.id === item.id)
             ) && (
@@ -177,7 +184,7 @@ const Items = ({ item }) => {
           {/* add/remove item quantity */}
           {item.store &&
             user &&
-            user.id === item.store.owner.id &&
+            user.id === item.userId &&
             url.path === "/item/:id" && (
               <Link to={`/item/${item.id}/quantity`}>
                 <Button className="btn-dark">Add/Remove</Button>

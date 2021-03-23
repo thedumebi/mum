@@ -18,6 +18,7 @@ import {
   ITEM_DELETE_FAIL,
   ITEM_DELETE_REQUEST,
   ITEM_DELETE_SUCCESS,
+  ITEM_DELETE_RESET,
   ITEM_ADD_REQUEST,
   ITEM_ADD_SUCCESS,
   ITEM_ADD_FAIL,
@@ -105,6 +106,8 @@ export const itemDeleteReducer = (state = {}, action) => {
       return { loading: false, success: true, message: action.payload.message };
     case ITEM_DELETE_FAIL:
       return { loading: false, error: action.payload };
+    case ITEM_DELETE_RESET:
+      return {};
     default:
       return state;
   }

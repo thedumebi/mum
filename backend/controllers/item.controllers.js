@@ -3,12 +3,13 @@ const db = require("../models");
 const Item = db.Item;
 const Category = db.Category;
 const sequelize = db.sequelize;
+const Op = db.Sequelize.Op;
 
 // @desc Get all items
 // @route GET /api/items/
 // @access Public
 const getItems = asyncHandler(async (req, res) => {
-  const items = await Item.findAll();
+  const items = await Item.findAll({ include: ["user", "categories"] });
   res.status(200).json(items);
 });
 
@@ -16,7 +17,9 @@ const getItems = asyncHandler(async (req, res) => {
 // @route GET /api/items/:id
 // @access Public
 const getItemByPk = asyncHandler(async (req, res) => {
-  const item = await Item.findByPk(req.params.id, { include: ["category"] });
+  const item = await Item.findByPk(req.params.id, {
+    include: ["user", "categories"],
+  });
   if (item) {
     res.status(200).json(item);
   } else {
@@ -29,16 +32,22 @@ const getItemByPk = asyncHandler(async (req, res) => {
 // @route POST /api/items/
 // @access Private
 const createItem = asyncHandler(async (req, res) => {
-  const { name, price, quantity, description, image, categoryId } = req.body;
+  console.log(req.body);
+  const { name, price, quantity, description, image, categories } = req.body;
 
-  const category = await Category.findByPk(categoryId);
+  const itemCategories = await Category.findAll({
+    where: {
+      id: { [Op.in]: categories },
+    },
+  });
+  console.log({ itemCategories });
 
   const itemExists = await Item.findOne({
     where: {
       name: sequelize.where(
         sequelize.fn("LOWER", sequelize.col("name")),
         "LIKE",
-        `%${name.toLowerCase()}%`
+        `${name.toLowerCase()}`
       ),
     },
   });
@@ -54,11 +63,11 @@ const createItem = asyncHandler(async (req, res) => {
     description,
     image,
   });
-  if (item.price === null) {
+  if (item.price === undefined) {
     await item.update({ price: category.price });
   }
-  await item.setCategory(category);
   await item.setUser(req.user);
+  await item.addCategories(itemCategories);
   if (item) {
     res.status(200).json(item);
   } else {
@@ -79,7 +88,7 @@ const updateItem = asyncHandler(async (req, res) => {
       name: sequelize.where(
         sequelize.fn("LOWER", sequelize.col("name")),
         "LIKE",
-        `%${name.toLowerCase()}%`
+        `${name.toLowerCase()}`
       ),
     },
   });
@@ -108,7 +117,7 @@ const deleteItem = asyncHandler(async (req, res) => {
     where: { id: req.params.id, userId: req.user.dataValues.id },
   });
   if (item) {
-    item.destroy();
+    await item.destroy();
     res.status(200).json({ message: "Item Deleted" });
   } else {
     res.status(404);

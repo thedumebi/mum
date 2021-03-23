@@ -5,6 +5,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { Button, Form } from "react-bootstrap";
 import { createCategory } from "../actions/category.actions";
+import { getUserDetails } from "../actions/user.actions";
 
 const NewCategory = ({ history }) => {
   const [category, setCategory] = useState({
@@ -19,18 +20,23 @@ const NewCategory = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user } = userDetails;
+
   const createCategoryState = useSelector((state) => state.categoryCreate);
   const { loading, error, status: success } = createCategoryState;
 
   useEffect(() => {
-    if (!userInfo || userInfo.role !== "admin") {
-      history.push("/login?redirect=/newcategory");
+    if (!user) {
+      dispatch(getUserDetails(userInfo.id));
+    } else if (user.role !== "admin") {
+      history.push("/login?redirect=/createcategory");
     } else {
       if (success) {
         history.push("/profile");
       }
     }
-  }, [history, userInfo, dispatch, success]);
+  }, [history, userInfo, user, dispatch, success]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

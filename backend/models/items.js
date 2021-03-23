@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       image: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: "upload/photos/d-avatar.jpg",
+        defaultValue: "backend\\uploads\\image-1616499028772.JPG",
       },
       createdAt: {
         type: "TIMESTAMP",
@@ -53,12 +53,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: { name: "userId", allowNull: true },
       targetKey: "id",
       as: "user",
-      onDelete: "SET NULL",
     });
     Item.belongsToMany(models.Category, {
       through: "Category_Item",
-      as: "category",
-      onDelete: "SET NULL",
+      as: "categories",
     });
   };
 
