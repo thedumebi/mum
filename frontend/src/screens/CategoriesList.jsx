@@ -34,7 +34,13 @@ const CategoriesList = ({ history }) => {
               {categories &&
                 categories.map((category) => {
                   return (
-                    <Col lg={4} key={category.id}>
+                    <Col
+                      lg={3}
+                      md={4}
+                      xs={6}
+                      key={category.id}
+                      style={{ padding: 0 }}
+                    >
                       <Categories category={category} />
                     </Col>
                   );

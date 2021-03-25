@@ -15,8 +15,8 @@ const router = express.Router();
 
 router.route("/").get(getItems).post(protect, admin, createItem);
 router.get("/item", getItemOfTheDay);
-router.post("/:id/add", protect, admin, addItem);
-router.post("/:id/remove", protect, admin, removeItem);
+router.patch("/:id/add", protect, admin, addItem);
+router.patch("/:id/remove", protect, admin, removeItem);
 router
   .route("/:id")
   .get(getItemByPk)

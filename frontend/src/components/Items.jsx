@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import {
+  Link,
+  Route,
+  useHistory,
+  useRouteMatch,
+  useLocation,
+} from "react-router-dom";
 import { Button, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,10 +15,12 @@ import {
 } from "../actions/item.actions";
 import Message from "../components/Message";
 import { getUserDetails } from "../actions/user.actions";
+import ItemQuantity from "./ItemQuantityEdit";
 
 const Items = ({ item }) => {
   const url = useRouteMatch();
   const history = useHistory();
+  const location = useLocation();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -81,7 +89,7 @@ const Items = ({ item }) => {
             backgroundColor: "rgba(0,0,0,0.5)",
           }}
         >
-          <Message variant="info">Tap anywhere on the screen to exit</Message>
+          <Message variant="info">Tap on the image to exit full screen</Message>
           <Image
             src={overlay.src}
             alt={item.name}
@@ -116,9 +124,20 @@ const Items = ({ item }) => {
           )}
           <div className="content">
             <h1 className="sub-heading">{item.name}</h1>
-            {item.category && <small>{item.category.name}</small>}
+            {item.categories && (
+              <small>
+                {item.categories.length === 1 ? "Category: " : "Categories: "}
+                {item.categories
+                  .map((category) => {
+                    return category.name;
+                  })
+                  .join(", ")}
+              </small>
+            )}
+            <br />
+            {item.description && <small>Description: {item.description}</small>}
             <p>
-              {item.quantity === null || 0
+              {item.quantity === null || item.quantity === 0
                 ? "Item is out of stock"
                 : item.quantity === 1
                 ? `There is ${item.quantity} left in stock`
@@ -126,7 +145,9 @@ const Items = ({ item }) => {
             </p>
           </div>
 
-          <hr />
+          <Route exact path={`${url.path}/quantity`}>
+            <ItemQuantity item={item} />
+          </Route>
 
           {item.id &&
             url.path === "/item/:id" &&
@@ -185,9 +206,10 @@ const Items = ({ item }) => {
             )}
 
           {/* add/remove item quantity */}
-          {item.store &&
+          {item &&
             user &&
-            user.id === item.userId &&
+            user.role === "admin" &&
+            location.pathname === url.url &&
             url.path === "/item/:id" && (
               <Link to={`/item/${item.id}/quantity`}>
                 <Button className="btn-dark">Add/Remove</Button>

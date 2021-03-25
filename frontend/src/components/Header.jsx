@@ -20,7 +20,7 @@ function Header({ mode }) {
           <Navbar.Brand href="/">
             <img
               src="/barmer_logo.svg"
-              alt="Nkadi Stores"
+              alt="Tessy Stores"
               width="40"
               height="40"
               className="d-inline-block"

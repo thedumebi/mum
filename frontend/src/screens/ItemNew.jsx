@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { Button, Col, Form } from "react-bootstrap";
+import { Button, Col, Form, Image } from "react-bootstrap";
 import { createItem } from "../actions/item.actions";
 import { CREATE_ITEM_RESET } from "../constants/item.constants";
 import axios from "axios";
@@ -141,7 +141,7 @@ const NewItem = ({ history, location }) => {
               name="price"
               value={item.price}
               onChange={handleChange}
-              placeholder="Price of items in this category"
+              placeholder="Price of item"
             />
           </Form.Group>
 
@@ -152,7 +152,7 @@ const NewItem = ({ history, location }) => {
               onChange={handleChange}
               name="quantity"
               value={item.quantity}
-              placeholder="Number of Item."
+              placeholder="Number of Item"
             />
           </Form.Group>
 
@@ -164,7 +164,7 @@ const NewItem = ({ history, location }) => {
               name="description"
               value={item.description}
               rows={3}
-              placeholder="Brief Description of the Item."
+              placeholder="Brief Description of the Item"
             />
           </Form.Group>
 
@@ -232,6 +232,7 @@ const NewItem = ({ history, location }) => {
                       .map((category) => {
                         return category.name;
                       })
+                      .join(", ")
                   : ""
               }
               readOnly
@@ -240,7 +241,7 @@ const NewItem = ({ history, location }) => {
 
           <Form.Group>
             <Form.Label>Item Image</Form.Label>
-            <Form.Control type="text" value={item.image} readOnly />
+            <Form.Control as={Image} src={`/${item.image}`} alt={item.name} />
             <Form.File
               name="image"
               label="Choose Image"

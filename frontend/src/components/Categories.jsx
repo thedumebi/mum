@@ -51,12 +51,12 @@ const Categories = ({ category }) => {
         userInfo.role === "admin" && (
           <>
             <Button className="btn-dark" type="button" onClick={deleteHandler}>
-              Delete Category
+              Delete
             </Button>
 
             <Link to={`/category/${category.id}/edit`}>
               <Button className="btn-dark" type="button">
-                Edit Category
+                Edit
               </Button>
             </Link>
           </>
@@ -80,7 +80,7 @@ const Categories = ({ category }) => {
       {category.id && url.path !== "/category/:id" && (
         <Link to={`/category/${category.id}`}>
           <Button className="btn-dark" type="button">
-            View Category
+            View
           </Button>
         </Link>
       )}

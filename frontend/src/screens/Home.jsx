@@ -19,8 +19,8 @@ const Home = () => {
   const [carousel, setCarousel] = useState({
     signup: {
       image: "/images/llama.svg",
-      text: userInfo ? "Visit profile" : "Register and start trading",
-      link: userInfo ? "/profile" : "/register",
+      text: userInfo ? "Visit profile" : "Browse through our items",
+      link: userInfo ? "/profile" : "/categories",
     },
     itemOfTheDay: undefined,
   });
@@ -50,7 +50,7 @@ const Home = () => {
           itemOfTheDay: {
             image: `/${item.image}`,
             text: `${item.name} (item of the day)`,
-            link: `/item/${item._id}`,
+            link: `/item/${item.id}`,
           },
         };
       });
@@ -60,14 +60,12 @@ const Home = () => {
 
   return (
     <div>
-      {error && <Message variant="danger">{error}</Message>}
-      {loading && <Loader />}
       {userInfo ? (
         <Row className="left">
           <Col lg={6}>
             <h1 className="big-heading">Welcome back {userInfo.username}</h1>
             <p>Satisfy your fabric needs today.</p>
-            <Link to="/items">
+            <Link to="/categories">
               <Button className="btn btn-lg btn-dark">Get Started</Button>
             </Link>
           </Col>
@@ -80,7 +78,7 @@ const Home = () => {
           <Col lg={6}>
             <h1 className="big-heading">Welcome to Tessy's Fabric Store.</h1>
             <p>We are here for all your fabric needs.</p>
-            <Link to="/items">
+            <Link to="/categories">
               <Button className="btn btn-lg btn-dark">Get Started</Button>
             </Link>
           </Col>
@@ -89,6 +87,8 @@ const Home = () => {
           </Col>
         </Row>
       )}
+      {error && <Message variant="danger">{error}</Message>}
+      {loading && <Loader />}
       <Carousel interval={3000} className="home-carousel">
         {Object.keys(carousel)
           .filter((item) => carousel[item] !== undefined)

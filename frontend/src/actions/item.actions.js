@@ -166,7 +166,7 @@ export const deleteItem = (id) => async (dispatch, getState) => {
   }
 };
 
-export const addToItem = (id, item) => async (dispatch, getState) => {
+export const addToItem = (id, count) => async (dispatch, getState) => {
   try {
     dispatch({ type: ITEM_ADD_REQUEST });
 
@@ -181,7 +181,11 @@ export const addToItem = (id, item) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.patch(`/api/items/${id}/add`, item, config);
+    const { data } = await axios.patch(
+      `/api/items/${id}/add`,
+      { count },
+      config
+    );
 
     dispatch({
       type: ITEM_ADD_SUCCESS,
@@ -200,7 +204,7 @@ export const addToItem = (id, item) => async (dispatch, getState) => {
   }
 };
 
-export const removeFromItem = (id, item) => async (dispatch, getState) => {
+export const removeFromItem = (id, count) => async (dispatch, getState) => {
   try {
     dispatch({ type: ITEM_REMOVE_REQUEST });
 
@@ -215,7 +219,11 @@ export const removeFromItem = (id, item) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.patch(`/api/items/${id}/remove`, item, config);
+    const { data } = await axios.patch(
+      `/api/items/${id}/remove`,
+      { count },
+      config
+    );
 
     dispatch({
       type: ITEM_REMOVE_SUCCESS,

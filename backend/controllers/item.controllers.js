@@ -101,7 +101,7 @@ const updateItem = asyncHandler(async (req, res) => {
 
   const item = await Item.findByPk(req.params.id);
   if (item) {
-    if (req.body.image) {
+    if (req.body.image && req.body.image !== item.image) {
       try {
         fs.unlinkSync(item.image);
       } catch (error) {
