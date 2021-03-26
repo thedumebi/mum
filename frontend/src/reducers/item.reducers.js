@@ -73,7 +73,12 @@ export const itemListReducer = (state = [], action) => {
     case ITEM_LIST_REQUEST:
       return { loading: true };
     case ITEM_LIST_SUCCESS:
-      return { loadin: false, items: action.payload };
+      return {
+        loading: false,
+        items: action.payload.items,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      };
     case ITEM_LIST_FAIL:
       return { loading: false, error: action.payload };
     case ITEM_LIST_RESET:

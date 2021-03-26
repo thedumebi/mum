@@ -55,7 +55,12 @@ export const listCategoryReducer = (state = [], action) => {
     case CATEGORY_LIST_REQUEST:
       return { loading: true };
     case CATEGORY_LIST_SUCCESS:
-      return { loading: false, categories: action.payload };
+      return {
+        loading: false,
+        categories: action.payload.categories,
+        pages: action.payload.pages,
+        page: action.payload.pages,
+      };
     case CATEGORY_LIST_FAIL:
       return { loading: false, error: action.payload };
     case CATEGORY_LIST_RESET:

@@ -5,6 +5,8 @@ import Categories from "../components/Categories";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryDetails } from "../actions/category.actions";
 import { Button } from "react-bootstrap";
+import SearchBox from "../components/SearchBox";
+import { Route } from "react-router-dom";
 
 const Category = ({ history, match }) => {
   const dispatch = useDispatch();
@@ -26,7 +28,14 @@ const Category = ({ history, match }) => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        category && <Categories category={category} />
+        <>
+          <Route
+            render={({ history, match }) => (
+              <SearchBox history={history} url={match} />
+            )}
+          />
+          {category && <Categories category={category} />}
+        </>
       )}
     </div>
   );

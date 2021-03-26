@@ -70,11 +70,15 @@ export const getCategoryDetails = (id) => async (dispatch) => {
   }
 };
 
-export const getCategories = () => async (dispatch) => {
+export const getCategories = (keyword = "", pageNumber = "") => async (
+  dispatch
+) => {
   try {
     dispatch({ type: CATEGORY_LIST_REQUEST });
 
-    const { data } = await axios.get("/api/categories");
+    const { data } = await axios.get(
+      `/api/categories?keyword=${keyword}&pageNumber=${pageNumber}`
+    );
 
     dispatch({
       type: CATEGORY_LIST_SUCCESS,

@@ -197,7 +197,7 @@ const Items = ({ item }) => {
 
           {/* visit item button */}
           {item.id &&
-            (url.path === "/store/:id" ||
+            (url.path === "/category/:id" ||
               url.path === "/favorites" ||
               url.path === "/items") && (
               <Link to={`/item/${item.id}`}>

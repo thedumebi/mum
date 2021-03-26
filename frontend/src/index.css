@@ -33,6 +33,17 @@ hr {
   width: 5%;
 }
 
+.pagination {
+  text-align: center;
+  padding: 2% !important;
+  display: inline-flex !important;
+  color: #fff;
+}
+
+.pagination .page-item {
+  margin-right: 10%;
+}
+
 .loader {
   width: 100px;
   height: 100px;
@@ -60,8 +71,9 @@ hr {
 
 .sub-heading {
   font-size: 1rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.5;
+  text-transform: none;
 }
 
 .left {
@@ -244,7 +256,7 @@ body.dark-theme a {
   color: #fff;
 }
 body.dark-theme a:hover {
-  color: white;
+  color: #222;
 }
 body.dark-theme .navbar-brand {
   color: white;
@@ -346,6 +358,10 @@ body.light-theme h3 {
 body.light-theme h4 {
   color: #222;
 }
+body.light-theme .form-control {
+  color: #222;
+  background: #ccc;
+}
 body.light-theme a {
   color: #222;
 }
@@ -371,6 +387,7 @@ body.light-theme .list-group-item {
   height: 150px;
   object-fit: cover;
 }
+
 
 @media (max-width:1028px) {
   .big-heading {

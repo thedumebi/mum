@@ -84,11 +84,13 @@ export const getItemDetails = (id) => async (dispatch) => {
   }
 };
 
-export const getItems = () => async (dispatch) => {
+export const getItems = (keyword = "", pageNumber = "") => async (dispatch) => {
   try {
     dispatch({ type: ITEM_LIST_REQUEST });
 
-    const { data } = await axios.get("/api/items");
+    const { data } = await axios.get(
+      `/api/items?keyword=${keyword}&pageNumber=${pageNumber}`
+    );
 
     dispatch({ type: ITEM_LIST_SUCCESS, payload: data });
   } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import Items from "./Items";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCategory } from "../actions/category.actions";
@@ -41,8 +41,28 @@ const Categories = ({ category }) => {
       >
         <h1 className="sub-heading">{category.name}</h1>
         <small>Description: {category.description}</small>
-        {category.items &&
-          category.items.map((item) => <Items key={item.id} item={item} />)}
+        {url.path === "/category/:id" && (
+          <>
+            {" "}
+            <hr />
+            <h4 className="sub-heading">Items:</h4>
+          </>
+        )}
+        {category.items && category.items.length === 0 ? (
+          <h1 className="sub-heading">There are no items in this category</h1>
+        ) : (
+          category.items && (
+            <Row>
+              {category.items.map((item) => {
+                return (
+                  <Col lg={3} md={4} xs={6}>
+                    <Items key={item.id} item={item} />
+                  </Col>
+                );
+              })}
+            </Row>
+          )
+        )}
       </div>
 
       {category.id &&

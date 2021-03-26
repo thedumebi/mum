@@ -65,16 +65,38 @@ const App = () => {
             <Route exact path="/login" component={Login} />
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/createcategory" component={NewCategory} />
+            <Route
+              exact
+              path="/categories/search/:keyword"
+              component={CategoriesList}
+            />
+            <Route
+              exact
+              path="/categories/search/:keyword/page/:pageNumber"
+              component={CategoriesList}
+            />
+            <Route
+              exact
+              path="/categories/page/:pageNumber"
+              component={CategoriesList}
+            />
             <Route exact path="/categories" component={CategoriesList} />
             <Route exact path="/category/:id" component={Category} />
             <Route exact path="/category/:id/edit" component={CategoryEdit} />
+            <Route exact path="/items/search/:keyword" component={ItemsList} />
+            <Route
+              exact
+              path="/items/search/:keyword/page/:pageNumber"
+              component={ItemsList}
+            />
+            <Route exact path="/items/page/:pageNumber" component={ItemsList} />
+            <Route exact path="/items" component={ItemsList} />
             <Route
               exact
               path="/items/newitem?category=:id"
               component={NewItem}
             />
             <Route exact path="/items/newitem" component={NewItem} />
-            <Route exact path="/items" component={ItemsList} />
             <Route exact path="/item/:id/edit" component={ItemEdit} />
             <Route path="/item/:id" component={Item} />
             <Route exact path="/settings" component={Settings} />
