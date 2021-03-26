@@ -10,8 +10,35 @@ const Op = db.Sequelize.Op;
 // @route GET /api/items/
 // @access Public
 const getItems = asyncHandler(async (req, res) => {
-  const items = await Item.findAll({ include: ["user", "categories"] });
-  res.status(200).json(items);
+  const pageSize = 20;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword;
+  let where = {};
+  if (keyword) {
+    where = {
+      [Op.or]: [
+        {
+          name: { [Op.like]: `%${keyword}%` },
+        },
+        { description: { [Op.like]: `%${keyword}%` } },
+      ],
+    };
+  }
+
+  const items = await Item.findAndCountAll({
+    where: where,
+    include: [
+      { model: db.User, as: "user", attributes: { exclude: ["password"] } },
+      "categories",
+    ],
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+  });
+  res.status(200).json({
+    items: items.rows,
+    page,
+    pages: Math.ceil(items.count / pageSize),
+  });
 });
 
 // @desc Get an Item

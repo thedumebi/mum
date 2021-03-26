@@ -2,15 +2,38 @@ const asyncHandler = require("express-async-handler");
 const db = require("../models");
 const Category = db.Category;
 const sequelize = db.sequelize;
+const Op = db.Sequelize.Op;
 
 // @desc Get all categories
 // @route GET /api/categories/
 // @access Public
 const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.findAll({
+  const pageSize = 20;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword;
+  let where = {};
+  if (keyword) {
+    where = {
+      [Op.or]: [
+        {
+          name: { [Op.like]: `%${keyword}%` },
+        },
+        { description: { [Op.like]: `%${keyword}%` } },
+      ],
+    };
+  }
+
+  const categories = await Category.findAndCountAll({
+    where: where,
     order: [["created_at", "DESC"]],
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
   });
-  res.status(200).json(categories);
+  res.status(200).json({
+    categories: categories.rows,
+    page,
+    pages: Math.ceil(categories.count / pageSize),
+  });
 });
 
 // @desc Get a Category
