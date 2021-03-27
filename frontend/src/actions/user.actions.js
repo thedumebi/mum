@@ -14,6 +14,12 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
+  USER_REQUEST_RESET_PASSWORD,
+  USER_REQUEST_RESET_PASSWORD_SUCCESS,
+  USER_REQUEST_RESET_PASSWORD_FAIL,
+  USER_RESET_PASSWORD_REQUEST,
+  USER_RESET_PASSWORD_SUCCESS,
+  USER_RESET_PASSWORD_FAIL,
 } from "../constants/user.constants";
 
 export const login = (user) => async (dispatch) => {
@@ -150,6 +156,90 @@ export const updateUserProfile = (id, user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+const setOTP = (key, value, ttl) => {
+  const now = new Date();
+  const item = {
+    value,
+    expiry: now.getTime() + ttl,
+  };
+  localStorage.setItem(key, JSON.stringify(item));
+};
+
+export const requestPasswordReset = (email) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_REQUEST_RESET_PASSWORD,
+    });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/request-password-reset`,
+      { email },
+      config
+    );
+
+    dispatch({
+      type: USER_REQUEST_RESET_PASSWORD_SUCCESS,
+      payload: data,
+    });
+
+    setOTP("OTP", data.OTP, 300000);
+  } catch (error) {
+    dispatch({
+      type: USER_REQUEST_RESET_PASSWORD_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const resetPassword = (user) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_RESET_PASSWORD_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/reset-password`,
+      user,
+      config
+    );
+
+    dispatch({
+      type: USER_RESET_PASSWORD_SUCCESS,
+      payload: data,
+    });
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_RESET_PASSWORD_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

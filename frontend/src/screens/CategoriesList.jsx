@@ -41,7 +41,7 @@ const CategoriesList = ({ history, match }) => {
           {categories && categories.length === 0 ? (
             <h1 className="big-heading">Categories are coming soon ;)</h1>
           ) : (
-            <div>
+            <div style={{ textAlign: "center" }}>
               <Row>
                 {categories &&
                   categories.map((category) => {

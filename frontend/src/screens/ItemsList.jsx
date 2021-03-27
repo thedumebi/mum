@@ -41,7 +41,7 @@ const ItemsList = ({ history, match }) => {
           {items && items.length === 0 ? (
             <h1 className="big-heading">No Item available ☹</h1>
           ) : (
-            <div>
+            <div style={{ textAlign: "center" }}>
               <Row>
                 {items &&
                   items.map((item) => {

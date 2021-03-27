@@ -14,10 +14,12 @@ const Settings = ({ history }) => {
     lastName: "",
     username: "",
     email: "",
-    password: "",
+    oldPassword: "",
+    newPassword: "",
     confirmPassword: "",
     phoneNumber: "",
   });
+  const [allowNewPassword, setAllowNewPassword] = useState(false);
 
   const [message, setMessage] = useState(null);
 
@@ -64,6 +66,11 @@ const Settings = ({ history }) => {
     setUser((prevValue) => {
       return { ...prevValue, [name]: value };
     });
+    if (name === "oldPassword" && value === userDetail.password) {
+      setAllowNewPassword(true);
+    } else {
+      setAllowNewPassword(false);
+    }
   };
 
   const submitHandler = (event) => {
@@ -147,27 +154,42 @@ const Settings = ({ history }) => {
           </Form.Group>
 
           <Form.Group>
-            <Form.Label>Password</Form.Label>
+            <Form.Label>Old Password</Form.Label>
             <Form.Control
               type="password"
-              name="password"
-              placeholder="Enter password"
-              value={user.password}
+              name="oldPassword"
+              placeholder="Enter old password"
+              value={user.oldPassword}
               onChange={handleChange}
             ></Form.Control>
           </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm password"
-              value={user.confirmPassword}
-              onChange={handleChange}
-            ></Form.Control>
-          </Form.Group>
-          {message && <Message variant="danger">{message}</Message>}
+          {allowNewPassword && (
+            <>
+              <Form.Group>
+                <Form.Label>New Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="newPassword"
+                  placeholder="Enter new password"
+                  value={user.newPassword}
+                  onChange={handleChange}
+                ></Form.Control>
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Confirm New Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  value={user.confirmPassword}
+                  onChange={handleChange}
+                ></Form.Control>
+                {message && <Message variant="danger">{message}</Message>}
+              </Form.Group>
+            </>
+          )}
 
           <Form.Group>
             <Form.Label>Phone Number</Form.Label>

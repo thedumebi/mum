@@ -190,11 +190,17 @@ const Login = ({ location, history, match }) => {
           {url === "/login" ? "Login" : "Register"}
         </Button>
       </Form>
+      <small>
+        Forgot password?
+        <Link to="/reset-password">
+          <Button className="btn-dark btn-sm">Reset</Button>
+        </Link>
+      </small>
       {url === "/login" && (
         <p>
-          Don't have an account yet?{" "}
+          Don't have an account yet?
           <Link to="/register">
-            <Button className=" btn btn-dark">Register</Button>
+            <Button className="btn btn-dark">Register</Button>
           </Link>
         </p>
       )}

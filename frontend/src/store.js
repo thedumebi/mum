@@ -9,6 +9,8 @@ import {
   userRegisterReducer,
   userUpdateProfileReducer,
   userUpdateReducer,
+  userRequestPasswordReset,
+  userResetPassword,
 } from "./reducers/user.reducers";
 import {
   createCategoryReducer,
@@ -45,6 +47,8 @@ const reducer = combineReducers({
   userDelete: userDeleteReducer,
   userList: userListReducer,
   userUpdate: userUpdateReducer,
+  userRequestPasswordReset: userRequestPasswordReset,
+  userResetPassword: userResetPassword,
   categoryCreate: createCategoryReducer,
   categoryDetails: categoryDetailsReducer,
   categoryList: listCategoryReducer,

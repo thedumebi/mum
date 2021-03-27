@@ -57,7 +57,7 @@ hr {
 
 .btn {
   margin: 2%;
-  text-transform: none;
+  text-transform: none !important;
   font-style: italic;
 }
 
@@ -141,7 +141,7 @@ hr {
   border-radius: 10px;
   box-shadow: 0 2px 5px #ccc;
   padding: 2%;
-  margin: 16px;
+  margin: 10px;
 }
 
 .case .heading {
@@ -164,6 +164,7 @@ hr {
   margin-top: 1%;
   padding: 2%;
   height: 150px;
+  width: 100%;
   overflow-y: auto;
   background-color: rgba(0, 0, 0, 0.08);
 }
@@ -173,6 +174,7 @@ hr {
   bottom: 20px;
   float: right;
   margin-right: 10px;
+  padding: 0.5rem 1rem;
   box-shadow: 0 2px 5px #ccc;
   border: none;
   cursor: pointer;
@@ -330,6 +332,7 @@ input:checked + .slider:before {
   float: left;
   margin-right: 1.5%;
   shape-outside: margin-box;
+  color: #fff !important;
 }
 
 /* light mode */
