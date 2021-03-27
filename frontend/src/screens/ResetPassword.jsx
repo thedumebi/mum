@@ -5,13 +5,17 @@ import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { requestPasswordReset, resetPassword } from "../actions/user.actions";
-import { USER_REQUEST_RESET_PASSWORD_RESET } from "../constants/user.constants";
+import {
+  USER_REQUEST_RESET_PASSWORD_RESET,
+  USER_RESET_PASSWORD_RESET,
+} from "../constants/user.constants";
 
 const ResetPassword = ({ history }) => {
   const [email, setEmail] = useState("");
   const [userOTP, setUserOTP] = useState("");
   const [password, setPassword] = useState("");
   const [otpError, setOTPError] = useState(null);
+  const [showOTP, setShowOTP] = useState(false);
   const [showPasswordField, setShowPasswordField] = useState(false);
 
   const dispatch = useDispatch();
@@ -29,16 +33,29 @@ const ResetPassword = ({ history }) => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
+    const otpExists = getOTP("OTP");
+    if (otpExists) {
+      setShowOTP(true);
+    } else {
+      setShowOTP(false);
+    }
     if (passwordSucces) {
+      window.alert("Password changed!");
+      localStorage.removeItem("OTP");
       history.push("/profile");
     }
     if (requestSuccess) {
+      setShowOTP(true);
       setMessage(
         `Dear ${user.firstName}, please check your email for an OTP which expires in the next five(5) minutes`
       );
     } else {
+      setMessage(null);
       dispatch({ type: USER_REQUEST_RESET_PASSWORD_RESET });
     }
+    return () => {
+      dispatch({ type: USER_RESET_PASSWORD_RESET });
+    };
   }, [requestSuccess, passwordSucces, history, user, dispatch]);
 
   const submitRequest = (event) => {
@@ -64,9 +81,8 @@ const ResetPassword = ({ history }) => {
     console.log({ otp });
     if (otp !== userOTP) {
       setOTPError("Sorry, invalid OTP");
-      console.log("invalid");
     } else {
-      console.log("valid");
+      setShowOTP(false);
       setOTPError(null);
       setShowPasswordField(true);
     }
@@ -74,7 +90,14 @@ const ResetPassword = ({ history }) => {
   };
 
   const submitNewPassword = (event) => {
-    if (otpError === null) dispatch(resetPassword({ email, password }));
+    if (email === "") {
+      setMessage("please enter your email");
+    } else {
+      setMessage(null);
+    }
+    if (otpError === null && message === null) {
+      dispatch(resetPassword({ email, password }));
+    }
     event.preventDefault();
   };
 
@@ -101,7 +124,7 @@ const ResetPassword = ({ history }) => {
             />
           </Form.Group>
 
-          {requestSuccess && (
+          {showOTP && (
             <Form.Group>
               <Form.Label>OTP</Form.Label>
               <Form.Control
@@ -138,7 +161,7 @@ const ResetPassword = ({ history }) => {
             </Button>
           )}
 
-          {!showPasswordField && requestSuccess && (
+          {showOTP && (
             <Button
               type="submit"
               variant="primary"
@@ -148,12 +171,12 @@ const ResetPassword = ({ history }) => {
               Resend OTP
             </Button>
           )}
-          {!showPasswordField && requestSuccess && (
+          {!showPasswordField && showOTP && (
             <Button type="submit" variant="primary" onClick={checkOTP}>
               Submit OTP
             </Button>
           )}
-          {!requestSuccess && (
+          {!showOTP && !showPasswordField && (
             <Button type="submit" variant="primary" onClick={submitRequest}>
               Send OTP
             </Button>
