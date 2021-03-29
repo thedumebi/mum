@@ -10,11 +10,6 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         unique: true,
       },
-      uuid: {
-        type: DataTypes.UUIDV4,
-        unique: true,
-        defaultValue: DataTypes.UUIDV4,
-      },
       username: {
         type: DataTypes.STRING,
         unique: true,
