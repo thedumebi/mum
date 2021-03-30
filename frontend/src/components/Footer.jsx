@@ -3,8 +3,8 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const Footer = () => {
   return (
-    <footer>
-      <Container>
+    <footer className="colored-section">
+      <Container fluid>
         <Row>
           <Col className="text-center py-3">
             Copyright &copy; Tessy Chiwuzoh | <a href="/">FAQ</a>

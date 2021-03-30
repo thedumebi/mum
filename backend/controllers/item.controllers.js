@@ -61,7 +61,16 @@ const getItemByPk = asyncHandler(async (req, res) => {
 // @access Private
 const createItem = asyncHandler(async (req, res) => {
   console.log(req.body);
-  const { name, price, quantity, description, image, categories } = req.body;
+  const {
+    name,
+    price,
+    quantity,
+    description,
+    image1,
+    image2,
+    image3,
+    categories,
+  } = req.body;
 
   const itemCategories = await Category.findAll({
     where: {
@@ -89,7 +98,9 @@ const createItem = asyncHandler(async (req, res) => {
     price,
     quantity,
     description,
-    image,
+    image1,
+    image2,
+    image3,
   });
   if (item.price === undefined) {
     await item.update({ price: itemCategories[0].price });
@@ -128,13 +139,25 @@ const updateItem = asyncHandler(async (req, res) => {
 
   const item = await Item.findByPk(req.params.id);
   if (item) {
-    if (req.body.image && req.body.image !== item.image) {
-      try {
-        fs.unlinkSync(item.image);
-      } catch (error) {
-        console.error(error);
+    for (let i = 1; i <= 3; i++) {
+      if (
+        req.body[`image${i}`] &&
+        req.body[`image${i}`] !== item[`image${i}`]
+      ) {
+        try {
+          fs.unlinkSync(item.image);
+        } catch (error) {
+          console.error(error);
+        }
       }
     }
+    // if (req.body.image && req.body.image !== item.image) {
+    //   try {
+    //     fs.unlinkSync(item.image);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
     const { categories, ...itemUpdate } = req.body;
     await item.update(itemUpdate);
     const itemCategories = await Category.findAll({
@@ -210,6 +233,18 @@ const removeItem = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Delete Item image
+// @route POST /api/items/delete-image
+// @access Private
+const deleteImage = asyncHandler(async (req, res) => {
+  const { image } = req.body;
+  try {
+    fs.unlinkSync(image);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 module.exports = {
   getItems,
   getItemByPk,
@@ -219,4 +254,5 @@ module.exports = {
   getItemOfTheDay,
   addItem,
   removeItem,
+  deleteImage,
 };

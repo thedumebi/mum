@@ -8,6 +8,7 @@ const {
   getItemByPk,
   updateItem,
   deleteItem,
+  deleteImage,
 } = require("../controllers/item.controllers");
 const { protect, admin } = require("../middleware/auth.middleware");
 
@@ -22,5 +23,6 @@ router
   .get(getItemByPk)
   .patch(protect, updateItem)
   .delete(protect, deleteItem);
+router.post("/delete-image", protect, deleteImage);
 
 module.exports = router;

@@ -15,7 +15,9 @@ const ItemEdit = ({ history, match }) => {
     price: "",
     quantity: "",
     description: "",
-    image: "",
+    image1: "",
+    image2: "",
+    image3: "",
     categories: "",
   });
 
@@ -56,7 +58,9 @@ const ItemEdit = ({ history, match }) => {
             price: itemDetail.price,
             quantity: itemDetail.quantity,
             description: itemDetail.description,
-            image: itemDetail.image,
+            image1: itemDetail.image1,
+            image2: itemDetail.image2,
+            image3: itemDetail.image3,
             categories: itemDetail.categories.map((category) => category.id),
           };
         });

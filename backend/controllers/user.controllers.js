@@ -136,6 +136,44 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Update User
+// @route   PATCH /api/users/:id
+// @access  Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findOne({
+    where: { email },
+    attributes: { exclude: ["password"] },
+  });
+  if (user) {
+    await user.update(req.body);
+    res.status(200).json({ ...user, token: generateToken(user.id) });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+// @desc    Update User
+// @route   PATCH /api/users/:id
+// @access  Private/Admin
+const ChangePassword = asyncHandler(async (req, res) => {
+  const { old: oldPassword, new: newPassword } = req.body;
+  const user = await User.findByPk(req.params.id);
+  if (user) {
+    if (await user.validPassword(oldPassword)) {
+      await user.update({ password: newPassword });
+      const { password, ...otherKeys } = user.dataValues;
+      res.status(200).json(otherKeys);
+    } else {
+      res.status(401);
+      throw new Error("Invalid password");
+    }
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
 // @desc    Delete User
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
@@ -282,6 +320,8 @@ module.exports = {
   authUser,
   registerUser,
   getUser,
+  updateUser,
+  ChangePassword,
   deleteUser,
   requestPasswordReset,
   resetPassword,

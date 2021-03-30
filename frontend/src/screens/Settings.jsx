@@ -14,14 +14,8 @@ const Settings = ({ history }) => {
     lastName: "",
     username: "",
     email: "",
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
     phoneNumber: "",
   });
-  const [allowNewPassword, setAllowNewPassword] = useState(false);
-
-  const [message, setMessage] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -66,42 +60,24 @@ const Settings = ({ history }) => {
     setUser((prevValue) => {
       return { ...prevValue, [name]: value };
     });
-    if (name === "oldPassword" && value === userDetail.password) {
-      setAllowNewPassword(true);
-    } else {
-      setAllowNewPassword(false);
-    }
   };
 
   const submitHandler = (event) => {
-    if (user.password !== user.confirmPassword) {
-      setMessage("Passwords do not match");
+    if (user.username === userDetail.username) {
+      const { username, ...otherfields } = user;
+      dispatch(updateUserProfile(userDetail.id, otherfields));
     } else {
-      setMessage(null);
-      if (user.password === "") {
-        if (user.username === userDetail.username) {
-          const { password, confirmPassword, username, ...otherfields } = user;
-          dispatch(updateUserProfile(userDetail.id, otherfields));
-        } else {
-          const { password, confirmPassword, ...otherfields } = user;
-          dispatch(updateUserProfile(userDetail.id, otherfields));
-        }
-      } else {
-        if (user.username === userDetail.username) {
-          const { username, ...otherfields } = user;
-          dispatch(updateUserProfile(userDetail.id, otherfields));
-        } else {
-          dispatch(updateUserProfile(userDetail.id, user));
-        }
-      }
+      dispatch(updateUserProfile(userDetail.id, user));
     }
+
     event.preventDefault();
   };
+
   return (
     <div>
-      <Link className="btn btn-dark my-3" to="/">
+      <Button className="btn btn-dark my-3" onClick={() => history.goBack()}>
         Back
-      </Link>
+      </Button>
 
       <FormContainer>
         <h2>User Settings</h2>
@@ -154,44 +130,6 @@ const Settings = ({ history }) => {
           </Form.Group>
 
           <Form.Group>
-            <Form.Label>Old Password</Form.Label>
-            <Form.Control
-              type="password"
-              name="oldPassword"
-              placeholder="Enter old password"
-              value={user.oldPassword}
-              onChange={handleChange}
-            ></Form.Control>
-          </Form.Group>
-
-          {allowNewPassword && (
-            <>
-              <Form.Group>
-                <Form.Label>New Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="newPassword"
-                  placeholder="Enter new password"
-                  value={user.newPassword}
-                  onChange={handleChange}
-                ></Form.Control>
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Label>Confirm New Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                  value={user.confirmPassword}
-                  onChange={handleChange}
-                ></Form.Control>
-                {message && <Message variant="danger">{message}</Message>}
-              </Form.Group>
-            </>
-          )}
-
-          <Form.Group>
             <Form.Label>Phone Number</Form.Label>
             <Form.Control
               onChange={handleChange}
@@ -206,6 +144,9 @@ const Settings = ({ history }) => {
           </Button>
         </Form>
       </FormContainer>
+      <Link to="/change-password">
+        <Button className="btn-sm">Change Password</Button>
+      </Link>
     </div>
   );
 };

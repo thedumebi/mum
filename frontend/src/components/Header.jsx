@@ -14,22 +14,13 @@ function Header({ mode }) {
   };
 
   return (
-    <header>
-      <Navbar collapseOnSelect bg="dark" variant="dark" expand="md">
-        <Container>
-          <Navbar.Brand href="/">
-            <img
-              src="/barmer_logo.svg"
-              alt="Tessy Stores"
-              width="40"
-              height="40"
-              className="d-inline-block"
-            />
-          </Navbar.Brand>
+    <header className="colored-section">
+      <Navbar collapseOnSelect variant="dark" expand="md">
+        <Container fluid>
+          <Navbar.Brand href="/">Tessy</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="ml-auto">
-              <DarkModeButton mode={mode} />
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/categories">Categories</Nav.Link>
               <Nav.Link href="/items">Items</Nav.Link>
@@ -67,6 +58,7 @@ function Header({ mode }) {
                   <i className="fas fa-user"></i>Sign In
                 </Nav.Link>
               )}
+              <DarkModeButton mode={mode} />
             </Nav>
           </Navbar.Collapse>
         </Container>

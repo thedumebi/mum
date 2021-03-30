@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Form, Button, Col } from "react-bootstrap";
+import { Form, Button, Col, InputGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
@@ -22,6 +22,8 @@ const Login = ({ location, history, match }) => {
     input: "",
     password: "",
   });
+  const [viewPassword, setViewPassword] = useState(false);
+  const [viewConfirmPassword, setViewConfirmPassword] = useState(false);
 
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
@@ -42,24 +44,31 @@ const Login = ({ location, history, match }) => {
     const { name, value } = event.target;
     const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.])(?=.{8,})/;
     const mediumRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
-    if (name === "password") {
-      if (strongRegex.test(value)) {
-        document.getElementById("password-strength").style.backgroundColor =
-          "green";
-        document.getElementById("password-strength-text").innerText = "strong";
-      } else if (mediumRegex.test(value)) {
-        document.getElementById("password-strength").style.backgroundColor =
-          "orange";
-        document.getElementById("password-strength-text").innerText = "medium";
-      } else {
-        document.getElementById("password-strength").style.backgroundColor =
-          "red";
-        document.getElementById("password-strength-text").innerText = "weak";
-      }
-    }
+
     setRegisterUser((prevValue) => {
       return { ...prevValue, [name]: value };
     });
+
+    if (name === "password") {
+      if (registerUser.password !== "") {
+        if (strongRegex.test(value)) {
+          document.getElementById("password-strength").style.backgroundColor =
+            "green";
+          document.getElementById("password-strength-text").innerText =
+            "strong";
+        } else if (mediumRegex.test(value)) {
+          document.getElementById("password-strength").style.backgroundColor =
+            "orange";
+          document.getElementById("password-strength-text").innerText =
+            "medium";
+        } else {
+          document.getElementById("password-strength").style.backgroundColor =
+            "red";
+          document.getElementById("password-strength-text").innerText = "weak";
+        }
+      }
+    }
+
     if (name === "confirmPassword") {
       if (value !== registerUser.password) {
         setMessage("Passwords do not match");
@@ -112,34 +121,60 @@ const Login = ({ location, history, match }) => {
         </Form.Group>
         <Form.Group>
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            onChange={url === "/login" ? handleLogin : handleRegister}
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={
-              url === "/login" ? loginUser.password : registerUser.password
-            }
-          />
+          <InputGroup>
+            <Form.Control
+              onChange={url === "/login" ? handleLogin : handleRegister}
+              name="password"
+              type={viewPassword ? "text" : "password"}
+              placeholder="Password"
+              value={
+                url === "/login" ? loginUser.password : registerUser.password
+              }
+            />
+            <InputGroup.Append>
+              <InputGroup.Text onClick={() => setViewPassword(!viewPassword)}>
+                {viewPassword ? (
+                  <i className="fas fa-eye-slash"></i>
+                ) : (
+                  <i className="fas fa-eye"></i>
+                )}
+              </InputGroup.Text>
+            </InputGroup.Append>
+          </InputGroup>
         </Form.Group>
 
         {url === "/register" && (
           <div>
-            <Form.Group>
-              <Form.Text>Password strength</Form.Text>
-              <Form.Control id="password-strength" readOnly />
-              <Form.Text id="password-strength-text"></Form.Text>
-            </Form.Group>
+            {registerUser.password !== "" && (
+              <Form.Group>
+                <Form.Text>Password strength</Form.Text>
+                <Form.Control id="password-strength" readOnly />
+                <Form.Text id="password-strength-text"></Form.Text>
+              </Form.Group>
+            )}
 
             <Form.Group>
               <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm password"
-                value={registerUser.confirmPassword}
-                onChange={handleRegister}
-              />
+              <InputGroup>
+                <Form.Control
+                  type={viewConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  value={registerUser.confirmPassword}
+                  onChange={handleRegister}
+                />
+                <InputGroup.Append>
+                  <InputGroup.Text
+                    onClick={() => setViewConfirmPassword(!viewConfirmPassword)}
+                  >
+                    {viewConfirmPassword ? (
+                      <i className="fas fa-eye-slash"></i>
+                    ) : (
+                      <i className="fas fa-eye"></i>
+                    )}
+                  </InputGroup.Text>
+                </InputGroup.Append>
+              </InputGroup>
               {message && <Message variant="danger">{message}</Message>}
             </Form.Group>
             <Form.Row>

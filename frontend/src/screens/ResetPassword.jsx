@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
@@ -17,6 +17,7 @@ const ResetPassword = ({ history }) => {
   const [otpError, setOTPError] = useState(null);
   const [showOTP, setShowOTP] = useState(false);
   const [showPasswordField, setShowPasswordField] = useState(false);
+  const [viewPassword, setViewPassword] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -142,13 +143,26 @@ const ResetPassword = ({ history }) => {
             <Form.Group>
               {passwordLoading && <Loader />}
               <Form.Label>New Password</Form.Label>
-              <Form.Control
-                type="text"
-                name="password"
-                value={password}
-                placeholder="Enter your new password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <InputGroup>
+                <Form.Control
+                  type={viewPassword ? "text" : "password"}
+                  name="password"
+                  value={password}
+                  placeholder="Enter your new password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <InputGroup.Append>
+                  <InputGroup.Text
+                    onClick={() => setViewPassword(!viewPassword)}
+                  >
+                    {viewPassword ? (
+                      <i className="fas fa-eye-slash"></i>
+                    ) : (
+                      <i className="fas fa-eye"></i>
+                    )}
+                  </InputGroup.Text>
+                </InputGroup.Append>
+              </InputGroup>
               {passwordError && (
                 <Message variant="danger">{passwordError}</Message>
               )}

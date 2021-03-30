@@ -59,17 +59,7 @@ export const listCarousels = () => async (dispatch, getState) => {
       type: CAROUSEL_LIST_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.get("/api/carousel", config);
+    const { data } = await axios.get("/api/carousel");
 
     dispatch({
       type: CAROUSEL_LIST_SUCCESS,

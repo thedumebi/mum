@@ -25,10 +25,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      image: {
+      image1: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: "backend\\uploads\\image-1616658260503.JPG",
+      },
+      image2: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      image3: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       createdAt: {
         type: "TIMESTAMP",

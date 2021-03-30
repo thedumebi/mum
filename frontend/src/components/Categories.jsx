@@ -83,7 +83,9 @@ const Categories = ({ category }) => {
         )}
 
       {category.id &&
-        (url.path === "/category/:id" || url.path === "/profile") && (
+        (url.path === "/category/:id" || url.path === "/profile") &&
+        userInfo &&
+        userInfo.role === "admin" && (
           <Link
             to={
               url.path === "/profile"

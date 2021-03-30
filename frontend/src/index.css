@@ -7,10 +7,32 @@
 
 body {
   font-family: "Montserrat", sans-serif !important;
+  line-height: 2;
 }
 
 main {
   min-height: 75vh;
+}
+
+.container-fluid {
+  padding: 5% 10% !important;
+}
+
+.colored-section {
+  background-color: #4f5c4f;
+  color: #fff;
+}
+
+.navbar {
+  font-size: 0.9rem !important;
+  padding: 0 0 4rem !important;
+  text-align: left;
+  text-transform: none !important;
+}
+
+.nav-link {
+  padding: 0 1rem !important;
+  margin: 0% !important;
 }
 
 footer {
@@ -59,6 +81,27 @@ hr {
   margin: 2%;
   text-transform: none !important;
   font-style: italic;
+  border: none !important;
+  border-radius: 10px !important;
+}
+
+.delete-div {
+  position: relative
+}
+
+.delete-icon {
+  width: 60px;
+  height: 40px;
+  background-color: #222;
+  color: white;
+  z-index: 10;
+  position: absolute;
+  bottom: 40%;
+  left: 45%;
+  padding: 10px;
+  text-align: center;
+  margin: auto;
+  box-shadow: 0 2px 5px #222;
 }
 
 .big-heading {
@@ -240,6 +283,9 @@ body.dark-theme .alert {
   color: black;
   font-weight: 400;
 }
+body.dark-theme .delete-icon {
+  background-color: #222;
+}
 body.dark-theme .carousel-control-next {
   filter: invert(0%);
 }
@@ -260,9 +306,14 @@ body.dark-theme a {
 body.dark-theme a:hover {
   color: #222;
 }
-body.dark-theme .navbar-brand {
-  color: white;
+body.dark-theme .colored-section {
+  background-color: #222;
+  color: #fff;
 }
+body.dark-theme .btn {
+  background-color: #222;
+}
+
 /* Dark mode button */
 .dark-btn {
   top: 12%;
@@ -274,8 +325,8 @@ body.dark-theme .navbar-brand {
   position: relative;
   display: inline-block;
   align-items: center;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 28px;
 }
 .switch input {
   /*hide default html checkbox*/
@@ -298,8 +349,8 @@ body.dark-theme .navbar-brand {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 20px;
+  width: 20px;
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -316,9 +367,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
 }
 
 .slider.round {
@@ -337,7 +388,7 @@ input:checked + .slider:before {
 
 /* light mode */
 body.light-theme {
-  color: #222;
+  color: #4f5c4f;
   background: #fff;
 }
 body.light-theme .carousel-control-next {
@@ -347,29 +398,30 @@ body.light-theme .carousel-control-prev {
   filter: invert(100%);
 }
 body.light-theme h1 {
-  color: #222;
+  color: #4f5c4f;
 }
 body.light-theme small {
   color: #111;
 }
 body.light-theme h2 {
-  color: #222;
+  color: #4f5c4f;
 }
 body.light-theme h3 {
-  color: #222;
+  color: #4f5c4f;
 }
 body.light-theme h4 {
-  color: #222;
+  color: #4f5c4f;
 }
 body.light-theme .form-control {
-  color: #222;
+  color: #4f5c4f;
   background: #ccc;
 }
 body.light-theme a {
-  color: #222;
+  color: #4f5c4f;
 }
 body.light-theme .btn {
   color: #fff;
+  background-color: #4f5c4f;
 }
 body.light-theme .case {
   box-shadow: 0 2px 5px #ccc;
@@ -391,8 +443,7 @@ body.light-theme .list-group-item {
   object-fit: cover;
 }
 
-
-@media (max-width:1028px) {
+@media (max-width: 1028px) {
   .big-heading {
     font-family: "Montserrat";
     font-weight: 700;
@@ -407,6 +458,11 @@ body.light-theme .list-group-item {
     border: none;
     cursor: pointer;
     outline: none;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0 !important;
+    margin: 0% !important;
   }
 
   footer {

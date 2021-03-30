@@ -17,6 +17,7 @@ import ItemEdit from "./screens/ItemEditScreen";
 import Item from "./screens/ItemSingle";
 import Settings from "./screens/Settings";
 import ResetPassword from "./screens/ResetPassword";
+import { ChangePassword } from "./screens/ChangePasswordScreen";
 
 const App = () => {
   const getCookie = (name) => {
@@ -58,8 +59,8 @@ const App = () => {
   return (
     <Router>
       <Header mode={theme} />
-      <main className="py-3">
-        <Container>
+      <main>
+        <Container fluid>
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/register" component={Login} />
@@ -102,6 +103,7 @@ const App = () => {
             <Route path="/item/:id" component={Item} />
             <Route exact path="/reset-password" component={ResetPassword} />
             <Route exact path="/settings" component={Settings} />
+            <Route exact path="/change-password" component={ChangePassword} />
             <Route component={NotFound} />
           </Switch>
         </Container>
