@@ -96,18 +96,29 @@ const NewItem = ({ history, location }) => {
 
       const { data } = await axios.post("/api/upload", formData, config);
 
-      setItem((prevValue) => {
-        return { ...prevValue, [name]: data };
-      });
-      if (name === "image1") {
-        setUploadError({ ...uploadError, one: null });
-      } else if (name === "image2") {
-        setUploadError({ ...uploadError, two: null });
-      } else if (name === "image3") {
-        setUploadError({ ...uploadError, three: null });
+      if (data !== "Please select images only!!!") {
+        setItem((prevValue) => {
+          return { ...prevValue, [name]: data };
+        });
+        if (name === "image1") {
+          setUploadError({ ...uploadError, one: null });
+        } else if (name === "image2") {
+          setUploadError({ ...uploadError, two: null });
+        } else if (name === "image3") {
+          setUploadError({ ...uploadError, three: null });
+        }
+      } else {
+        if (name === "image1") {
+          setUploadError({ ...uploadError, one: data });
+        } else if (name === "image2") {
+          setUploadError({ ...uploadError, two: data });
+        } else if (name === "image3") {
+          setUploadError({ ...uploadError, three: data });
+        }
       }
     } catch (error) {
       if (name === "image1") {
+        console.log({ error });
         setUploadError({ ...uploadError, one: error.message });
       } else if (name === "image2") {
         setUploadError({ ...uploadError, two: error.message });
@@ -118,6 +129,14 @@ const NewItem = ({ history, location }) => {
   };
 
   const submitHandler = (event) => {
+    for (let i = 1; i <= Object.keys(uploadError).length; i++) {
+      if (
+        uploadError[Object.keys(uploadError)[i]] ===
+        "Please select images only!!!"
+      ) {
+        uploadError[Object.keys(uploadError)[i]] = null;
+      }
+    }
     if (item.name === "") {
       setNameError("This field is required");
     } else if (

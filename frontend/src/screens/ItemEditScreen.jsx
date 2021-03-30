@@ -37,7 +37,11 @@ const ItemEdit = ({ history, match }) => {
   const itemUpdate = useSelector((state) => state.itemUpdate);
   const { success, error: updateError } = itemUpdate;
 
-  const [uploadError, setUploadError] = useState(null);
+  const [uploadError, setUploadError] = useState({
+    one: null,
+    two: null,
+    three: null,
+  });
 
   useEffect(() => {
     if (!userInfo) {
@@ -114,18 +118,52 @@ const ItemEdit = ({ history, match }) => {
       };
 
       const { data } = await axios.post("/api/upload", formData, config);
-
-      setItem((prevValue) => {
-        return { ...prevValue, [name]: data };
-      });
-      setUploadError(null);
+      if (data !== "Please select images only!!!") {
+        setItem((prevValue) => {
+          return { ...prevValue, [name]: data };
+        });
+        if (name === "image1") {
+          setUploadError({ ...uploadError, one: null });
+        } else if (name === "image2") {
+          setUploadError({ ...uploadError, two: null });
+        } else if (name === "image3") {
+          setUploadError({ ...uploadError, three: null });
+        }
+      } else {
+        if (name === "image1") {
+          setUploadError({ ...uploadError, one: data });
+        } else if (name === "image2") {
+          setUploadError({ ...uploadError, two: data });
+        } else if (name === "image3") {
+          setUploadError({ ...uploadError, three: data });
+        }
+      }
     } catch (error) {
-      setUploadError(error.message);
+      if (name === "image1") {
+        console.log({ error });
+        setUploadError({ ...uploadError, one: error.message });
+      } else if (name === "image2") {
+        setUploadError({ ...uploadError, two: error.message });
+      } else if (name === "image3") {
+        setUploadError({ ...uploadError, three: error.message });
+      }
     }
   };
 
   const submitHandler = (event) => {
-    if (uploadError === null) {
+    for (let i = 1; i <= Object.keys(uploadError).length; i++) {
+      if (
+        uploadError[Object.keys(uploadError)[i]] ===
+        "Please select images only!!!"
+      ) {
+        uploadError[Object.keys(uploadError)[i]] = null;
+      }
+    }
+    if (
+      uploadError.one === null &&
+      uploadError.two === null &&
+      uploadError.three === null
+    ) {
       if (itemDetail.name === item.name) {
         const { name, ...otherfields } = item;
         dispatch(updateItem(itemDetail.id, otherfields));
@@ -134,6 +172,32 @@ const ItemEdit = ({ history, match }) => {
       }
     }
     event.preventDefault();
+  };
+
+  const deleteImage = (name) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const image = item[name];
+
+      axios.post("/api/items/delete-image", { image }, config);
+    } catch (error) {
+      console.log(error.message);
+    }
+    setItem({ ...item, [name]: undefined });
+  };
+
+  const deleteIcon = ({ name }) => {
+    return (
+      <div className="delete-icon" onClick={() => deleteImage(name)}>
+        <i className="fas fa-trash fa-lg"></i>
+      </div>
+    );
   };
 
   return (
@@ -274,14 +338,83 @@ const ItemEdit = ({ history, match }) => {
 
           <Form.Group>
             <Form.Label>Item Image</Form.Label>
-            <Form.Control as={Image} src={`/${item.image}`} alt={item.name} />
+            {item.image1 && (
+              <div className="delete-div">
+                <Form.Control
+                  as={Image}
+                  src={`/${item.image1}`}
+                  alt={item.image1}
+                />
+                <Form.Control
+                  as={deleteIcon}
+                  className="delete-icon"
+                  name="image1"
+                />
+              </div>
+            )}
             <Form.File
-              name="image"
+              name="image1"
               label="Choose Image"
               custom
               onChange={uploadFileHandler}
             />
-            {uploadError && <Message variant="danger">{uploadError}</Message>}
+            {uploadError.one && (
+              <Message variant="danger">{uploadError.one}</Message>
+            )}
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Second Image</Form.Label>
+            {item.image2 && (
+              <div className="delete-div">
+                <Form.Control
+                  as={Image}
+                  src={`/${item.image2}`}
+                  alt={item.image2}
+                />
+                <Form.Control
+                  as={deleteIcon}
+                  className="delete-icon"
+                  name="image2"
+                />
+              </div>
+            )}
+            <Form.File
+              name="image2"
+              label="Choose Image"
+              custom
+              onChange={uploadFileHandler}
+            />
+            {uploadError.two && (
+              <Message variant="danger">{uploadError.two}</Message>
+            )}
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Third Image</Form.Label>
+            {item.image3 && (
+              <div className="delete-div">
+                <Form.Control
+                  as={Image}
+                  src={`/${item.image3}`}
+                  alt={item.image3}
+                />
+                <Form.Control
+                  as={deleteIcon}
+                  className="delete-icon"
+                  name="image3"
+                />
+              </div>
+            )}
+            <Form.File
+              name="image3"
+              label="Choose Image"
+              custom
+              onChange={uploadFileHandler}
+            />
+            {uploadError.three && (
+              <Message variant="danger">{uploadError.three}</Message>
+            )}
           </Form.Group>
 
           <Button type="submit" variant="primary" onClick={submitHandler}>

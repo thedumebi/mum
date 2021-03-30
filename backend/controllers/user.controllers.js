@@ -249,49 +249,53 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   if (user) {
     const OTP = await generateOTP(4, { upperCase: true });
     console.log({ OTP });
-    // const transporter = nodemailer.createTransport({
-    //   host: process.env.HOST,
-    //   port: 465,
-    //   secure: true,
-    //   auth: {
-    //     user: process.env.EMAIL,
-    //     pass: process.env.EMAIL_PASSWORD,
-    //   },
-    // });
-    // transporter.verify((err, success) => {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log("success");
-    //   }
-    // });
-    // const mailOptions = {
-    //   from: process.env.EMAIL,
-    //   to: user.email,
-    //   subject: "Reset Password",
-    //   html: `<h1>Reset Password</h1>
-    //   <p>Hello ${user.firstName},</p>
-    //   <p>Your one time password is <strong>${OTP}</strong>. This expires in the next five (5) minutes</p>
-    //   <p>Cheers,</p>
-    //   <p>Tessy.</p>`,
-    // };
-    // const info = await transporter.sendMail(mailOptions);
-
-    // if (info) res.status(200).json({ user, OTP });
-
-    const client = new postmark.ServerClient(process.env.POSTMARK);
-    const info = await client.sendEmail({
-      From: process.env.EMAIL,
-      To: user.email,
-      Subject: "Reset Password",
-      HtmlBody: `<h1>Reset Password</h1>
+    const transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+      port: 465,
+      secure: true,
+      secureConnection: false,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+      tls: {
+        rejectUnauthorized: true,
+      },
+    });
+    transporter.verify((err, success) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("success");
+      }
+    });
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: "chiwuzohdumebi@gmail.com",
+      subject: "Reset Password",
+      html: `<h1>Reset Password</h1>
       <p>Hello ${user.firstName},</p>
       <p>Your one time password is <strong>${OTP}</strong>. This expires in the next five (5) minutes</p>
       <p>Cheers,</p>
       <p>Tessy.</p>`,
-      MessageStream: "outbound",
-    });
+    };
+    const info = await transporter.sendMail(mailOptions);
+
     if (info) res.status(200).json({ user, OTP });
+
+    // const client = new postmark.ServerClient(process.env.POSTMARK);
+    // const info = await client.sendEmail({
+    //   From: process.env.EMAIL,
+    //   To: user.email,
+    //   Subject: "Reset Password",
+    //   HtmlBody: `<h1>Reset Password</h1>
+    //   <p>Hello ${user.firstName},</p>
+    //   <p>Your one time password is <strong>${OTP}</strong>. This expires in the next five (5) minutes</p>
+    //   <p>Cheers,</p>
+    //   <p>Tessy.</p>`,
+    //   MessageStream: "outbound",
+    // });
+    // if (info) res.status(200).json({ user, OTP });
   } else {
     res.status(404);
     throw new Error("User not found");
