@@ -5,7 +5,6 @@ const User = db.User;
 const sequelize = db.sequelize;
 const Op = db.Sequelize.Op;
 const nodemailer = require("nodemailer");
-const postmark = require("postmark");
 
 // @desc Auth user & get token
 // @route POST /api/users/signin
@@ -117,6 +116,35 @@ const registerUser = asyncHandler(async (req, res) => {
       throw new Error("Invalid user data");
     }
   }
+});
+
+// @desc Get Users
+// @route GET /api/users/
+// @access Private
+const getUsers = asyncHandler(async (req, res) => {
+  const pageSize = 20;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword;
+  let where = {};
+  if (keyword) {
+    where = {
+      [Op.or]: [
+        { fullName: { [Op.like]: `%${keyword}%` } },
+        { email: { [Op.like]: `%${keyword}%` } },
+      ],
+    };
+  }
+
+  const users = await User.findAndCountAll({
+    where: where,
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+  });
+  res.status(200).json({
+    users: users.rows,
+    page,
+    pages: Math.ceil(users.count / pageSize),
+  });
 });
 
 // @desc Get a User
@@ -252,21 +280,20 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
       port: 587,
-      secure: true,
-      secureConnection: false,
+      requireTLS: true,
+      tls: {
+        rejectUnauthorized: false,
+      },
       auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD,
       },
-      tls: {
-        rejectUnauthorized: true,
-      },
     });
     transporter.verify((err, success) => {
       if (err) {
-        console.log(err);
+        console.log({ err });
       } else {
-        console.log("success");
+        console.log({ success });
       }
     });
     const mailOptions = {
@@ -282,20 +309,6 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     const info = await transporter.sendMail(mailOptions);
 
     if (info) res.status(200).json({ user, OTP });
-
-    // const client = new postmark.ServerClient(process.env.POSTMARK);
-    // const info = await client.sendEmail({
-    //   From: process.env.EMAIL,
-    //   To: user.email,
-    //   Subject: "Reset Password",
-    //   HtmlBody: `<h1>Reset Password</h1>
-    //   <p>Hello ${user.firstName},</p>
-    //   <p>Your one time password is <strong>${OTP}</strong>. This expires in the next five (5) minutes</p>
-    //   <p>Cheers,</p>
-    //   <p>Tessy.</p>`,
-    //   MessageStream: "outbound",
-    // });
-    // if (info) res.status(200).json({ user, OTP });
   } else {
     res.status(404);
     throw new Error("User not found");
@@ -323,6 +336,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 module.exports = {
   authUser,
   registerUser,
+  getUsers,
   getUser,
   updateUser,
   ChangePassword,

@@ -16,13 +16,19 @@ const CarouselListScreen = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const carouselDelete = useSelector((state) => state.carouselDelete);
+  const { success: successDelete } = carouselDelete;
+
   useEffect(() => {
     if (userInfo && userInfo.role === "admin") {
       dispatch(listCarousels());
+      if (successDelete) {
+        history.push("/admin/carousels");
+      }
     } else {
-      history.push("/login");
+      history.push("/profile");
     }
-  }, [dispatch, userInfo, history]);
+  }, [dispatch, userInfo, successDelete, history]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {

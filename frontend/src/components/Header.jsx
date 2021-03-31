@@ -41,10 +41,10 @@ function Header({ mode }) {
                   <NavDropdown.Divider />
                   {userInfo.role === "admin" && (
                     <>
-                      <NavDropdown.Item href="/admin/userlist">
+                      <NavDropdown.Item href="/admin/users">
                         Users
                       </NavDropdown.Item>
-                      <NavDropdown.Item href="/admin/dispatchlist">
+                      <NavDropdown.Item href="/admin/dispatch">
                         Dispatch
                       </NavDropdown.Item>
                       <NavDropdown.Item href="/admin/carousels">

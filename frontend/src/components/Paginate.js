@@ -19,6 +19,10 @@ const Paginate = ({ pages, page, isAdmin = false, keyword = "", url }) => {
                   ? keyword
                     ? `/items/search/${keyword}/page/${x + 1}`
                     : `/items/page/${x + 1}`
+                  : url.path.includes("/admin/users")
+                  ? keyword
+                    ? `/admin/users/search/${keyword}/page/${x + 1}`
+                    : `/admin/users/page/${x + 1}`
                   : `/page/${x + 1}`
                 : `/admin/items/${x + 1}`
             }

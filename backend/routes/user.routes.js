@@ -8,12 +8,13 @@ const {
   requestPasswordReset,
   resetPassword,
   ChangePassword,
+  getUsers,
 } = require("../controllers/user.controllers");
-const { protect } = require("../middleware/auth.middleware");
+const { protect, admin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-router.post("/", registerUser);
+router.route("/").get(protect, admin, getUsers).post(registerUser);
 router.post("/login", authUser);
 router
   .route("/:id")

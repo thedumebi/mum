@@ -14,12 +14,18 @@ const SearchBox = ({ history, url }) => {
       history.push(
         url.path.includes("/category") && `/items/search/${keyword}`
       );
+      history.push(
+        url.path.includes("/admin/users") && `/admin/users/search/${keyword}`
+      );
     } else {
       history.push(url.path.includes("/categories") && `/categories`);
       history.push(url.path.includes("/items") && `/items`);
-
+      history.push(url.path.includes("/admin/users") && `/admin/users`);
       history.push(
-        !url.path.includes("/categories") && !url.path.includes("/items") && "/"
+        !url.path.includes("/categories") &&
+          !url.path.includes("/items") &&
+          !url.path.includes("/admin/users") &&
+          "/"
       );
     }
   };
@@ -32,6 +38,8 @@ const SearchBox = ({ history, url }) => {
         placeholder={
           url.path === "/categories"
             ? "Search categories ..."
+            : url.path === "/admin/users"
+            ? "Search users ..."
             : "Search items ..."
         }
       ></Form.Control>

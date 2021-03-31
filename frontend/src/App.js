@@ -21,6 +21,7 @@ import ChangePassword from "./screens/ChangePasswordScreen";
 import CarouselListScreen from "./screens/CarouselListScreen";
 import AddCarouselScrren from "./screens/AddCarouselScreen";
 import CarouselEditScreen from "./screens/CarouselEditScreen";
+import UserListScreen from "./screens/UserListScreen";
 
 const App = () => {
   const getCookie = (name) => {
@@ -122,6 +123,22 @@ const App = () => {
               path="/admin/carousels/:id/edit"
               component={CarouselEditScreen}
             />
+            <Route
+              exact
+              path="/admin/users/search/:keyword"
+              component={UserListScreen}
+            />
+            <Route
+              exact
+              path="/admin/users/search/:keyword/page/:pageNumber"
+              component={UserListScreen}
+            />
+            <Route
+              exact
+              path="/admin/users/page/:pageNumber"
+              component={UserListScreen}
+            />
+            <Route exact path="/admin/users" component={UserListScreen} />
             <Route component={NotFound} />
           </Switch>
         </Container>
