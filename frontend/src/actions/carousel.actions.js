@@ -94,11 +94,9 @@ export const deleteCarousel = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios
-      .delete(`/api/carousel/${id}`, config)
-      .then(() => dispatch(listCarousels()));
+    const { data } = await axios.delete(`/api/carousel/${id}`, config);
 
-    dispatch({ type: ADMIN_DELETE_CAROUSEL_SUCCESS });
+    dispatch({ type: ADMIN_DELETE_CAROUSEL_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
       type: ADMIN_DELETE_CAROUSEL_FAIL,
@@ -143,7 +141,7 @@ export const getCarouselDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateCarousel = (carousel) => async (dispatch, getState) => {
+export const updateCarousel = (id, carousel) => async (dispatch, getState) => {
   try {
     dispatch({
       type: ADMIN_UPDATE_CAROUSEL_REQUEST,
@@ -160,7 +158,7 @@ export const updateCarousel = (carousel) => async (dispatch, getState) => {
       },
     };
 
-    await axios.patch(`/api/carousel/${carousel._id}`, carousel, config);
+    await axios.patch(`/api/carousel/${id}`, carousel, config);
 
     dispatch({ type: ADMIN_UPDATE_CAROUSEL_SUCCESS });
   } catch (error) {

@@ -70,7 +70,7 @@ const reducer = combineReducers({
   carouselList: carouselListReducer,
   carouselDelete: carouselDeleteReducer,
   carouselDetails: carouselDetailsReducer,
-  carouselUpate: carouselUpdateReducer,
+  carouselUpdate: carouselUpdateReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

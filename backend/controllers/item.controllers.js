@@ -151,13 +151,6 @@ const updateItem = asyncHandler(async (req, res) => {
         }
       }
     }
-    // if (req.body.image && req.body.image !== item.image) {
-    //   try {
-    //     fs.unlinkSync(item.image);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
     const { categories, ...itemUpdate } = req.body;
     await item.update(itemUpdate);
     const itemCategories = await Category.findAll({

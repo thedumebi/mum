@@ -48,8 +48,10 @@ router.post(
   asyncHandler(async (req, res) => {
     upload(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
-        return res.end(err.toString());
+        // file size error
+        return res.end("The maximum file size is 8mb");
       } else if (err) {
+        // file type error
         return res.end(err.toString());
       } else {
         res.send(`${req.file.path}`);

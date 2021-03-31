@@ -17,7 +17,10 @@ import ItemEdit from "./screens/ItemEditScreen";
 import Item from "./screens/ItemSingle";
 import Settings from "./screens/Settings";
 import ResetPassword from "./screens/ResetPassword";
-import { ChangePassword } from "./screens/ChangePasswordScreen";
+import ChangePassword from "./screens/ChangePasswordScreen";
+import CarouselListScreen from "./screens/CarouselListScreen";
+import AddCarouselScrren from "./screens/AddCarouselScreen";
+import CarouselEditScreen from "./screens/CarouselEditScreen";
 
 const App = () => {
   const getCookie = (name) => {
@@ -104,6 +107,21 @@ const App = () => {
             <Route exact path="/reset-password" component={ResetPassword} />
             <Route exact path="/settings" component={Settings} />
             <Route exact path="/change-password" component={ChangePassword} />
+            <Route
+              exact
+              path="/admin/carousels"
+              component={CarouselListScreen}
+            />
+            <Route
+              exact
+              path="/admin/carousels/add"
+              component={AddCarouselScrren}
+            />
+            <Route
+              exact
+              path="/admin/carousels/:id/edit"
+              component={CarouselEditScreen}
+            />
             <Route component={NotFound} />
           </Switch>
         </Container>

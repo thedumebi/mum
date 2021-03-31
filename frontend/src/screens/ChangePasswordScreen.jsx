@@ -8,7 +8,7 @@ import { changePassword, getUserDetails } from "../actions/user.actions";
 import { Link } from "react-router-dom";
 import { USER_CHANGE_PASSWORD_RESET } from "../constants/user.constants";
 
-export const ChangePassword = ({ history }) => {
+const ChangePassword = ({ history }) => {
   const [password, setPassword] = useState({
     old: "",
     new: "",
@@ -208,3 +208,5 @@ export const ChangePassword = ({ history }) => {
     </div>
   );
 };
+
+export default ChangePassword;

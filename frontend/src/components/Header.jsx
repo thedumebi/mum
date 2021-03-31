@@ -39,7 +39,7 @@ function Header({ mode }) {
                     Logout
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  {userInfo.isAdmin && (
+                  {userInfo.role === "admin" && (
                     <>
                       <NavDropdown.Item href="/admin/userlist">
                         Users

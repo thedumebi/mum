@@ -9,7 +9,7 @@ import { CREATE_ITEM_RESET } from "../constants/item.constants";
 import axios from "axios";
 import { getCategories } from "../actions/category.actions";
 
-const NewItem = ({ history, location }) => {
+const NewItem = ({ history }) => {
   const [item, setItem] = useState({
     name: "",
     categories: [],
@@ -40,13 +40,13 @@ const NewItem = ({ history, location }) => {
       dispatch(getCategories());
       dispatch({ type: CREATE_ITEM_RESET });
       if (status) {
-        history.push(`/categories`);
+        history.push(`/items`);
       }
       if (userInfo.role !== "admin") {
         history.push("/profile");
       }
     }
-  }, [history, dispatch, status, userInfo, location]);
+  }, [history, dispatch, status, userInfo]);
 
   const addToCategoryArray = (event) => {
     const { name, value } = event.target;
@@ -96,7 +96,10 @@ const NewItem = ({ history, location }) => {
 
       const { data } = await axios.post("/api/upload", formData, config);
 
-      if (data !== "Please select images only!!!") {
+      if (
+        !data.includes("Please select images only!!!") &&
+        !data.includes("The maximum file size")
+      ) {
         setItem((prevValue) => {
           return { ...prevValue, [name]: data };
         });
@@ -132,7 +135,8 @@ const NewItem = ({ history, location }) => {
     for (let i = 1; i <= Object.keys(uploadError).length; i++) {
       if (
         uploadError[Object.keys(uploadError)[i]] ===
-        "Please select images only!!!"
+          "Please select images only!!!" ||
+        "The maximum file size"
       ) {
         uploadError[Object.keys(uploadError)[i]] = null;
       }

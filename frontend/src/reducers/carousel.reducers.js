@@ -21,7 +21,7 @@ export const createCarouselReducer = (state = { carousel: {} }, action) => {
     case ADMIN_CREATE_CAROUSEL_REQUEST:
       return { ...state, loading: true };
     case ADMIN_CREATE_CAROUSEL_SUCCESS:
-      return { loading: false, carousel: action.payload };
+      return { loading: false, carousel: action.payload, success: true };
     case ADMIN_CREATE_CAROUSEL_FAIL:
       return { loading: false, error: action.payload };
     default:
@@ -47,7 +47,7 @@ export const carouselDeleteReducer = (state = {}, action) => {
     case ADMIN_DELETE_CAROUSEL_REQUEST:
       return { loading: true };
     case ADMIN_DELETE_CAROUSEL_SUCCESS:
-      return { loading: false, success: true };
+      return { loading: false, success: true, message: action.payload.message };
     case ADMIN_DELETE_CAROUSEL_FAIL:
       return { loading: false, error: action.payload };
     default:
@@ -55,7 +55,7 @@ export const carouselDeleteReducer = (state = {}, action) => {
   }
 };
 
-export const carouselDetailsReducer = (state = { carousel: {} }, action) => {
+export const carouselDetailsReducer = (state = {}, action) => {
   switch (action.type) {
     case ADMIN_CAROUSEL_DETAILS_REQUEST:
       return { ...state, loading: true };

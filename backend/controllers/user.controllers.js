@@ -251,7 +251,7 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     console.log({ OTP });
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-      port: 465,
+      port: 587,
       secure: true,
       secureConnection: false,
       auth: {

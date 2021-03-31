@@ -118,7 +118,10 @@ const ItemEdit = ({ history, match }) => {
       };
 
       const { data } = await axios.post("/api/upload", formData, config);
-      if (data !== "Please select images only!!!") {
+      if (
+        !data.includes("Please select images only!!!") &&
+        !data.includes("The maximum file size")
+      ) {
         setItem((prevValue) => {
           return { ...prevValue, [name]: data };
         });
@@ -154,7 +157,8 @@ const ItemEdit = ({ history, match }) => {
     for (let i = 1; i <= Object.keys(uploadError).length; i++) {
       if (
         uploadError[Object.keys(uploadError)[i]] ===
-        "Please select images only!!!"
+          "Please select images only!!!" ||
+        "The maximum file size"
       ) {
         uploadError[Object.keys(uploadError)[i]] = null;
       }

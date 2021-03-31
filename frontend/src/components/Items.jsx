@@ -6,7 +6,7 @@ import {
   useRouteMatch,
   useLocation,
 } from "react-router-dom";
-import { Button, Image } from "react-bootstrap";
+import { Button, Carousel, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteItem,
@@ -30,6 +30,13 @@ const Items = ({ item }) => {
 
   const itemDelete = useSelector((state) => state.itemDelete);
   const { success, error } = itemDelete;
+
+  const images = [];
+  for (var i = 1; i <= 3; i++) {
+    if (item[`image${i}`] !== null || "" || undefined) {
+      images.push(item[`image${i}`]);
+    }
+  }
 
   const dispatch = useDispatch();
 
@@ -107,17 +114,40 @@ const Items = ({ item }) => {
               Tap the image tile to view the full item image
             </Message>
           )}
-          {item.image && (
+          {(item.image1 !== null ||
+            "" ||
+            undefined ||
+            item.image2 !== null ||
+            "" ||
+            undefined ||
+            item.image3 !== null ||
+            "" ||
+            undefined) && (
             <div className="heading">
               {url.path === "/item/:id" ? (
-                <Image
-                  src={`/${item.image}`}
-                  alt={item.name}
-                  onClick={() => overlayHandler(`/${item.image}`)}
-                />
+                <Carousel interval={3000}>
+                  {images.map((image, index) => (
+                    <Carousel.Item key={index}>
+                      <Image
+                        src={`/${image}`}
+                        alt={item.name}
+                        onClick={() => overlayHandler(`/${image}`)}
+                      />
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
               ) : (
                 <Link to={`/item/${item.id}`}>
-                  <Image src={`/${item.image}`} alt={item.name} />
+                  <Image
+                    src={
+                      item.image1 !== null || "" || undefined
+                        ? `/${item.image1}`
+                        : item.image2 !== null || "" || undefined
+                        ? `/${item.image2}`
+                        : `/${item.image3}`
+                    }
+                    alt={item.name}
+                  />
                 </Link>
               )}
             </div>

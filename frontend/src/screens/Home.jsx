@@ -35,6 +35,7 @@ const Home = () => {
       adminCarousels[carousels[i].name] = {
         image: carousels[i].image,
         text: carousels[i].text,
+        link: carousels[i].link,
       };
     }
     Object.assign(carousel, adminCarousels);
@@ -48,7 +49,7 @@ const Home = () => {
         return {
           ...prevValues,
           itemOfTheDay: {
-            image: `/${item.image}`,
+            image: `/${item.image1}`,
             text: `${item.name} (item of the day)`,
             link: `/item/${item.id}`,
           },
