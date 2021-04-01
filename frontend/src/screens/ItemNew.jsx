@@ -340,7 +340,11 @@ const NewItem = ({ history }) => {
             <Form.Label>Second Image</Form.Label>
             {item.image2 && (
               <div className="delete-div">
-                <Form.Control as={Image} src={item.image2} alt={item.image2} />
+                <Form.Control
+                  as={Image}
+                  src={`/${item.image2}`}
+                  alt={item.image2}
+                />
                 <Form.Control
                   as={deleteIcon}
                   className="delete-icon"
