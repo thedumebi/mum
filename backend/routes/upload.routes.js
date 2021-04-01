@@ -54,6 +54,12 @@ router.post(
         // file type error
         return res.end(err.toString());
       } else {
+        // const data = fs.readFileSync(
+        //   path.join(__dirname, "..", "/uploads/" + req.file.filename)
+        // );
+        // const src = `data:${req.file.mimetype};base64,${data.toString(
+        //   "base64"
+        // )}`;
         res.send(`${req.file.path}`);
       }
     });

@@ -64,7 +64,15 @@ const Settings = ({ history }) => {
 
   const submitHandler = (event) => {
     if (user.username === userDetail.username) {
-      const { username, ...otherfields } = user;
+      if (user.email === userDetail.email) {
+        const { username, email, ...otherfields } = user;
+        dispatch(updateUserProfile(userDetail.id, otherfields));
+      } else {
+        const { username, ...otherfields } = user;
+        dispatch(updateUserProfile(userDetail.id, otherfields));
+      }
+    } else if (user.email === userDetail.email) {
+      const { email, ...otherfields } = user;
       dispatch(updateUserProfile(userDetail.id, otherfields));
     } else {
       dispatch(updateUserProfile(userDetail.id, user));

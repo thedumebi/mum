@@ -168,13 +168,35 @@ const getUser = asyncHandler(async (req, res) => {
 // @route   PATCH /api/users/:id
 // @access  Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findOne({
-    where: { email },
+  const { username, email } = req.body;
+  if (username) {
+    const usernameExists = await User.findOne({
+      where: {
+        username: { [Op.like]: `${username.toLowerCase()}` },
+      },
+    });
+    if (usernameExists) {
+      res.status(400);
+      throw new Error("Sorry, that username is not available");
+    }
+  }
+  if (email) {
+    const emailExists = await User.findOne({
+      where: {
+        email: { [Op.like]: `${email.toLowerCase()}` },
+      },
+    });
+    if (emailExists) {
+      res.status(400);
+      throw new Error("Sorry, the provided email is not available");
+    }
+  }
+  const user = await User.findByPk(req.params.id, {
     attributes: { exclude: ["password"] },
   });
   if (user) {
     await user.update(req.body);
-    res.status(200).json({ ...user, token: generateToken(user.id) });
+    res.status(200).json({ ...user.dataValues, token: generateToken(user.id) });
   } else {
     res.status(404);
     throw new Error("User not found");

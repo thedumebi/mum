@@ -312,6 +312,12 @@ body.dark-theme .table {
   color: #fff;
   background-color: #222;
 }
+body.dark-theme td {
+  color: #fff;
+}
+body.dark-theme td a:hover {
+  color: green;
+}
 body.dark-theme .dropdown-menu {
   color: #fff;
   background-color: #222;
