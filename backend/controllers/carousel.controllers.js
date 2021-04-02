@@ -57,7 +57,6 @@ const createCarousel = asyncHandler(async (req, res) => {
 // @route PATCH /api/carousel/:id
 // @access Private
 const updateCarousel = asyncHandler(async (req, res) => {
-  console.log(req.params);
   const { name } = req.body;
 
   if (name) {

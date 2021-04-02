@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const fs = require("fs");
 const db = require("../models");
+const imagekit = require("../utils/imageKit.utils");
 const Item = db.Item;
 const Category = db.Category;
 const sequelize = db.sequelize;
@@ -60,7 +61,6 @@ const getItemByPk = asyncHandler(async (req, res) => {
 // @route POST /api/items/
 // @access Private
 const createItem = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const {
     name,
     price,
@@ -77,7 +77,6 @@ const createItem = asyncHandler(async (req, res) => {
       id: { [Op.in]: categories },
     },
   });
-  console.log({ itemCategories });
 
   const itemExists = await Item.findOne({
     where: {
@@ -144,11 +143,12 @@ const updateItem = asyncHandler(async (req, res) => {
         req.body[`image${i}`] &&
         req.body[`image${i}`] !== item[`image${i}`]
       ) {
-        try {
-          fs.unlinkSync(item.image);
-        } catch (error) {
-          console.error(error);
-        }
+        await imagekit.deleteFile(item[`image${i}`]);
+        //   try {
+        //     fs.unlinkSync(item[`image${i}`]);
+        //   } catch (error) {
+        //     console.error(error);
+        //   }
       }
     }
     const { categories, ...itemUpdate } = req.body;
@@ -231,11 +231,12 @@ const removeItem = asyncHandler(async (req, res) => {
 // @access Private
 const deleteImage = asyncHandler(async (req, res) => {
   const { image } = req.body;
-  try {
-    fs.unlinkSync(image);
-  } catch (error) {
-    console.error(error);
-  }
+  await imagekit.deleteFile(image);
+  // try {
+  //   fs.unlinkSync(image);
+  // } catch (error) {
+  //   console.error(error);
+  // }
 });
 
 module.exports = {

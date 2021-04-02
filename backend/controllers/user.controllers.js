@@ -4,7 +4,8 @@ const db = require("../models");
 const User = db.User;
 const sequelize = db.sequelize;
 const Op = db.Sequelize.Op;
-const nodemailer = require("nodemailer");
+const transporter = require("../utils/nodemailer.utils");
+const generateOTP = require("../utils/generateOTP.utils");
 
 // @desc Auth user & get token
 // @route POST /api/users/signin
@@ -106,11 +107,24 @@ const registerUser = asyncHandler(async (req, res) => {
       lastName,
     });
     if (user) {
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: user.email,
+        subject: "Welcome",
+        html: `
+        <p>Hello ${user.firstName},</p>
+        <p>I am pleased to welcome you to my store. Be sure to check out our <a href="https://tessy.chiwuzoh.com.ng/FAQs">FAQs for any information that you would need.</a></p>
+        <p>Cheers,</p>
+        <p>Tessy.</p>`,
+      };
+      const info = await transporter.sendMail(mailOptions);
       const { password, ...otherKeys } = user.dataValues;
-      res.status(200).json({
-        ...otherKeys,
-        token: generateToken(user.id),
-      });
+      if (info) {
+        res.status(200).json({
+          ...otherKeys,
+          token: generateToken(user.id),
+        });
+      }
     } else {
       res.status(400);
       throw new Error("Invalid user data");
@@ -238,55 +252,6 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc generate OTP
-const generateOTP = async (length, args) => {
-  const {
-    digits = true,
-    lowerCase = false,
-    upperCase = false,
-    specialChars = false,
-  } = args;
-
-  const numbers = "0123456789";
-  const lowerAlphabets = "abcdefghijklmnopqrstuvwxyz";
-  const upperAlphabets = lowerAlphabets.toUpperCase();
-  const special = "!@#$%*";
-  let OTP = "";
-
-  let generateString = "";
-  if (digits && lowerCase && upperCase && specialChars) {
-    generateString = `${numbers}${lowerAlphabets}${upperAlphabets}${special}`;
-  } else if (digits && lowerCase && upperCase) {
-    generateString = `${numbers}${lowerAlphabets}${upperAlphabets}`;
-  } else if (digits && lowerCase) {
-    generateString = `${numbers}${lowerAlphabets}`;
-  } else if (digits && upperCase) {
-    generateString = `${numbers}${upperAlphabets}`;
-  } else if (digits && specialChars) {
-    generateString = `${numbers}${special}`;
-  } else if (digits) {
-    generateString = `${numbers}`;
-  } else if (lowerCase && upperCase) {
-    generateString = `${lowerAlphabets}${upperAlphabets}`;
-  } else if (lowerCase && specialChars) {
-    generateString = `${lowerAlphabets}${special}`;
-  } else if (upperCase && specialChars) {
-    generateString = `${upperAlphabets}${special}`;
-  } else if (upperCase) {
-    generateString = `${upperAlphabets}`;
-  } else if (lowerCase) {
-    generateString = `${lowerAlphabets}`;
-  } else if (specialChars) {
-    generateString = `${special}`;
-  }
-
-  for (let i = 0; i < length; i++) {
-    OTP += generateString[Math.floor(Math.random() * generateString.length)];
-  }
-
-  return OTP;
-};
-
 // @desc Request password reset
 // @route POST /api/users/request-password-reset
 // @access Public
@@ -299,28 +264,10 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   if (user) {
     const OTP = await generateOTP(4, { upperCase: true });
     console.log({ OTP });
-    const transporter = nodemailer.createTransport({
-      host: process.env.HOST,
-      port: 587,
-      requireTLS: true,
-      tls: {
-        rejectUnauthorized: false,
-      },
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-    transporter.verify((err, success) => {
-      if (err) {
-        console.log({ err });
-      } else {
-        console.log({ success });
-      }
-    });
+
     const mailOptions = {
       from: process.env.EMAIL,
-      to: "chiwuzohdumebi@gmail.com",
+      to: user.email,
       subject: "Reset Password",
       html: `<h1>Reset Password</h1>
       <p>Hello ${user.firstName},</p>

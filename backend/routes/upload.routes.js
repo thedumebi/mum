@@ -2,8 +2,8 @@ const path = require("path");
 const fs = require("fs");
 const express = require("express");
 const multer = require("multer");
-const db = require("../models");
-const Item = db.Item;
+const sharp = require("sharp");
+const imagekit = require("../utils/imageKit.utils");
 const { admin, protect } = require("../middleware/auth.middleware");
 const asyncHandler = require("express-async-handler");
 
@@ -35,7 +35,7 @@ const checkFileType = (file, cb) => {
 
 const upload = multer({
   storage,
-  limits: { fileSize: 1024 * 1024 * 8 },
+  // limits: { fileSize: 1024 * 1024 * 10 },
   fileFilter: (req, file, cb) => {
     checkFileType(file, cb);
   },
@@ -60,7 +60,60 @@ router.post(
         // const src = `data:${req.file.mimetype};base64,${data.toString(
         //   "base64"
         // )}`;
-        res.send(`${req.file.path}`);
+
+        // resize and compress with sharp
+        const fileExt = path.extname(req.file.filename).toLowerCase();
+        const imgSrc = `backend/uploads/${
+          req.file.fieldname
+        }-${Date.now()}${path.extname(req.file.filename)}`;
+        if (fileExt === "jpg" || "jpeg") {
+          await sharp(req.file.path)
+            .jpeg({ quality: 100 })
+            .rotate()
+            .resize(1080, 1080, {
+              fit: "inside",
+              withoutEnlargement: true,
+            })
+            .toFile(imgSrc);
+        } else if (fileExt === "png") {
+          await sharp(req.file.path)
+            .png({ quality: 100 })
+            .rotate()
+            .resize(1080, 1080, {
+              fit: "inside",
+              withoutEnlargement: true,
+            })
+            .toFile(imgSrc);
+        }
+        // delete original file uploaded
+        try {
+          fs.unlinkSync(req.file.path);
+        } catch (error) {
+          console.log(error);
+        }
+        // send to imageKit
+        try {
+          fs.readFile(imgSrc, (err, data) => {
+            if (err) throw err;
+            imagekit.upload(
+              {
+                file: data,
+                fileName: `${req.file.fieldname}-${Date.now()}${path.extname(
+                  req.file.filename
+                )}`,
+                folder: "/tessy",
+              },
+              (err, result) => {
+                if (err) throw err;
+                else console.log(result);
+                res.json({ url: result.url, fileId: result.fileId });
+              }
+            );
+          });
+        } catch (error) {
+          console.log(error);
+        }
+        // res.send(imgSrc);
       }
     });
   })

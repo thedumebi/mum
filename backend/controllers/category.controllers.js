@@ -55,7 +55,6 @@ const getCategoryByPk = asyncHandler(async (req, res) => {
 // @route POST /api/categories/
 // @access Private
 const createCategory = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { name, price, description } = req.body;
 
   const categoryExists = await Category.findOne({
@@ -92,7 +91,6 @@ const updateCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
   if (name) {
-    console.log({ name });
     const categoryExists = await Category.findOne({
       where: {
         name: sequelize.where(
