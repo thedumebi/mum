@@ -91,10 +91,7 @@ const CarouselEditScreen = ({ match, history }) => {
 
       const { data } = await axios.post("/api/upload", formData, config);
 
-      if (
-        !data.includes("Please select images only!!!") &&
-        !data.includes("The maximum file size")
-      ) {
+      if (data.url) {
         setCarousel((prevValue) => {
           return { ...prevValue, [e.target.name]: data };
         });
@@ -198,8 +195,8 @@ const CarouselEditScreen = ({ match, history }) => {
                 <div className="delete-div">
                   <Form.Control
                     as={Image}
-                    src={`/${carousel.image}`}
-                    alt={carousel.image1}
+                    src={carousel.image.url}
+                    alt={carousel.image.name}
                   />
                   <Form.Control
                     as={deleteIcon}

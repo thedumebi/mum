@@ -69,7 +69,7 @@ const CarouselListScreen = ({ history }) => {
                     <td>{carousel.text}</td>
                     <td>
                       <Image
-                        src={`/${carousel.image}`}
+                        src={carousel.image.url}
                         alt={carousel.name}
                         fluid
                         style={{

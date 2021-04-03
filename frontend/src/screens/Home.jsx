@@ -33,7 +33,7 @@ const Home = () => {
   if (carousels && carousels.length !== 0) {
     for (let i = 0; i < carousels.length; i++) {
       adminCarousels[carousels[i].name] = {
-        image: `/${carousels[i].image}`,
+        image: carousels[i].image.url,
         text: carousels[i].text,
         link: carousels[i].link,
       };
@@ -49,7 +49,12 @@ const Home = () => {
         return {
           ...prevValues,
           itemOfTheDay: {
-            image: `/${item.image1}`,
+            image:
+              item.image1 !== null || "" || undefined
+                ? item.image1.url
+                : item.imag2 !== null || "" || undefined
+                ? item.image2.url
+                : item.image3.url,
             text: `${item.name} (item of the day)`,
             link: `/item/${item.id}`,
           },
@@ -108,7 +113,7 @@ const Home = () => {
               ) : (
                 carousel[item].image && (
                   <Image
-                    src={carousel[item].imsge}
+                    src={carousel[item].image}
                     className="d-block w-100"
                     alt="carousel image"
                   />

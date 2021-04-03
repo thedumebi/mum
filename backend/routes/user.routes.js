@@ -9,6 +9,7 @@ const {
   resetPassword,
   ChangePassword,
   getUsers,
+  updateDP,
 } = require("../controllers/user.controllers");
 const { protect, admin } = require("../middleware/auth.middleware");
 
@@ -24,5 +25,6 @@ router
 router.post("/:id/change-password", protect, ChangePassword);
 router.post("/request-password-reset", requestPasswordReset);
 router.post("/reset-password", resetPassword);
+router.post("/:id/profile-picture", updateDP);
 
 module.exports = router;

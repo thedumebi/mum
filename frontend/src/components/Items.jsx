@@ -79,21 +79,13 @@ const Items = ({ item }) => {
     <div className="case">
       {url.path === "/item/:id" && overlay.status ? (
         <div
+          className="overlay"
           id="overlay"
           onClick={() =>
             setOverlay({ src: "", status: false, display: "none" })
           }
           style={{
-            textAlign: "center",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vw",
-            padding: "2%",
-            zIndex: 10,
             display: overlay.display,
-            backgroundColor: "rgba(0,0,0,0.5)",
           }}
         >
           <Message variant="info">Tap on the image to exit full screen</Message>
@@ -129,9 +121,9 @@ const Items = ({ item }) => {
                   {images.map((image, index) => (
                     <Carousel.Item key={index}>
                       <Image
-                        src={`/${image}`}
+                        src={image.url}
                         alt={item.name}
-                        onClick={() => overlayHandler(`/${image}`)}
+                        onClick={() => overlayHandler(image.url)}
                       />
                     </Carousel.Item>
                   ))}
@@ -141,10 +133,10 @@ const Items = ({ item }) => {
                   <Image
                     src={
                       item.image1 !== null || "" || undefined
-                        ? `/${item.image1}`
+                        ? item.image1.url
                         : item.image2 !== null || "" || undefined
-                        ? `/${item.image2}`
-                        : `/${item.image3}`
+                        ? item.image2.url
+                        : item.image3.url
                     }
                     alt={item.name}
                   />

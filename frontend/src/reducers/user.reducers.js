@@ -37,6 +37,10 @@ import {
   USER_RESET_PASSWORD_SUCCESS,
   USER_RESET_PASSWORD_FAIL,
   USER_RESET_PASSWORD_RESET,
+  USER_UPDATE_DP_REQUEST,
+  USER_UPDATE_DP_SUCCESS,
+  USER_UPDATE_DP_FAIL,
+  USER_UPDATE_DP_RESET,
 } from "../constants/user.constants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -184,6 +188,21 @@ export const userResetPassword = (state = { user: {} }, action) => {
     case USER_RESET_PASSWORD_FAIL:
       return { loading: false, error: action.payload };
     case USER_RESET_PASSWORD_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userUpdateDp = (state = {}, action) => {
+  switch (action.type) {
+    case USER_UPDATE_DP_REQUEST:
+      return { loading: true };
+    case USER_UPDATE_DP_SUCCESS:
+      return { loading: false, success: true, user: action.payload };
+    case USER_UPDATE_DP_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_UPDATE_DP_RESET:
       return {};
     default:
       return state;

@@ -33,6 +33,9 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
+  USER_UPDATE_DP_REQUEST,
+  USER_UPDATE_DP_SUCCESS,
+  USER_UPDATE_DP_FAIL,
 } from "../constants/user.constants";
 
 export const login = (user) => async (dispatch) => {
@@ -393,6 +396,49 @@ export const updateUser = (id, user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateDp = (id, dp) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_DP_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/${id}/profile-picture`,
+      { dp },
+      config
+    );
+
+    dispatch({
+      type: USER_UPDATE_DP_SUCCESS,
+      payload: data,
+    });
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_DP_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

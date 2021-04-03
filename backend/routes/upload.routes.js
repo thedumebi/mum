@@ -35,7 +35,7 @@ const checkFileType = (file, cb) => {
 
 const upload = multer({
   storage,
-  // limits: { fileSize: 1024 * 1024 * 10 },
+  limits: { fileSize: 1024 * 1024 * 15 },
   fileFilter: (req, file, cb) => {
     checkFileType(file, cb);
   },
@@ -101,12 +101,17 @@ router.post(
                 fileName: `${req.file.fieldname}-${Date.now()}${path.extname(
                   req.file.filename
                 )}`,
-                folder: "/tessy",
               },
               (err, result) => {
                 if (err) throw err;
-                else console.log(result);
-                res.json({ url: result.url, fileId: result.fileId });
+                else {
+                  try {
+                    fs.unlinkSync(imgSrc);
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }
+                res.json(result);
               }
             );
           });

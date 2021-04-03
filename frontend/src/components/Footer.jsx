@@ -1,21 +1,28 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="colored-section">
-      <Container fluid>
-        <Row>
-          <Col className="text-center py-3">
-            Copyright &copy; Tessy Chiwuzoh | <a href="/">FAQ</a>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="text-center pb-3">
-            Designed by <a href="https:/dmb100days.herokuapp.com">DMB</a>
-          </Col>
-        </Row>
-      </Container>
+      <a href="tel:+2348028611554">
+        <Button className="btn-small">
+          <i className="fas fa-phone" />
+        </Button>
+      </a>
+      <a href="mailto:tchiwuzoh@gmail.com">
+        <Button className="btn-small">
+          <i className="fas fa-envelope" />
+        </Button>
+      </a>
+      <p>
+        Copyright &copy; {year} Tessy Chiwuzoh | <Link to="/FAQs">FAQS</Link>
+      </p>
+      <p className="pb-3">
+        Designed by <Link to="https://chiwuzoh.com.ng">DMB</Link>
+      </p>
     </footer>
   );
 };

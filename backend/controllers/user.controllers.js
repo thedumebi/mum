@@ -6,6 +6,7 @@ const sequelize = db.sequelize;
 const Op = db.Sequelize.Op;
 const transporter = require("../utils/nodemailer.utils");
 const generateOTP = require("../utils/generateOTP.utils");
+const imagekit = require("../utils/imageKit.utils");
 
 // @desc Auth user & get token
 // @route POST /api/users/signin
@@ -302,6 +303,37 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc update user profile picture
+// @route POST /user/profile-picture
+// @access Private
+const updateDP = asyncHandler(async (req, res) => {
+  console.log({ body: req.body });
+  const user = await User.findByPk(req.params.id, {
+    attributes: { exclude: ["password"] },
+  });
+  const defaultUrl =
+    "https://ik.imagekit.io/msf9dwhbk3m/AC26972E-41EB-4318-877F-1ACBB7B32AC0_IMrRiKVMPG-t.jpeg";
+  if (user) {
+    let update;
+    const dp = req.body.dp;
+    if (dp === {}) {
+      update = {
+        url: defaultUrl,
+      };
+    } else {
+      update = dp;
+    }
+    if (user.profileImage.url !== defaultUrl) {
+      await imagekit.deleteFile(user.profileImage.fileId);
+    }
+    await user.update({ profileImage: update });
+    res.status(200).json({ ...user.dataValues, token: generateToken(user.id) });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
 module.exports = {
   authUser,
   registerUser,
@@ -312,4 +344,5 @@ module.exports = {
   deleteUser,
   requestPasswordReset,
   resetPassword,
+  updateDP,
 };

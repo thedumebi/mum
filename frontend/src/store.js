@@ -12,6 +12,7 @@ import {
   userUpdateReducer,
   userRequestPasswordReset,
   userResetPassword,
+  userUpdateDp,
 } from "./reducers/user.reducers";
 import {
   createCategoryReducer,
@@ -51,6 +52,7 @@ const reducer = combineReducers({
   userUpdate: userUpdateReducer,
   userRequestPasswordReset: userRequestPasswordReset,
   userResetPassword: userResetPassword,
+  userUpdateDp: userUpdateDp,
   categoryCreate: createCategoryReducer,
   categoryDetails: categoryDetailsReducer,
   categoryList: listCategoryReducer,

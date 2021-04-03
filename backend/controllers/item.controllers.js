@@ -143,7 +143,7 @@ const updateItem = asyncHandler(async (req, res) => {
         req.body[`image${i}`] &&
         req.body[`image${i}`] !== item[`image${i}`]
       ) {
-        await imagekit.deleteFile(item[`image${i}`]);
+        await imagekit.deleteFile(item[`image${i}`].fileId);
         //   try {
         //     fs.unlinkSync(item[`image${i}`]);
         //   } catch (error) {
@@ -231,7 +231,7 @@ const removeItem = asyncHandler(async (req, res) => {
 // @access Private
 const deleteImage = asyncHandler(async (req, res) => {
   const { image } = req.body;
-  await imagekit.deleteFile(image);
+  await imagekit.deleteFile(image.fileId);
   // try {
   //   fs.unlinkSync(image);
   // } catch (error) {

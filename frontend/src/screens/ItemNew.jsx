@@ -96,10 +96,7 @@ const NewItem = ({ history }) => {
 
       const { data } = await axios.post("/api/upload", formData, config);
 
-      if (
-        !data.includes("Please select images only!!!") &&
-        !data.includes("The maximum file size")
-      ) {
+      if (data.url) {
         setItem((prevValue) => {
           return { ...prevValue, [name]: data };
         });
@@ -315,8 +312,8 @@ const NewItem = ({ history }) => {
               <div className="delete-div">
                 <Form.Control
                   as={Image}
-                  src={`/${item.image1}`}
-                  alt={item.image1}
+                  src={item.image1.url}
+                  alt={item.image1.name}
                 />
                 <Form.Control
                   as={deleteIcon}
@@ -342,8 +339,8 @@ const NewItem = ({ history }) => {
               <div className="delete-div">
                 <Form.Control
                   as={Image}
-                  src={`/${item.image2}`}
-                  alt={item.image2}
+                  src={item.image2.url}
+                  alt={item.image2.name}
                 />
                 <Form.Control
                   as={deleteIcon}
@@ -369,8 +366,8 @@ const NewItem = ({ history }) => {
               <div className="delete-div">
                 <Form.Control
                   as={Image}
-                  src={`/${item.image3}`}
-                  alt={item.image3}
+                  src={item.image3.url}
+                  alt={item.image3.name}
                 />
                 <Form.Control
                   as={deleteIcon}

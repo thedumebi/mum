@@ -26,16 +26,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       image1: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: true,
-        defaultValue: "backend\\uploads\\image-1616658260503.JPG",
       },
       image2: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: true,
       },
       image3: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: true,
       },
       createdAt: {
