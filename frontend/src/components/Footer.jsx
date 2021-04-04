@@ -21,7 +21,7 @@ const Footer = () => {
         Copyright &copy; {year} Tessy Chiwuzoh | <Link to="/FAQs">FAQS</Link>
       </p>
       <p className="pb-3">
-        Designed by <Link to="https://chiwuzoh.com.ng">DMB</Link>
+        Designed by <a href="https://chiwuzoh.com.ng">DMB</a>
       </p>
     </footer>
   );

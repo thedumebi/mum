@@ -143,7 +143,9 @@ const updateItem = asyncHandler(async (req, res) => {
         req.body[`image${i}`] &&
         req.body[`image${i}`] !== item[`image${i}`]
       ) {
-        await imagekit.deleteFile(item[`image${i}`].fileId);
+        if (item[`image${i}`] !== null) {
+          await imagekit.deleteFile(item[`image${i}`].fileId);
+        }
         //   try {
         //     fs.unlinkSync(item[`image${i}`]);
         //   } catch (error) {

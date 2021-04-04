@@ -151,7 +151,7 @@ const Profile = ({ history }) => {
           style={{ display: overlay.display }}
         >
           <Message variant="info">
-            Tap anywhere outside the image to exit full screen
+            Tap anywhere outside the image box to exit full screen
           </Message>
           <div id="delete-div" className="delete-div">
             <Image
@@ -213,13 +213,12 @@ const Profile = ({ history }) => {
           )}
           {user && user.profileImage && (
             <div className="avatar">
-              <Image src={user.profileImage.url} alt={user.username} fluid />
-              <Button
-                className="btn-small"
+              <Image
+                src={user.profileImage.url}
+                alt={user.username}
+                fluid
                 onClick={() => overlayHandler(user.profileImage.url)}
-              >
-                View
-              </Button>
+              />
             </div>
           )}
           <h1 className="sub-heading"> Welcome {user && user.fullName} </h1>

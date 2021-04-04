@@ -89,12 +89,15 @@ hr {
 .delete-div {
   position: relative;
   display: inline-block;
-  background-color: rgba(0, 0, 0, 0.4)
+  background-color: rgba(0, 0, 0, 0.8)
+}
+
+.overlay .delete-div img {
+  width: 50%;
 }
 
 .delete-div img {
-  width: 50%;
-  height: 50%;
+  width: 100%;
 }
 
 .delete-icon {
@@ -280,7 +283,6 @@ hr {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100pc;
   padding: 2%;
   z-index: 5;
   background-color: rgba(0, 0, 0, 0.4);
