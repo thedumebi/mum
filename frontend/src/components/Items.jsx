@@ -142,10 +142,10 @@ const Items = ({ item }) => {
                   <Image
                     src={
                       item.image1 !== null || "" || undefined
-                        ? item.image1.url
+                        ? item.image1.thumbnailUrl
                         : item.image2 !== null || "" || undefined
-                        ? item.image2.url
-                        : item.image3.url
+                        ? item.image2.thumbnailUrl
+                        : item.image3.thumbnailUrl
                     }
                     alt={item.name}
                   />
