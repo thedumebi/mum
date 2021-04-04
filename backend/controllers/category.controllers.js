@@ -126,8 +126,9 @@ const updateCategory = asyncHandler(async (req, res) => {
           },
         ],
       });
-      console.log({ items });
-      await items.update({ price: category.prices }, { where: {} });
+      for (var item of items) {
+        item.update({ price: category.price });
+      }
     }
     res.status(200).json(updatedCategory);
   } else {

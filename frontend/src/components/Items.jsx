@@ -101,11 +101,20 @@ const Items = ({ item }) => {
       ) : (
         <>
           {error && <Message variant="danger">{error}</Message>}
-          {url.path === "/item/:id" && (
-            <Message variant="info">
-              Tap the image tile to view the full item image
-            </Message>
-          )}
+          {url.path === "/item/:id" &&
+            (item.image1 !== null ||
+              "" ||
+              undefined ||
+              item.image2 !== null ||
+              "" ||
+              undefined ||
+              item.image3 !== null ||
+              "" ||
+              undefined) && (
+              <Message variant="info">
+                Tap the image tile to view the full item image
+              </Message>
+            )}
           {(item.image1 !== null ||
             "" ||
             undefined ||
