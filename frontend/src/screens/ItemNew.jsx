@@ -287,7 +287,7 @@ const NewItem = ({ history }) => {
           </Form.Row>
 
           <Form.Group>
-            <Form.Label>Item Categories</Form.Label>
+            <Form.Label>Selected Categories</Form.Label>
             <Form.Control
               type="text"
               value={

@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const db = require("../models");
 const Category = db.Category;
+const Item = db.Item;
 const sequelize = db.sequelize;
 const Op = db.Sequelize.Op;
 
@@ -110,6 +111,24 @@ const updateCategory = asyncHandler(async (req, res) => {
   const category = await Category.findByPk(req.params.id);
   if (category) {
     const updatedCategory = await category.update(req.body);
+    if (req.body.setPrice && req.body.setPrice === true) {
+      const items = await Item.findAll({
+        include: [
+          {
+            model: Category,
+            as: "categories",
+            required: true,
+            through: {
+              where: {
+                categoryId: { [Op.eq]: category.id },
+              },
+            },
+          },
+        ],
+      });
+      console.log({ items });
+      await items.update({ price: category.prices }, { where: {} });
+    }
     res.status(200).json(updatedCategory);
   } else {
     res.status(404);

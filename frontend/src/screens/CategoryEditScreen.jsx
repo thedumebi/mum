@@ -63,6 +63,13 @@ const CategoryEdit = ({ history, match }) => {
     });
   };
 
+  const handleCheck = (event) => {
+    const { name, checked } = event.target;
+    setCategory((prevValues) => {
+      return { ...prevValues, [name]: checked };
+    });
+  };
+
   const submitHandler = (event) => {
     if (categoryDetail.name === category.name) {
       const { name, ...otherfields } = category;
@@ -117,6 +124,16 @@ const CategoryEdit = ({ history, match }) => {
               name="description"
               value={category.description}
               rows={3}
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Check
+              type="checkbox"
+              label="Apply Price to all Items in this Category"
+              onChange={handleCheck}
+              name="setPrice"
+              value={category.setPrice}
             />
           </Form.Group>
 
