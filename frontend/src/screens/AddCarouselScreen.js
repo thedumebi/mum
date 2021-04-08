@@ -167,12 +167,15 @@ const AddCarouselScrren = ({ history }) => {
                 />
               </div>
             )}
-            <Form.File
-              name="image"
-              label="Choose Image"
-              custom
-              onChange={uploadFileHandler}
-            />
+            {!carousel.image && (
+              <Form.File
+                name="image"
+                label="Choose Image"
+                custom
+                onChange={uploadFileHandler}
+              />
+            )}
+
             {uploadError && <Message variant="danger">{uploadError}</Message>}
           </Form.Group>
 

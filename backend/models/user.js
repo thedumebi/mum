@@ -77,6 +77,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     User.hasMany(models.Item, { foreignKey: "userId", as: "items" });
+    User.belongsToMany(models.Item, { through: "Favorites", as: "favorites" });
   };
 
   User.prototype.validPassword = function (password) {

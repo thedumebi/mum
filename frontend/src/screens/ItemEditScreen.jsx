@@ -353,12 +353,15 @@ const ItemEdit = ({ history, match }) => {
                 />
               </div>
             )}
-            <Form.File
-              name="image1"
-              label="Choose Image"
-              custom
-              onChange={uploadFileHandler}
-            />
+            {!item.image1 && (
+              <Form.File
+                name="image1"
+                label="Choose Image"
+                custom
+                onChange={uploadFileHandler}
+              />
+            )}
+
             {uploadError.one && (
               <Message variant="danger">{uploadError.one}</Message>
             )}
@@ -380,12 +383,15 @@ const ItemEdit = ({ history, match }) => {
                 />
               </div>
             )}
-            <Form.File
-              name="image2"
-              label="Choose Image"
-              custom
-              onChange={uploadFileHandler}
-            />
+            {!item.image2 && (
+              <Form.File
+                name="image2"
+                label="Choose Image"
+                custom
+                onChange={uploadFileHandler}
+              />
+            )}
+
             {uploadError.two && (
               <Message variant="danger">{uploadError.two}</Message>
             )}
@@ -407,12 +413,15 @@ const ItemEdit = ({ history, match }) => {
                 />
               </div>
             )}
-            <Form.File
-              name="image3"
-              label="Choose Image"
-              custom
-              onChange={uploadFileHandler}
-            />
+            {!item.image3 && (
+              <Form.File
+                name="image3"
+                label="Choose Image"
+                custom
+                onChange={uploadFileHandler}
+              />
+            )}
+
             {uploadError.three && (
               <Message variant="danger">{uploadError.three}</Message>
             )}

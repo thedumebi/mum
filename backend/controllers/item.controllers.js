@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const fs = require("fs");
+const User = require("../../../Barmer/backend/models/users.model");
 const db = require("../models");
 const imagekit = require("../utils/imageKit.utils");
 const Item = db.Item;
@@ -241,6 +242,42 @@ const deleteImage = asyncHandler(async (req, res) => {
   // }
 });
 
+// @desc Favorite an Item
+// @route POST /api/items/:id/favorite
+// @access Private
+const favoriteItem = asyncHandler(async (req, res) => {
+  const item = await Item.findByPk(req.params.id);
+  if (item) {
+    const user = await User.findByPk(req.body.userId, {
+      include: ["items", "favorites"],
+      attributes: { exclude: ["password"] },
+    });
+    await item.addUser(user);
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    throw new Error("Item not found");
+  }
+});
+
+// @desc unfavorite an Item
+// @route POST /api/items/:id/unfavorite
+// @access Private
+const unfavoriteItem = asyncHandler(async (req, res) => {
+  const item = await Item.findByPk(req.params.id);
+  if (item) {
+    const user = await User.findByPk(req.body.userId, {
+      include: ["items", "favorites"],
+      attributes: { exclude: ["password"] },
+    });
+    await item.removeUser(user);
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    throw new Error("Item not found");
+  }
+});
+
 module.exports = {
   getItems,
   getItemByPk,
@@ -251,4 +288,6 @@ module.exports = {
   addItem,
   removeItem,
   deleteImage,
+  favoriteItem,
+  unfavoriteItem,
 };

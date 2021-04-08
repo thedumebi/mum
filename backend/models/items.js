@@ -66,6 +66,9 @@ module.exports = (sequelize, DataTypes) => {
       through: "Category_Item",
       as: "categories",
     });
+    Item.belongsToMany(models.User, {
+      through: "Favorites",
+    });
   };
 
   return Item;

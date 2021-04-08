@@ -145,6 +145,9 @@ const Profile = ({ history }) => {
           id="overlay"
           onClick={(e) => {
             if (!document.getElementById("delete-div").contains(e.target)) {
+              if (dp.url) {
+                deleteImage();
+              }
               setOverlay({ src: "", status: false, display: "none" });
             }
           }}

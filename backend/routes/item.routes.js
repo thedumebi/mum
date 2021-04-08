@@ -9,6 +9,8 @@ const {
   updateItem,
   deleteItem,
   deleteImage,
+  favoriteItem,
+  unfavoriteItem,
 } = require("../controllers/item.controllers");
 const { protect, admin } = require("../middleware/auth.middleware");
 
@@ -24,5 +26,7 @@ router
   .patch(protect, updateItem)
   .delete(protect, deleteItem);
 router.post("/delete-image", protect, deleteImage);
+router.post("/:id/favorite", protect, favoriteItem);
+router.post("/:id/unfavorite", protect, unfavoriteItem);
 
 module.exports = router;

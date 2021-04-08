@@ -167,7 +167,7 @@ const getUsers = asyncHandler(async (req, res) => {
 // @access Public
 const getUser = asyncHandler(async (req, res) => {
   const user = await User.findByPk(req.params.id, {
-    include: ["items"],
+    include: ["items", "favorites"],
     attributes: { exclude: ["password"] },
   });
 
