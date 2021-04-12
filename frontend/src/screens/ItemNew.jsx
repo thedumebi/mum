@@ -6,14 +6,14 @@ import Loader from "../components/Loader";
 import { Button, Col, Form, Image } from "react-bootstrap";
 import { createItem } from "../actions/item.actions";
 import { CREATE_ITEM_RESET } from "../constants/item.constants";
-import axios from "axios";
 import { getCategories } from "../actions/category.actions";
 
-const NewItem = ({ history }) => {
+const NewItem = ({ history, location }) => {
   const [item, setItem] = useState({
     name: "",
     categories: [],
   });
+  const [objectUrls, setObjectUrls] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -27,26 +27,32 @@ const NewItem = ({ history }) => {
   const { categories } = categoryList;
 
   const [nameError, setNameError] = useState(null);
-  const [uploadError, setUploadError] = useState({
-    one: null,
-    two: null,
-    three: null,
-  });
 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login?redirect=/items/newitem");
     } else {
-      dispatch(getCategories());
+      if (!categories) dispatch(getCategories());
       dispatch({ type: CREATE_ITEM_RESET });
       if (status) {
         history.push(`/items`);
+      }
+      if (categories) {
+        setItem((prevValues) => {
+          return {
+            ...prevValues,
+            categories: [
+              ...prevValues.categories,
+              Number(location.search.split("=")[1]),
+            ],
+          };
+        });
       }
       if (userInfo.role !== "admin") {
         history.push("/profile");
       }
     }
-  }, [history, dispatch, status, userInfo]);
+  }, [history, dispatch, status, categories, location, userInfo]);
 
   const addToCategoryArray = (event) => {
     const { name, value } = event.target;
@@ -80,92 +86,31 @@ const NewItem = ({ history }) => {
     }
   };
 
-  const uploadFileHandler = async (event) => {
-    const { name, files } = event.target;
-    const file = files[0];
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.post("/api/upload", formData, config);
-
-      if (data.url) {
-        setItem((prevValue) => {
-          return { ...prevValue, [name]: data };
-        });
-        if (name === "image1") {
-          setUploadError({ ...uploadError, one: null });
-        } else if (name === "image2") {
-          setUploadError({ ...uploadError, two: null });
-        } else if (name === "image3") {
-          setUploadError({ ...uploadError, three: null });
-        }
-      } else {
-        if (name === "image1") {
-          setUploadError({ ...uploadError, one: data });
-        } else if (name === "image2") {
-          setUploadError({ ...uploadError, two: data });
-        } else if (name === "image3") {
-          setUploadError({ ...uploadError, three: data });
-        }
-      }
-    } catch (error) {
-      if (name === "image1") {
-        console.log({ error });
-        setUploadError({ ...uploadError, one: error.message });
-      } else if (name === "image2") {
-        setUploadError({ ...uploadError, two: error.message });
-      } else if (name === "image3") {
-        setUploadError({ ...uploadError, three: error.message });
-      }
-    }
-  };
-
   const submitHandler = (event) => {
-    for (let i = 1; i <= Object.keys(uploadError).length; i++) {
-      if (
-        uploadError[Object.keys(uploadError)[i]] ===
-          "Please select images only!!!" ||
-        "The maximum file size"
-      ) {
-        uploadError[Object.keys(uploadError)[i]] = null;
-      }
-    }
     if (item.name === "") {
       setNameError("This field is required");
-    } else if (
-      uploadError.one === null &&
-      uploadError.two === null &&
-      uploadError.three === null &&
-      nameError === null
-    ) {
-      dispatch(createItem(item));
+    } else if (nameError === null) {
+      const data = new FormData();
+      for (const name in item) {
+        if (
+          item[name] !== undefined &&
+          item[name] !== null &&
+          item[name] !== ""
+        )
+          data.append(name, item[name]);
+      }
+      dispatch(createItem(data));
+      removeUrls();
     }
     event.preventDefault();
   };
 
   const deleteImage = (name) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-
-      const image = item[name];
-
-      axios.post("/api/items/delete-image", { image }, config);
-    } catch (error) {
-      console.log(error.message);
-    }
+    const imageSrc = document.getElementById(name).src;
+    URL.revokeObjectURL(imageSrc);
+    setObjectUrls((prevValues) => {
+      return [...prevValues.filter((val) => val !== imageSrc)];
+    });
     setItem({ ...item, [name]: undefined });
   };
 
@@ -175,6 +120,25 @@ const NewItem = ({ history }) => {
         <i className="fas fa-trash fa-lg"></i>
       </div>
     );
+  };
+
+  const preview = (event) => {
+    const { name, files } = event.target;
+    setItem((prevValues) => {
+      return { ...prevValues, [name]: files[0] };
+    });
+    const frame = document.getElementById(name);
+    const url = URL.createObjectURL(event.target.files[0]);
+    setObjectUrls((prevValues) => {
+      return [...prevValues, url];
+    });
+    frame.src = url;
+  };
+
+  const removeUrls = () => {
+    for (let i = 0; i < objectUrls.length; i++) {
+      URL.revokeObjectURL(objectUrls[i]);
+    }
   };
 
   return (
@@ -206,7 +170,7 @@ const NewItem = ({ history }) => {
             <Form.Control
               type="number"
               name="price"
-              value={item.price}
+              min={0}
               onChange={handleChange}
               placeholder="Price of item"
             />
@@ -218,7 +182,7 @@ const NewItem = ({ history }) => {
               type="number"
               onChange={handleChange}
               name="quantity"
-              value={item.quantity}
+              min={0}
               placeholder="Number of Item"
             />
           </Form.Group>
@@ -229,7 +193,6 @@ const NewItem = ({ history }) => {
               as="textarea"
               onChange={handleChange}
               name="description"
-              value={item.description}
               rows={3}
               placeholder="Brief Description of the Item"
             />
@@ -308,88 +271,70 @@ const NewItem = ({ history }) => {
 
           <Form.Group>
             <Form.Label>Item Image</Form.Label>
-            {item.image1 && (
-              <div className="delete-div">
-                <Form.Control
-                  as={Image}
-                  src={item.image1.url}
-                  alt={item.image1.name}
-                />
-                <Form.Control
-                  as={deleteIcon}
-                  className="delete-icon"
-                  name="image1"
-                />
-              </div>
-            )}
+            <div
+              className="delete-div"
+              style={{ display: !item.image1 && "none" }}
+            >
+              <Form.Control id="image1" as={Image} src="" alt="" />
+              <Form.Control
+                as={deleteIcon}
+                className="delete-icon"
+                name="image1"
+              />
+            </div>
             {!item.image1 && (
               <Form.File
                 name="image1"
                 label="Choose Image"
                 custom
-                onChange={uploadFileHandler}
+                onChange={preview}
               />
-            )}
-            {uploadError.one && (
-              <Message variant="danger">{uploadError.one}</Message>
             )}
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Second Image</Form.Label>
-            {item.image2 && (
-              <div className="delete-div">
-                <Form.Control
-                  as={Image}
-                  src={item.image2.url}
-                  alt={item.image2.name}
-                />
-                <Form.Control
-                  as={deleteIcon}
-                  className="delete-icon"
-                  name="image2"
-                />
-              </div>
-            )}
+            <div
+              className="delete-div"
+              style={{ display: !item.image2 && "none" }}
+            >
+              <Form.Control as={Image} id="image2" src="" alt="" />
+              <Form.Control
+                as={deleteIcon}
+                className="delete-icon"
+                name="image2"
+              />
+            </div>
             {!item.image2 && (
               <Form.File
                 name="image2"
                 label="Choose Image"
                 custom
-                onChange={uploadFileHandler}
+                onChange={preview}
               />
-            )}
-            {uploadError.two && (
-              <Message variant="danger">{uploadError.two}</Message>
             )}
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Third Image</Form.Label>
-            {item.image3 && (
-              <div className="delete-div">
-                <Form.Control
-                  as={Image}
-                  src={item.image3.url}
-                  alt={item.image3.name}
-                />
-                <Form.Control
-                  as={deleteIcon}
-                  className="delete-icon"
-                  name="image3"
-                />
-              </div>
-            )}
+            <div
+              className="delete-div"
+              style={{ display: !item.image3 && "none" }}
+            >
+              <Form.Control as={Image} id="image3" src="" alt="" />
+              <Form.Control
+                as={deleteIcon}
+                className="delete-icon"
+                name="image3"
+              />
+            </div>
             {!item.image3 && (
               <Form.File
                 name="image3"
                 label="Choose Image"
                 custom
-                onChange={uploadFileHandler}
+                onChange={preview}
               />
-            )}
-            {uploadError.three && (
-              <Message variant="danger">{uploadError.three}</Message>
             )}
           </Form.Group>
 

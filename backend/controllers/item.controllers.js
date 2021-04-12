@@ -1,9 +1,13 @@
-const asyncHandler = require("express-async-handler");
 const fs = require("fs");
-const User = require("../../../Barmer/backend/models/users.model");
 const db = require("../models");
+const multer = require("multer");
 const imagekit = require("../utils/imageKit.utils");
+const uploadFiles = require("../utils/multer.utils");
+const asyncHandler = require("express-async-handler");
+const sendToImageKit = require("../utils/imageKit.utils");
+
 const Item = db.Item;
+const User = db.User;
 const Category = db.Category;
 const sequelize = db.sequelize;
 const Op = db.Sequelize.Op;
@@ -61,58 +65,81 @@ const getItemByPk = asyncHandler(async (req, res) => {
 // @desc Create a new Item
 // @route POST /api/items/
 // @access Private
-const createItem = asyncHandler(async (req, res) => {
-  const {
-    name,
-    price,
-    quantity,
-    description,
-    image1,
-    image2,
-    image3,
-    categories,
-  } = req.body;
+const createItem = asyncHandler(async (req, res, next) => {
+  uploadFiles(req, res, async (err) => {
+    try {
+      if (err instanceof multer.MulterError) {
+        // file size error
+        res.status(400);
+        throw new Error(err.message);
+      } else if (err) {
+        // file type error
+        res.status(400);
+        throw new Error(err.toString());
+      } else {
+        // no error
+        const { name, price, quantity, description, categories } = req.body;
+        const { image1, image2, image3 } = req.files;
+        const categoriesArray = categories.split(",");
 
-  const itemCategories = await Category.findAll({
-    where: {
-      id: { [Op.in]: categories },
-    },
-  });
+        const itemCategories = await Category.findAll({
+          where: {
+            id: { [Op.in]: categoriesArray },
+          },
+        });
 
-  const itemExists = await Item.findOne({
-    where: {
-      name: sequelize.where(
-        sequelize.fn("LOWER", sequelize.col("name")),
-        "LIKE",
-        `${name.toLowerCase()}`
-      ),
-    },
-  });
-  if (itemExists) {
-    res.status(400);
-    throw new Error("Sorry, you already have an item with that name!");
-  }
+        const itemExists = await Item.findOne({
+          where: {
+            name: sequelize.where(
+              sequelize.fn("LOWER", sequelize.col("name")),
+              "LIKE",
+              `${name.toLowerCase()}`
+            ),
+          },
+        });
+        if (itemExists) {
+          res.status(400);
+          throw new Error("Sorry, you already have an item with that name!");
+        }
 
-  const item = await Item.create({
-    name,
-    price,
-    quantity,
-    description,
-    image1,
-    image2,
-    image3,
+        const item = await Item.create({
+          name,
+          price,
+          quantity,
+          description,
+          image1: image1 && image1[0].path,
+          image2: image2 && image2[0].path,
+          image3: image3 && image3[0].path,
+        });
+        if (item.price === undefined) {
+          await item.update({ price: itemCategories[0].price });
+        }
+        await item.setUser(req.user);
+        await item.addCategories(itemCategories);
+        if (item) {
+          if (image1) const imageKit1 = sendToImageKit(image1[0]);
+          if (image2) const imageKit2 = sendToImageKit(image2[0]);
+          if (image3) const imageKit3 = sendToImageKit(image3[0]);
+          const [result1, result2, result3] = await Promise.all([
+            imageKit1,
+            imageKit2,
+            imageKit3,
+          ]);
+          await item.update({
+            image1: result1,
+            image2: result2,
+            image3: result3,
+          });
+          res.status(200).json(item);
+        } else {
+          res.status(401);
+          throw new Error("Invalid input");
+        }
+      }
+    } catch (err) {
+      next(err);
+    }
   });
-  if (item.price === undefined) {
-    await item.update({ price: itemCategories[0].price });
-  }
-  await item.setUser(req.user);
-  await item.addCategories(itemCategories);
-  if (item) {
-    res.status(200).json(item);
-  } else {
-    res.status(401);
-    throw new Error("Invalid input");
-  }
 });
 
 // @desc Update an Item
