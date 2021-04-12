@@ -117,14 +117,16 @@ const createItem = asyncHandler(async (req, res, next) => {
         await item.setUser(req.user);
         await item.addCategories(itemCategories);
         if (item) {
-          if (image1) const imageKit1 = sendToImageKit(image1[0]);
-          if (image2) const imageKit2 = sendToImageKit(image2[0]);
-          if (image3) const imageKit3 = sendToImageKit(image3[0]);
+          let imageKit1, imageKit2, imageKit3;
+          if (image1) imageKit1 = sendToImageKit(image1[0]);
+          if (image2) imageKit2 = sendToImageKit(image2[0]);
+          if (image3) imageKit3 = sendToImageKit(image3[0]);
           const [result1, result2, result3] = await Promise.all([
             imageKit1,
             imageKit2,
             imageKit3,
           ]);
+          console.log(result1, result2, result3);
           await item.update({
             image1: result1,
             image2: result2,

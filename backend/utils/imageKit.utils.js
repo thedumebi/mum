@@ -1,7 +1,7 @@
 const ImageKit = require("imagekit");
 const sharp = require("sharp");
 const path = require("path");
-const fs = require("fs");
+const { promises: fs } = require("fs");
 const db = require("../models");
 const Item = db.Item;
 
@@ -37,40 +37,53 @@ const resizeImages = async (file) => {
         })
         .toFile(imgSrc);
     }
-    fs.unlink(file.path, (err) => {
-      if (err) console.log(err);
-    });
+    await fs.unlink(file.path);
     return imgSrc;
   } catch (err) {
     console.log(err);
   }
 };
 
-const sendToImageKit = async (file, field, id) => {
-  const imgSrc = await resizeImages(file);
-  try {
-    fs.readFile(imgSrc, (err, data) => {
-      if (err) console.log(err);
-      imagekit.upload(
-        {
-          file: data,
-          fileName: file.filename,
-        },
-        (err, result) => {
-          if (err) console.log(err);
-          else {
-            try {
-              fs.unlink(imgSrc, (err) => {
-                if (err) console.log(err);
-              });
-            } catch (err) {
-              console.log(err);
-            }
-          }
-          return result;
+const uploadToImageKit = (file, data, imgSrc) => {
+  return new Promise((resolve, reject) => {
+    imagekit.upload(
+      { file: data, fileName: file.filename },
+      async (err, result) => {
+        if (err) return reject(err);
+        try {
+          await fs.unlink(imgSrc);
+        } catch (err) {
+          console.log(err);
         }
-      );
-    });
+        return resolve(result);
+      }
+    );
+  });
+};
+
+const sendToImageKit = async (file) => {
+  try {
+    const imgSrc = await resizeImages(file);
+    const data = await fs.readFile(imgSrc);
+    const result = await uploadToImageKit(file, data, imgSrc);
+    return result;
+    // imagekit.upload(
+    //   {
+    //     file: data,
+    //     fileName: file.filename,
+    //   },
+    //   async (err, result) => {
+    //     if (err) console.log(err);
+    //     else {
+    //       try {
+    //         await fs.unlink(imgSrc);
+    //         return result;
+    //       } catch (err) {
+    //         console.log(err);
+    //       }
+    //     }
+    //   }
+    // );
   } catch (err) {
     console.log(err);
   }
