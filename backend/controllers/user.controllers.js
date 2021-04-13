@@ -4,6 +4,7 @@ const db = require("../models");
 const User = db.User;
 const sequelize = db.sequelize;
 const Op = db.Sequelize.Op;
+const multer = require("multer");
 const uploadFiles = require("../utils/multer.utils");
 const transporter = require("../utils/nodemailer.utils");
 const generateOTP = require("../utils/generateOTP.utils");

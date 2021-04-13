@@ -33,7 +33,7 @@ const Home = () => {
   if (carousels && carousels.length !== 0) {
     for (let i = 0; i < carousels.length; i++) {
       adminCarousels[carousels[i].name] = {
-        image: carousels[i].image.url,
+        image: carousels[i].image.url ? carousels[i].image.url : "",
         text: carousels[i].text,
         link: carousels[i].link,
       };

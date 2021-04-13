@@ -216,6 +216,11 @@ const CarouselEditScreen = ({ match, history }) => {
               )}
             </Form.Group>
 
+            <Form.Group>
+              <Form.Label>Link</Form.Label>
+              <Form.Control type="text" name="link" onChange={handleChange} />
+            </Form.Group>
+
             <Button className="btn-md btn-dark" onClick={submitHandler}>
               Update
             </Button>
