@@ -1,10 +1,9 @@
 const fs = require("fs");
 const db = require("../models");
 const multer = require("multer");
-const imagekit = require("../utils/imageKit.utils");
 const uploadFiles = require("../utils/multer.utils");
 const asyncHandler = require("express-async-handler");
-const sendToImageKit = require("../utils/imageKit.utils");
+const { imagekit, sendToImageKit } = require("../utils/imageKit.utils");
 
 const Item = db.Item;
 const User = db.User;
@@ -107,9 +106,6 @@ const createItem = asyncHandler(async (req, res, next) => {
           price,
           quantity,
           description,
-          image1: image1 && image1[0].path,
-          image2: image2 && image2[0].path,
-          image3: image3 && image3[0].path,
         });
         if (item.price === undefined) {
           await item.update({ price: itemCategories[0].price });
@@ -126,7 +122,6 @@ const createItem = asyncHandler(async (req, res, next) => {
             imageKit2,
             imageKit3,
           ]);
-          console.log(result1, result2, result3);
           await item.update({
             image1: result1,
             image2: result2,
@@ -147,57 +142,102 @@ const createItem = asyncHandler(async (req, res, next) => {
 // @desc Update an Item
 // @route PATCH /api/items/:id
 // @access Private
-const updateItem = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+const updateItem = asyncHandler(async (req, res, next) => {
+  uploadFiles(req, res, async (err) => {
+    try {
+      if (err instanceof multer.MulterError) {
+        // file size error
+        res.status(400);
+        throw new Error(err.message);
+      } else if (err) {
+        // file type error
+        res.status(400);
+        throw new Error(err.toString());
+      } else {
+        // no error
+        const { image1, image2, image3 } = req.files;
+        const { name } = req.body;
 
-  if (name) {
-    const itemExists = await Item.findOne({
-      where: {
-        name: sequelize.where(
-          sequelize.fn("LOWER", sequelize.col("name")),
-          "LIKE",
-          `${name.toLowerCase()}`
-        ),
-      },
-    });
-    if (itemExists) {
-      res.status(400);
-      throw new Error("Sorry, you already have an item with that name!");
-    }
-  }
-
-  const item = await Item.findByPk(req.params.id);
-  if (item) {
-    for (let i = 1; i <= 3; i++) {
-      if (
-        req.body[`image${i}`] &&
-        req.body[`image${i}`] !== item[`image${i}`]
-      ) {
-        if (item[`image${i}`] !== null) {
-          await imagekit.deleteFile(item[`image${i}`].fileId);
+        if (name) {
+          const itemExists = await Item.findOne({
+            where: {
+              name: sequelize.where(
+                sequelize.fn("LOWER", sequelize.col("name")),
+                "LIKE",
+                `${name.toLowerCase()}`
+              ),
+            },
+          });
+          if (itemExists) {
+            res.status(400);
+            throw new Error("Sorry, you already have an item with that name!");
+          }
         }
-        //   try {
-        //     fs.unlinkSync(item[`image${i}`]);
-        //   } catch (error) {
-        //     console.error(error);
-        //   }
-      }
-    }
-    const { categories, ...itemUpdate } = req.body;
-    await item.update(itemUpdate);
-    const itemCategories = await Category.findAll({
-      where: {
-        id: { [Op.in]: categories },
-      },
-    });
-    await item.setCategories([]);
-    await item.addCategories(itemCategories);
 
-    res.status(200).json(item);
-  } else {
-    res.status(404);
-    throw new Error("Item not found");
-  }
+        const item = await Item.findByPk(req.params.id);
+        if (item) {
+          const {
+            categories,
+            image1: oldImage1,
+            image2: oldImage2,
+            image3: oldImage3,
+            ...itemUpdate
+          } = req.body;
+          await item.update(itemUpdate);
+          const categoriesArray = categories.split(",");
+          const itemCategories = await Category.findAll({
+            where: {
+              id: { [Op.in]: categoriesArray },
+            },
+          });
+          await item.setCategories([]);
+          await item.addCategories(itemCategories);
+
+          let imageKit1, imageKit2, imageKit3;
+          if (image1) imageKit1 = sendToImageKit(image1[0]);
+          if (image2) imageKit2 = sendToImageKit(image2[0]);
+          if (image3) imageKit3 = sendToImageKit(image3[0]);
+          const [result1, result2, result3] = await Promise.all([
+            imageKit1,
+            imageKit2,
+            imageKit3,
+          ]);
+
+          // delete image
+          for (let i = 1; i < 4; i++) {
+            if (item[`image${i}`] !== null) {
+              if (
+                (!req.files[`image${i}`] && !req.body[`image${i}`]) ||
+                req.files[`image${i}`]
+              ) {
+                console.log(i, "deleted");
+                await imagekit.deleteFile(item[`image${i}`].fileId);
+                item[`image${i}`] = null;
+                await item.save();
+              }
+            }
+          }
+
+          if (result1) {
+            await item.update({ image1: result1 });
+          }
+          if (result2) {
+            await item.update({ image2: result2 });
+          }
+          if (result3) {
+            await item.update({ image3: result3 });
+          }
+
+          res.status(200).json(item);
+        } else {
+          res.status(404);
+          throw new Error("Item not found");
+        }
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
 });
 
 // @desc    Delete Item

@@ -2,7 +2,10 @@ const asyncHandler = require("express-async-handler");
 const db = require("../models");
 const Op = db.Sequelize.Op;
 const fs = require("fs");
+const uploadFiles = require("../utils/multer.utils");
+const multer = require("multer");
 const Carousel = db.Carousel;
+const { sendToImageKit, imagekit } = require("../utils/imageKit.utils");
 
 // @desc Get all carousels
 // @route GET /api/carousel/
@@ -28,64 +31,99 @@ const getCarouselById = asyncHandler(async (req, res) => {
 // @desc Create a new Carousel
 // @route POST /api/carousel/
 // @access Private
-const createCarousel = asyncHandler(async (req, res) => {
-  const { name, image, text, link } = req.body;
-  const carouselExists = await Carousel.findOne({
-    where: {
-      name: { [Op.like]: `${name.toLowerCase()}` },
-    },
-  });
-  if (carouselExists) {
-    res.status(400);
-    throw new Error("Sorry, you already have a carousel with that name");
-  }
+const createCarousel = asyncHandler(async (req, res, next) => {
+  uploadFiles(req, res, async (err) => {
+    try {
+      if (err instanceof multer.MulterError) {
+        res.status(400);
+        throw new Error(err.message);
+      } else if (err) {
+        res.status(400);
+        throw new Error(err.toString());
+      } else {
+        const { image } = req.files;
+        const { name, text, link } = req.body;
+        const carouselExists = await Carousel.findOne({
+          where: {
+            name: { [Op.like]: `${name.toLowerCase()}` },
+          },
+        });
+        if (carouselExists) {
+          res.status(400);
+          throw new Error("Sorry, you already have a carousel with that name");
+        }
 
-  const carousel = await Carousel.create({
-    name,
-    image,
-    text,
-    link,
+        const carousel = await Carousel.create({
+          name,
+          text,
+          link,
+        });
+        if (carousel) {
+          let imageKit1;
+          if (image) imageKit1 = await sendToImageKit(image[0]);
+          if (imageKit1) await carousel.update({ image: imageKit1 });
+          res.status(200).json(carousel);
+        } else {
+          throw new Error("Invalid Input");
+        }
+      }
+    } catch (err) {
+      next(err);
+    }
   });
-  if (carousel) {
-    res.status(200).json(carousel);
-  } else {
-    throw new Error("Invalid Input");
-  }
 });
 
 // @desc Update a Carousel
 // @route PATCH /api/carousel/:id
 // @access Private
-const updateCarousel = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+const updateCarousel = asyncHandler(async (req, res, next) => {
+  uploadFiles(req, res, async (err) => {
+    try {
+      if (err instanceof multer.MulterError) {
+        res.status(400);
+        throw new Error(err.message);
+      } else if (err) {
+        res.status(400);
+        throw new Error(err.toString());
+      } else {
+        const { name } = req.body;
+        if (name) {
+          const carouselExists = await Carousel.findOne({
+            where: {
+              name: { [Op.like]: `${req.body.name.toLowerCase()}` },
+            },
+          });
+          if (carouselExists) {
+            res.status(400);
+            throw new Error(
+              "Sorry, you already have a carousel item with that name"
+            );
+          }
+        }
 
-  if (name) {
-    const carouselExists = await Carousel.findOne({
-      where: {
-        name: { [Op.like]: `${req.body.name.toLowerCase()}` },
-      },
-    });
-    if (carouselExists) {
-      res.status(400);
-      throw new Error("Sorry, you already have a carousel item with that name");
-    }
-  }
-
-  const carousel = await Carousel.findByPk(req.params.id);
-  if (carousel) {
-    if (req.body.image !== carousel.image) {
-      try {
-        fs.unlinkSync(carousel.image);
-      } catch (error) {
-        console.error(error);
+        const carousel = await Carousel.findByPk(req.params.id);
+        if (carousel) {
+          if (!req.body.image && carousel.image !== null) {
+            await imagekit.deleteFile(carousel.image.fileId);
+            carousel.image = null;
+            await carousel.save();
+          }
+          const { image } = req.files;
+          const { image: oldImage, ...otherUpdates } = req.body;
+          await carousel.update(otherUpdates);
+          let imageKit1;
+          if (image) imageKit1 = await sendToImageKit(image[0]);
+          if (imageKit1) await carousel.update({ image: imageKit1 });
+          res.status(200).json(carousel);
+        } else {
+          res.status(404);
+          throw new Error("Carousel not found");
+        }
       }
+    } catch (err) {
+      next(err);
     }
-    await carousel.update(req.body);
-    res.status(200).json(carousel);
-  } else {
-    res.status(404);
-    throw new Error("Carousel not found");
-  }
+  });
 });
 
 // @desc    Delete Carousel

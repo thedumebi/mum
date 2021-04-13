@@ -3,7 +3,6 @@ const sharp = require("sharp");
 const path = require("path");
 const { promises: fs } = require("fs");
 const db = require("../models");
-const Item = db.Item;
 
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -67,26 +66,12 @@ const sendToImageKit = async (file) => {
     const data = await fs.readFile(imgSrc);
     const result = await uploadToImageKit(file, data, imgSrc);
     return result;
-    // imagekit.upload(
-    //   {
-    //     file: data,
-    //     fileName: file.filename,
-    //   },
-    //   async (err, result) => {
-    //     if (err) console.log(err);
-    //     else {
-    //       try {
-    //         await fs.unlink(imgSrc);
-    //         return result;
-    //       } catch (err) {
-    //         console.log(err);
-    //       }
-    //     }
-    //   }
-    // );
   } catch (err) {
     console.log(err);
   }
 };
 
-module.exports = sendToImageKit;
+module.exports = {
+  imagekit,
+  sendToImageKit,
+};

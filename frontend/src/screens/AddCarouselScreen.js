@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Button, Image } from "react-bootstrap";
-import axios from "axios";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { createCarousel } from "../actions/carousel.actions";
@@ -21,7 +20,7 @@ const AddCarouselScrren = ({ history }) => {
   const { loading, error, success } = carouselCreate;
 
   const [nameError, setNameError] = useState(null);
-  const [uploadError, setUploadError] = useState(null);
+  const [objectUrls, setObjectUrls] = useState([]);
 
   useEffect(() => {
     if (!userInfo) {
@@ -50,62 +49,30 @@ const AddCarouselScrren = ({ history }) => {
   };
 
   const addCarousel = (e) => {
-    if (
-      uploadError === "Please select images only!!!" ||
-      "The maximum file size"
-    ) {
-      setUploadError(null);
-    }
     if (carousel.name === "") {
       setNameError("This field is required!");
-    } else if (uploadError === null && nameError === null) {
-      dispatch(createCarousel(carousel));
-    }
-    e.preventDefault();
-  };
-
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-      const { data } = await axios.post("/api/upload", formData, config);
-
-      if (data.url) {
-        setCarousel((prevValue) => {
-          return { ...prevValue, [e.target.name]: data };
-        });
-        setUploadError(null);
-      } else {
-        setUploadError(data);
+    } else if (nameError === null) {
+      const data = new FormData();
+      for (var name in carousel) {
+        if (
+          carousel[name] !== undefined &&
+          carousel[name] !== null &&
+          carousel[name] !== ""
+        )
+          data.append(name, carousel[name]);
       }
-    } catch (error) {
-      console.error(error);
+      dispatch(createCarousel(data));
+      removeUrls();
+      e.preventDefault();
     }
   };
 
   const deleteImage = (name) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-
-      const image = carousel[name];
-
-      axios.post("/api/items/delete-image", { image }, config);
-    } catch (error) {
-      console.log(error.message);
-    }
+    const imageSrc = document.getElementById(name).src;
+    URL.revokeObjectURL(imageSrc);
+    setObjectUrls((prevValues) => {
+      return [...prevValues.filter((val) => val !== imageSrc)];
+    });
     setCarousel({ ...carousel, [name]: undefined });
   };
 
@@ -115,6 +82,25 @@ const AddCarouselScrren = ({ history }) => {
         <i className="fas fa-trash fa-lg"></i>
       </div>
     );
+  };
+
+  const preview = (event) => {
+    const { name, files } = event.target;
+    setCarousel((prevValues) => {
+      return { ...prevValues, [name]: files[0] };
+    });
+    const frame = document.getElementById(name);
+    const url = URL.createObjectURL(event.target.files[0]);
+    setObjectUrls((prevValues) => {
+      return [...prevValues, url];
+    });
+    frame.src = url;
+  };
+
+  const removeUrls = () => {
+    for (let i = 0; i < objectUrls.length; i++) {
+      URL.revokeObjectURL(objectUrls[i]);
+    }
   };
 
   return (
@@ -147,46 +133,35 @@ const AddCarouselScrren = ({ history }) => {
               name="text"
               type="text"
               placeholder="Enter Carousel Text to be displayed"
-              value={carousel.text}
             />
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Carousel Image</Form.Label>
-            {carousel.image && (
-              <div className="delete-div">
-                <Form.Control
-                  as={Image}
-                  src={carousel.image.url}
-                  alt={carousel.image.name}
-                />
-                <Form.Control
-                  as={deleteIcon}
-                  className="delete-icon"
-                  name="image"
-                />
-              </div>
-            )}
+            <div
+              className="delete-div"
+              style={{ display: !carousel.image && "none" }}
+            >
+              <Form.Control as={Image} id="image" src="" alt="" />
+              <Form.Control
+                as={deleteIcon}
+                className="delete-icon"
+                name="image"
+              />
+            </div>
             {!carousel.image && (
               <Form.File
                 name="image"
                 label="Choose Image"
                 custom
-                onChange={uploadFileHandler}
+                onChange={preview}
               />
             )}
-
-            {uploadError && <Message variant="danger">{uploadError}</Message>}
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Link</Form.Label>
-            <Form.Control
-              type="text"
-              name="link"
-              value={carousel.link}
-              onChange={handleChange}
-            />
+            <Form.Control type="text" name="link" onChange={handleChange} />
           </Form.Group>
 
           <Button className="btn-md btn-dark" onClick={addCarousel}>

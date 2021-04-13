@@ -423,7 +423,7 @@ export const updateDp = (id, dp) => async (dispatch, getState) => {
 
     const { data } = await axios.post(
       `/api/users/${id}/profile-picture`,
-      { dp },
+      dp,
       config
     );
 

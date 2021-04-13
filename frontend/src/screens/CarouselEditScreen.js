@@ -5,7 +5,6 @@ import {
   getCarouselDetails,
   updateCarousel,
 } from "../actions/carousel.actions";
-import axios from "axios";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
@@ -19,6 +18,7 @@ const CarouselEditScreen = ({ match, history }) => {
     image: "",
     link: "",
   });
+  const [objectUrls, setObjectUrls] = useState([]);
 
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
@@ -35,7 +35,6 @@ const CarouselEditScreen = ({ match, history }) => {
   } = carouselUpdate;
 
   const [nameError, setNameError] = useState(null);
-  const [uploadError, setUploadError] = useState(null);
 
   useEffect(() => {
     if (!userInfo) {
@@ -52,9 +51,9 @@ const CarouselEditScreen = ({ match, history }) => {
           return {
             ...prevValue,
             name: carouselDetail.name,
-            text: carouselDetail.text,
-            image: carouselDetail.image,
-            link: carouselDetail.link,
+            text: carouselDetail.text !== null ? carouselDetail.text : "",
+            image: carouselDetail.image !== null ? carouselDetail.image : "",
+            link: carouselDetail.link !== null ? carouselDetail.link : "",
           };
         });
 
@@ -77,68 +76,45 @@ const CarouselEditScreen = ({ match, history }) => {
     }
   };
 
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-
-      const { data } = await axios.post("/api/upload", formData, config);
-
-      if (data.url) {
-        setCarousel((prevValue) => {
-          return { ...prevValue, [e.target.name]: data };
-        });
-        setUploadError(null);
-      } else {
-        setUploadError(data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const submitHandler = (e) => {
-    if (
-      uploadError === "Please select images only!!!" ||
-      "The maximum file size"
-    ) {
-      setUploadError(null);
-    }
     if (carousel.name === "") {
       setNameError("This field is required!");
-    } else if (uploadError === null && nameError === null) {
+    } else if (nameError === null) {
+      const data = new FormData();
       if (carouselDetail.name === carousel.name) {
         const { name, ...otherfields } = carousel;
-        dispatch(updateCarousel(carouselDetail.id, otherfields));
+        for (const name in otherfields) {
+          if (
+            otherfields[name] !== undefined &&
+            otherfields[name] !== null &&
+            otherfields[name] !== ""
+          )
+            data.append(name, otherfields[name]);
+        }
+        dispatch(updateCarousel(carouselDetail.id, data));
+        removeUrls();
       } else {
-        dispatch(updateCarousel(carouselDetail.id, carousel));
+        for (const name in carousel) {
+          if (
+            carousel[name] !== undefined &&
+            carousel[name] !== null &&
+            carousel[name] !== ""
+          )
+            data.append(name, carousel[name]);
+        }
+        dispatch(updateCarousel(carouselDetail.id, data));
+        removeUrls();
       }
     }
     e.preventDefault();
   };
 
   const deleteImage = (name) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-
-      const image = carousel[name];
-
-      axios.post("/api/items/delete-image", { image }, config);
-    } catch (error) {
-      console.log(error.message);
-    }
+    const imageSrc = document.getElementById(name).src;
+    URL.revokeObjectURL(imageSrc);
+    setObjectUrls((prevValues) => {
+      return [...prevValues.filter((val) => val !== imageSrc)];
+    });
     setCarousel({ ...carousel, [name]: undefined });
   };
 
@@ -148,6 +124,25 @@ const CarouselEditScreen = ({ match, history }) => {
         <i className="fas fa-trash fa-lg"></i>
       </div>
     );
+  };
+
+  const preview = (event) => {
+    const { name, files } = event.target;
+    setCarousel((prevValues) => {
+      return { ...prevValues, [name]: files[0] };
+    });
+    const frame = document.getElementById(name);
+    const url = URL.createObjectURL(event.target.files[0]);
+    setObjectUrls((prevValues) => {
+      return [...prevValues, url];
+    });
+    frame.src = url;
+  };
+
+  const removeUrls = () => {
+    for (let i = 0; i < objectUrls.length; i++) {
+      URL.revokeObjectURL(objectUrls[i]);
+    }
   };
 
   return (
@@ -191,30 +186,34 @@ const CarouselEditScreen = ({ match, history }) => {
 
             <Form.Group>
               <Form.Label>Carousel Image</Form.Label>
-              {carousel.image && (
-                <div className="delete-div">
-                  <Form.Control
-                    as={Image}
-                    src={carousel.image.url}
-                    alt={carousel.image.name}
-                  />
-                  <Form.Control
-                    as={deleteIcon}
-                    className="delete-icon"
-                    name="image"
-                  />
-                </div>
-              )}
+              <div
+                className="delete-div"
+                style={{ display: !carousel.image && "none" }}
+              >
+                <Form.Control
+                  as={Image}
+                  id="image"
+                  src={
+                    carouselDetail &&
+                    carouselDetail.image &&
+                    carouselDetail.image.url
+                  }
+                  alt={carousel.image.name}
+                />
+                <Form.Control
+                  as={deleteIcon}
+                  className="delete-icon"
+                  name="image"
+                />
+              </div>
               {!carousel.image && (
                 <Form.File
                   name="image"
                   label="Choose Image"
                   custom
-                  onChange={uploadFileHandler}
+                  onChange={preview}
                 />
               )}
-
-              {uploadError && <Message variant="danger">{uploadError}</Message>}
             </Form.Group>
 
             <Button className="btn-md btn-dark" onClick={submitHandler}>
