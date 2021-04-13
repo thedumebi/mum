@@ -23,6 +23,7 @@ import AddCarouselScrren from "./screens/AddCarouselScreen";
 import CarouselEditScreen from "./screens/CarouselEditScreen";
 import UserListScreen from "./screens/UserListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
+import Favorites from "./screens/Favorites";
 
 const App = () => {
   const getCookie = (name) => {
@@ -106,6 +107,7 @@ const App = () => {
             <Route exact path="/items/newitem" component={NewItem} />
             <Route exact path="/item/:id/edit" component={ItemEdit} />
             <Route path="/item/:id" component={Item} />
+            <Route exact path="/favorites" component={Favorites} />
             <Route exact path="/reset-password" component={ResetPassword} />
             <Route exact path="/settings" component={Settings} />
             <Route exact path="/change-password" component={ChangePassword} />

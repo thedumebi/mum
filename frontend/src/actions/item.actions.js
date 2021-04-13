@@ -31,7 +31,6 @@ import {
   ITEM_UNFAVORITE_SUCCESS,
   ITEM_UNFAVORITE_FAIL,
 } from "../constants/item.constants";
-import { USER_LOGIN_SUCCESS } from "../constants/user.constants";
 import { getUserDetails } from "./user.actions";
 
 export const createItem = (item) => async (dispatch, getState) => {
@@ -289,10 +288,6 @@ export const favoriteItem = (id, userId) => async (dispatch, getState) => {
     });
 
     dispatch(getUserDetails(data._id));
-
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-
-    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: ITEM_FAVORITE_FAIL,
@@ -331,10 +326,6 @@ export const unFavoriteItem = (id, userId) => async (dispatch, getState) => {
     });
 
     dispatch(getUserDetails(data._id));
-
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-
-    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: ITEM_UNFAVORITE_FAIL,

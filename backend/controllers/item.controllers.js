@@ -321,7 +321,7 @@ const favoriteItem = asyncHandler(async (req, res) => {
       include: ["items", "favorites"],
       attributes: { exclude: ["password"] },
     });
-    await item.addUser(user);
+    await item.addFavorites(user);
     res.status(200).json(user);
   } else {
     res.status(404);
@@ -339,7 +339,7 @@ const unfavoriteItem = asyncHandler(async (req, res) => {
       include: ["items", "favorites"],
       attributes: { exclude: ["password"] },
     });
-    await item.removeUser(user);
+    await item.removeFavorites(user);
     res.status(200).json(user);
   } else {
     res.status(404);
