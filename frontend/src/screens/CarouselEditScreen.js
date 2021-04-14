@@ -198,7 +198,7 @@ const CarouselEditScreen = ({ match, history }) => {
                     carouselDetail.image &&
                     carouselDetail.image.url
                   }
-                  alt={carousel.image.name}
+                  alt={carousel.image}
                 />
                 <Form.Control
                   as={deleteIcon}

@@ -99,38 +99,38 @@ const createItem = asyncHandler(async (req, res, next) => {
         if (itemExists) {
           res.status(400);
           throw new Error("Sorry, you already have an item with that name!");
-        }
-
-        const item = await Item.create({
-          name,
-          price,
-          quantity,
-          description,
-        });
-        if (item.price === undefined) {
-          await item.update({ price: itemCategories[0].price });
-        }
-        await item.setUser(req.user);
-        await item.addCategories(itemCategories);
-        if (item) {
-          let imageKit1, imageKit2, imageKit3;
-          if (image1) imageKit1 = sendToImageKit(image1[0]);
-          if (image2) imageKit2 = sendToImageKit(image2[0]);
-          if (image3) imageKit3 = sendToImageKit(image3[0]);
-          const [result1, result2, result3] = await Promise.all([
-            imageKit1,
-            imageKit2,
-            imageKit3,
-          ]);
-          await item.update({
-            image1: result1,
-            image2: result2,
-            image3: result3,
-          });
-          res.status(200).json(item);
         } else {
-          res.status(401);
-          throw new Error("Invalid input");
+          const item = await Item.create({
+            name,
+            price,
+            quantity,
+            description,
+          });
+          if (item.price === undefined) {
+            await item.update({ price: itemCategories[0].price });
+          }
+          await item.setUser(req.user);
+          await item.addCategories(itemCategories);
+          if (item) {
+            let imageKit1, imageKit2, imageKit3;
+            if (image1) imageKit1 = sendToImageKit(image1[0]);
+            if (image2) imageKit2 = sendToImageKit(image2[0]);
+            if (image3) imageKit3 = sendToImageKit(image3[0]);
+            const [result1, result2, result3] = await Promise.all([
+              imageKit1,
+              imageKit2,
+              imageKit3,
+            ]);
+            await item.update({
+              image1: result1,
+              image2: result2,
+              image3: result3,
+            });
+            res.status(200).json(item);
+          } else {
+            res.status(401);
+            throw new Error("Invalid input");
+          }
         }
       }
     } catch (err) {
@@ -171,67 +171,127 @@ const updateItem = asyncHandler(async (req, res, next) => {
           if (itemExists) {
             res.status(400);
             throw new Error("Sorry, you already have an item with that name!");
-          }
-        }
+          } else {
+            const item = await Item.findByPk(req.params.id);
+            if (item) {
+              const {
+                categories,
+                image1: oldImage1,
+                image2: oldImage2,
+                image3: oldImage3,
+                ...itemUpdate
+              } = req.body;
+              await item.update(itemUpdate);
+              const categoriesArray = categories.split(",");
+              const itemCategories = await Category.findAll({
+                where: {
+                  id: { [Op.in]: categoriesArray },
+                },
+              });
+              await item.setCategories([]);
+              await item.addCategories(itemCategories);
 
-        const item = await Item.findByPk(req.params.id);
-        if (item) {
-          const {
-            categories,
-            image1: oldImage1,
-            image2: oldImage2,
-            image3: oldImage3,
-            ...itemUpdate
-          } = req.body;
-          await item.update(itemUpdate);
-          const categoriesArray = categories.split(",");
-          const itemCategories = await Category.findAll({
-            where: {
-              id: { [Op.in]: categoriesArray },
-            },
-          });
-          await item.setCategories([]);
-          await item.addCategories(itemCategories);
+              let imageKit1, imageKit2, imageKit3;
+              if (image1) imageKit1 = sendToImageKit(image1[0]);
+              if (image2) imageKit2 = sendToImageKit(image2[0]);
+              if (image3) imageKit3 = sendToImageKit(image3[0]);
+              const [result1, result2, result3] = await Promise.all([
+                imageKit1,
+                imageKit2,
+                imageKit3,
+              ]);
 
-          let imageKit1, imageKit2, imageKit3;
-          if (image1) imageKit1 = sendToImageKit(image1[0]);
-          if (image2) imageKit2 = sendToImageKit(image2[0]);
-          if (image3) imageKit3 = sendToImageKit(image3[0]);
-          const [result1, result2, result3] = await Promise.all([
-            imageKit1,
-            imageKit2,
-            imageKit3,
-          ]);
-
-          // delete image
-          for (let i = 1; i < 4; i++) {
-            if (item[`image${i}`] !== null) {
-              if (
-                (!req.files[`image${i}`] && !req.body[`image${i}`]) ||
-                req.files[`image${i}`]
-              ) {
-                console.log(i, "deleted");
-                await imagekit.deleteFile(item[`image${i}`].fileId);
-                item[`image${i}`] = null;
-                await item.save();
+              // delete image
+              for (let i = 1; i < 4; i++) {
+                if (item[`image${i}`] !== null) {
+                  if (
+                    (!req.files[`image${i}`] && !req.body[`image${i}`]) ||
+                    req.files[`image${i}`]
+                  ) {
+                    console.log(i, "deleted");
+                    await imagekit.deleteFile(item[`image${i}`].fileId);
+                    item[`image${i}`] = null;
+                    await item.save();
+                  }
+                }
               }
+
+              if (result1) {
+                await item.update({ image1: result1 });
+              }
+              if (result2) {
+                await item.update({ image2: result2 });
+              }
+              if (result3) {
+                await item.update({ image3: result3 });
+              }
+
+              res.status(200).json(item);
+            } else {
+              res.status(404);
+              throw new Error("Item not found");
             }
           }
-
-          if (result1) {
-            await item.update({ image1: result1 });
-          }
-          if (result2) {
-            await item.update({ image2: result2 });
-          }
-          if (result3) {
-            await item.update({ image3: result3 });
-          }
-
-          res.status(200).json(item);
         } else {
-          res.status(404);
-          throw new Error("Item not found");
+          const item = await Item.findByPk(req.params.id);
+          if (item) {
+            const {
+              categories,
+              image1: oldImage1,
+              image2: oldImage2,
+              image3: oldImage3,
+              ...itemUpdate
+            } = req.body;
+            await item.update(itemUpdate);
+            const categoriesArray = categories.split(",");
+            const itemCategories = await Category.findAll({
+              where: {
+                id: { [Op.in]: categoriesArray },
+              },
+            });
+            await item.setCategories([]);
+            await item.addCategories(itemCategories);
+
+            let imageKit1, imageKit2, imageKit3;
+            if (image1) imageKit1 = sendToImageKit(image1[0]);
+            if (image2) imageKit2 = sendToImageKit(image2[0]);
+            if (image3) imageKit3 = sendToImageKit(image3[0]);
+            const [result1, result2, result3] = await Promise.all([
+              imageKit1,
+              imageKit2,
+              imageKit3,
+            ]);
+
+            // delete image
+            for (let i = 1; i < 4; i++) {
+              if (item[`image${i}`] !== null) {
+                if (
+                  (!req.files[`image${i}`] && !req.body[`image${i}`]) ||
+                  req.files[`image${i}`]
+                ) {
+                  console.log(i, "deleted");
+                  await imagekit.deleteFile(item[`image${i}`].fileId);
+                  item[`image${i}`] = null;
+                  await item.save();
+                }
+              }
+            }
+
+            if (result1) {
+              await item.update({ image1: result1 });
+            }
+            if (result2) {
+              await item.update({ image2: result2 });
+            }
+            if (result3) {
+              await item.update({ image3: result3 });
+            }
+
+            res.status(200).json(item);
+          } else {
+            res.status(404);
+            throw new Error("Item not found");
+          }
         }
       }
     } catch (err) {

@@ -99,38 +99,38 @@ const registerUser = asyncHandler(async (req, res) => {
     if (emailExists) {
       res.status(400);
       throw new Error("Email is already in use");
-    }
-
-    const user = await User.create({
-      username,
-      password,
-      email,
-      phoneNumber,
-      firstName,
-      lastName,
-    });
-    if (user) {
-      const mailOptions = {
-        from: process.env.EMAIL,
-        to: user.email,
-        subject: "Welcome",
-        html: `
-        <p>Hello ${user.firstName},</p>
-        <p>I am pleased to welcome you to my store. Be sure to check out our <a href="https://tessy.chiwuzoh.com.ng/FAQs">FAQs for any information that you would need.</a></p>
-        <p>Cheers,</p>
-        <p>Tessy.</p>`,
-      };
-      const info = await transporter.sendMail(mailOptions);
-      const { password, ...otherKeys } = user.dataValues;
-      if (info) {
-        res.status(200).json({
-          ...otherKeys,
-          token: generateToken(user.id),
-        });
-      }
     } else {
-      res.status(400);
-      throw new Error("Invalid user data");
+      const user = await User.create({
+        username,
+        password,
+        email,
+        phoneNumber,
+        firstName,
+        lastName,
+      });
+      if (user) {
+        const mailOptions = {
+          from: process.env.EMAIL,
+          to: user.email,
+          subject: "Welcome",
+          html: `
+          <p>Hello ${user.firstName},</p>
+          <p>I am pleased to welcome you to my store. Be sure to check out our <a href="https://tessy.chiwuzoh.com.ng/FAQs">FAQs for any information that you would need.</a></p>
+          <p>Cheers,</p>
+          <p>Tessy.</p>`,
+        };
+        const info = await transporter.sendMail(mailOptions);
+        const { password, ...otherKeys } = user.dataValues;
+        if (info) {
+          res.status(200).json({
+            ...otherKeys,
+            token: generateToken(user.id),
+          });
+        }
+      } else {
+        res.status(400);
+        throw new Error("Invalid user data");
+      }
     }
   }
 });
@@ -186,37 +186,54 @@ const getUser = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
   const { username, email } = req.body;
-  if (username) {
-    const usernameExists = await User.findOne({
-      where: {
-        username: { [Op.like]: `${username.toLowerCase()}` },
-      },
-    });
-    if (usernameExists) {
-      res.status(400);
-      throw new Error("Sorry, that username is not available");
+  if (username || email) {
+    if (username) {
+      const usernameExists = await User.findOne({
+        where: {
+          username: { [Op.like]: `${username.toLowerCase()}` },
+        },
+      });
+      if (usernameExists) {
+        res.status(400);
+        throw new Error("Sorry, that username is not available");
+      } else if (email) {
+        const emailExists = await User.findOne({
+          where: {
+            email: { [Op.like]: `${email.toLowerCase()}` },
+          },
+        });
+        if (emailExists) {
+          res.status(400);
+          throw new Error("Sorry, the provided email is not available");
+        } else {
+          const user = await User.findByPk(req.params.id, {
+            attributes: { exclude: ["password"] },
+          });
+          if (user) {
+            await user.update(req.body);
+            res
+              .status(200)
+              .json({ ...user.dataValues, token: generateToken(user.id) });
+          } else {
+            res.status(404);
+            throw new Error("User not found");
+          }
+        }
+      }
     }
-  }
-  if (email) {
-    const emailExists = await User.findOne({
-      where: {
-        email: { [Op.like]: `${email.toLowerCase()}` },
-      },
-    });
-    if (emailExists) {
-      res.status(400);
-      throw new Error("Sorry, the provided email is not available");
-    }
-  }
-  const user = await User.findByPk(req.params.id, {
-    attributes: { exclude: ["password"] },
-  });
-  if (user) {
-    await user.update(req.body);
-    res.status(200).json({ ...user.dataValues, token: generateToken(user.id) });
   } else {
-    res.status(404);
-    throw new Error("User not found");
+    const user = await User.findByPk(req.params.id, {
+      attributes: { exclude: ["password"] },
+    });
+    if (user) {
+      await user.update(req.body);
+      res
+        .status(200)
+        .json({ ...user.dataValues, token: generateToken(user.id) });
+    } else {
+      res.status(404);
+      throw new Error("User not found");
+    }
   }
 });
 

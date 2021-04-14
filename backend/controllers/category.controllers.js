@@ -70,18 +70,18 @@ const createCategory = asyncHandler(async (req, res) => {
   if (categoryExists) {
     res.status(400);
     throw new Error("Sorry, you already have a category with that name");
-  }
-
-  const category = await Category.create({
-    name,
-    price,
-    description,
-  });
-  if (category) {
-    res.status(200).json(category);
   } else {
-    res.status(401);
-    throw new Error("Invalid input");
+    const category = await Category.create({
+      name,
+      price,
+      description,
+    });
+    if (category) {
+      res.status(200).json(category);
+    } else {
+      res.status(401);
+      throw new Error("Invalid input");
+    }
   }
 });
 
@@ -105,35 +105,63 @@ const updateCategory = asyncHandler(async (req, res) => {
     if (categoryExists) {
       res.status(400);
       throw new Error("Sorry, you already have a category with that name");
-    }
-  }
-
-  const category = await Category.findByPk(req.params.id);
-  if (category) {
-    const updatedCategory = await category.update(req.body);
-    if (req.body.setPrice && req.body.setPrice === true) {
-      const items = await Item.findAll({
-        include: [
-          {
-            model: Category,
-            as: "categories",
-            required: true,
-            through: {
-              where: {
-                categoryId: { [Op.eq]: category.id },
+    } else {
+      const category = await Category.findByPk(req.params.id);
+      if (category) {
+        const updatedCategory = await category.update(req.body);
+        if (req.body.setPrice && req.body.setPrice === true) {
+          const items = await Item.findAll({
+            include: [
+              {
+                model: Category,
+                as: "categories",
+                required: true,
+                through: {
+                  where: {
+                    categoryId: { [Op.eq]: category.id },
+                  },
+                },
               },
-            },
-          },
-        ],
-      });
-      for (var item of items) {
-        item.update({ price: category.price });
+            ],
+          });
+          for (var item of items) {
+            item.update({ price: category.price });
+          }
+        }
+        res.status(200).json(updatedCategory);
+      } else {
+        res.status(404);
+        throw new Error("Category not found");
       }
     }
-    res.status(200).json(updatedCategory);
   } else {
-    res.status(404);
-    throw new Error("Category not found");
+    const category = await Category.findByPk(req.params.id);
+    if (category) {
+      const updatedCategory = await category.update(req.body);
+      if (req.body.setPrice && req.body.setPrice === true) {
+        const items = await Item.findAll({
+          include: [
+            {
+              model: Category,
+              as: "categories",
+              required: true,
+              through: {
+                where: {
+                  categoryId: { [Op.eq]: category.id },
+                },
+              },
+            },
+          ],
+        });
+        for (var item of items) {
+          item.update({ price: category.price });
+        }
+      }
+      res.status(200).json(updatedCategory);
+    } else {
+      res.status(404);
+      throw new Error("Category not found");
+    }
   }
 });
 

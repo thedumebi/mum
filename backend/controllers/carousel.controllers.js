@@ -49,22 +49,31 @@ const createCarousel = asyncHandler(async (req, res, next) => {
           },
         });
         if (carouselExists) {
+          try {
+            fs.unlink(image[0].path, (err) => {
+              if (err) {
+                console.log(err);
+              }
+            });
+          } catch (err) {
+            console.log(err);
+          }
           res.status(400);
           throw new Error("Sorry, you already have a carousel with that name");
-        }
-
-        const carousel = await Carousel.create({
-          name,
-          text,
-          link,
-        });
-        if (carousel) {
-          let imageKit1;
-          if (image) imageKit1 = await sendToImageKit(image[0]);
-          if (imageKit1) await carousel.update({ image: imageKit1 });
-          res.status(200).json(carousel);
         } else {
-          throw new Error("Invalid Input");
+          const carousel = await Carousel.create({
+            name,
+            text,
+            link,
+          });
+          if (carousel) {
+            let imageKit1;
+            if (image) imageKit1 = await sendToImageKit(image[0]);
+            if (imageKit1) await carousel.update({ image: imageKit1 });
+            res.status(200).json(carousel);
+          } else {
+            throw new Error("Invalid Input");
+          }
         }
       }
     } catch (err) {
@@ -99,25 +108,25 @@ const updateCarousel = asyncHandler(async (req, res, next) => {
               "Sorry, you already have a carousel item with that name"
             );
           }
-        }
-
-        const carousel = await Carousel.findByPk(req.params.id);
-        if (carousel) {
-          if (!req.body.image && carousel.image !== null) {
-            await imagekit.deleteFile(carousel.image.fileId);
-            carousel.image = null;
-            await carousel.save();
-          }
-          const { image } = req.files;
-          const { image: oldImage, ...otherUpdates } = req.body;
-          await carousel.update(otherUpdates);
-          let imageKit1;
-          if (image) imageKit1 = await sendToImageKit(image[0]);
-          if (imageKit1) await carousel.update({ image: imageKit1 });
-          res.status(200).json(carousel);
         } else {
-          res.status(404);
-          throw new Error("Carousel not found");
+          const carousel = await Carousel.findByPk(req.params.id);
+          if (carousel) {
+            if (!req.body.image && carousel.image !== null) {
+              await imagekit.deleteFile(carousel.image.fileId);
+              carousel.image = null;
+              await carousel.save();
+            }
+            const { image } = req.files;
+            const { image: oldImage, ...otherUpdates } = req.body;
+            await carousel.update(otherUpdates);
+            let imageKit1;
+            if (image) imageKit1 = await sendToImageKit(image[0]);
+            if (imageKit1) await carousel.update({ image: imageKit1 });
+            res.status(200).json(carousel);
+          } else {
+            res.status(404);
+            throw new Error("Carousel not found");
+          }
         }
       }
     } catch (err) {
