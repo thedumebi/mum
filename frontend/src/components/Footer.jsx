@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import ReactWhatsapp from "react-whatsapp";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -17,6 +18,13 @@ const Footer = () => {
           <i className="fas fa-envelope" />
         </Button>
       </a>
+      <Button
+        as={ReactWhatsapp}
+        number="+2348022111180"
+        message="Good day, I would like to make an enquiry about ..."
+      >
+        <i className="fa fa-whatsapp fa-lg" />
+      </Button>
       <p>
         Copyright &copy; {year} Tessy Chiwuzoh | <Link to="/FAQs">FAQS</Link>
       </p>

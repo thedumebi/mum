@@ -16,6 +16,7 @@ import {
 import Message from "../components/Message";
 import { getUserDetails } from "../actions/user.actions";
 import ItemQuantity from "./ItemQuantityEdit";
+import ReactWhatsapp from "react-whatsapp";
 
 const Items = ({ item }) => {
   const url = useRouteMatch();
@@ -226,6 +227,28 @@ const Items = ({ item }) => {
               </Button>
             )}
 
+          {/* whatsapp button */}
+          {item &&
+            item.id &&
+            url.path === "/item/:id" &&
+            user &&
+            user.role === "customer" && (
+              <>
+                <a href="tel:+2348028611554">
+                  <Button className="btn-small">
+                    <i className="fas fa-phone" />
+                  </Button>
+                </a>
+                <Button
+                  as={ReactWhatsapp}
+                  number="+2348022111180"
+                  message={`Good Day, I would like to make an enquiry about this item https://tessy.chiwuzoh.com/item/${item.id}`}
+                >
+                  <i className="fa fa-whatsapp fa-lg" />
+                </Button>
+              </>
+            )}
+
           {/* visit item button */}
           {item.id &&
             (url.path === "/category/:id" ||
@@ -251,6 +274,24 @@ const Items = ({ item }) => {
             <Link to={`/login?redirect=/item/${item.id}`}>
               <Button className="btn-dark">Favorite</Button>
             </Link>
+          )}
+
+          {/* whatsapp button */}
+          {url.path === "/item/:id" && !user && (
+            <>
+              <a href="tel:+2348028611554">
+                <Button className="btn-small">
+                  <i className="fas fa-phone" />
+                </Button>
+              </a>
+              <Button
+                as={ReactWhatsapp}
+                number="+2348022111180"
+                message={`Good Day, I would like to make an enquiry about this item https://tessy.chiwuzoh.com/item/${item.id}`}
+              >
+                <i className="fa fa-whatsapp fa-lg" />
+              </Button>
+            </>
           )}
         </>
       )}
