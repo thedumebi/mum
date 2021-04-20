@@ -89,7 +89,7 @@ hr {
 .delete-div {
   position: relative;
   display: inline-block;
-  background-color: rgba(0, 0, 0, 0.8)
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .overlay .delete-div img {
