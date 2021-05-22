@@ -24,6 +24,10 @@ import CarouselEditScreen from "./screens/CarouselEditScreen";
 import UserListScreen from "./screens/UserListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import Favorites from "./screens/Favorites";
+import FaqsList from "./screens/FaqList";
+import FaqsAdminList from "./screens/FaqAdminList";
+import FaqEditScreen from "./screens/FaqEditScreen";
+import FaqNew from "./screens/FaqNew";
 
 const App = () => {
   const getCookie = (name) => {
@@ -147,6 +151,37 @@ const App = () => {
               component={UserEditScreen}
             />
             <Route exact path="/admin/users" component={UserListScreen} />
+            <Route exact path="/faqs/search/:keyword/" component={FaqsList} />
+            <Route
+              exact
+              path="/faqs/search/:keyword/page/:pageNumber"
+              component={FaqsList}
+            />
+            <Route exact path="/faqs/page/:pageNumber" component={FaqsList} />
+            <Route exact path="/faqs" component={FaqsList} />
+            <Route exact path="/admin/faqs/add" component={FaqNew} />
+            <Route
+              exact
+              path="/admin/faqs/:id/edit"
+              component={FaqEditScreen}
+            />
+            <Route
+              exact
+              path="/admin/faqs/search/:keyword"
+              component={FaqsAdminList}
+            />
+            <Route
+              exact
+              path="/admin/faqs/search/:keyword/page/:pageNumber"
+              component={FaqsAdminList}
+            />
+            <Route
+              exact
+              path="/admin/faqs/page/:pageNumber"
+              component={FaqsAdminList}
+            />
+            <Route exact path="/admin/faqs" component={FaqsAdminList} />
+
             <Route component={NotFound} />
           </Switch>
         </Container>

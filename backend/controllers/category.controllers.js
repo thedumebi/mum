@@ -79,7 +79,7 @@ const createCategory = asyncHandler(async (req, res) => {
     if (category) {
       res.status(200).json(category);
     } else {
-      res.status(401);
+      res.status(400);
       throw new Error("Invalid input");
     }
   }

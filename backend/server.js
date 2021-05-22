@@ -7,6 +7,7 @@ const itemRoutes = require("./routes/item.routes");
 const categoryRoutes = require("./routes/category.routes");
 const uploadRoute = require("./routes/upload.routes");
 const carouselRoutes = require("./routes/carousel.routes");
+const faqRoutes = require("./routes/faq.routes");
 const { errorHandler, notFound } = require("./middleware/error.middleware");
 
 const app = express();
@@ -20,6 +21,7 @@ app.use("/api/items", itemRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/upload", uploadRoute);
 app.use("/api/carousel", carouselRoutes);
+app.use("/api/faqs", faqRoutes);
 
 //Make uploads folder static
 app.use("/backend/uploads", express.static(__dirname + "/uploads"));

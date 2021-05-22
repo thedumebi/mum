@@ -22,6 +22,13 @@ import {
   deleteCategoryReducer,
 } from "./reducers/category.reducers";
 import {
+  createFaqReducer,
+  faqDetailsReducer,
+  listFaqReducer,
+  updateFaqReducer,
+  deleteFaqReducer,
+} from "./reducers/faq.reducers";
+import {
   addToItemReducer,
   createItemReducer,
   favoriteItemReducer,
@@ -58,6 +65,11 @@ const reducer = combineReducers({
   categoryList: listCategoryReducer,
   categoryUpdate: updateCategoryReducer,
   categoryDelete: deleteCategoryReducer,
+  faqCreate: createFaqReducer,
+  faqDetails: faqDetailsReducer,
+  faqList: listFaqReducer,
+  faqUpdate: updateFaqReducer,
+  faqDelete: deleteFaqReducer,
   itemCreate: createItemReducer,
   itemDetails: itemDetailsReducer,
   itemList: itemListReducer,

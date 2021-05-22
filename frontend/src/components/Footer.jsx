@@ -26,7 +26,7 @@ const Footer = () => {
         <i className="fa fa-whatsapp fa-lg" />
       </Button>
       <p>
-        Copyright &copy; {year} Tessy Chiwuzoh | <Link to="/FAQs">FAQS</Link>
+        Copyright &copy; {year} Tessy Chiwuzoh | <Link to="/faqs">FAQS</Link>
       </p>
       <p className="pb-3">
         Designed by <a href="https://chiwuzoh.com.ng">DMB</a>

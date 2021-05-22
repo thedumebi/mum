@@ -10,6 +10,16 @@ const SearchBox = ({ history, url }) => {
       history.push(
         url.path.includes("/categories") && `/categories/search/${keyword}`
       );
+      history.push(
+        url.path.includes("faqs") &&
+          !url.path.includes("admin") &&
+          `/faqs/search/${keyword}`
+      );
+      history.push(
+        url.path.includes("faqs") &&
+          url.path.includes("admin") &&
+          `admin/faqs/search/${keyword}`
+      );
       history.push(url.path.includes("/items") && `/items/search/${keyword}`);
       history.push(
         url.path.includes("/category") && `/items/search/${keyword}`
@@ -19,12 +29,19 @@ const SearchBox = ({ history, url }) => {
       );
     } else {
       history.push(url.path.includes("/categories") && `/categories`);
+      history.push(
+        url.path.includes("/faqs") && !url.path.includes("/admin") && `/faqs`
+      );
+      history.push(
+        url.path.includes("/faqs") && url.path.includes("/admin") && `/faqs`
+      );
       history.push(url.path.includes("/items") && `/items`);
       history.push(url.path.includes("/admin/users") && `/admin/users`);
       history.push(
         !url.path.includes("/categories") &&
           !url.path.includes("/items") &&
           !url.path.includes("/admin/users") &&
+          !url.path.includes("/faqs") &&
           "/"
       );
     }
@@ -40,6 +57,8 @@ const SearchBox = ({ history, url }) => {
             ? "Search categories ..."
             : url.path === "/admin/users"
             ? "Search users ..."
+            : url.path.includes("faqs")
+            ? "Search FAQs"
             : "Search items ..."
         }
       ></Form.Control>

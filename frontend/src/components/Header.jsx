@@ -50,6 +50,9 @@ function Header({ mode }) {
                       <NavDropdown.Item href="/admin/carousels">
                         Carousels
                       </NavDropdown.Item>
+                      <NavDropdown.Item href="/admin/faqs">
+                        FAQS
+                      </NavDropdown.Item>
                     </>
                   )}
                 </NavDropdown>
