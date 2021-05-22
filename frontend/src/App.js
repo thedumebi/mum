@@ -28,6 +28,7 @@ import FaqsList from "./screens/FaqList";
 import FaqsAdminList from "./screens/FaqAdminList";
 import FaqEditScreen from "./screens/FaqEditScreen";
 import FaqNew from "./screens/FaqNew";
+import FaqSingle from "./screens/FaqSingle";
 
 const App = () => {
   const getCookie = (name) => {
@@ -181,6 +182,7 @@ const App = () => {
               component={FaqsAdminList}
             />
             <Route exact path="/admin/faqs" component={FaqsAdminList} />
+            <Route exact path="/faqs/:id" component={FaqSingle} />
 
             <Route component={NotFound} />
           </Switch>
