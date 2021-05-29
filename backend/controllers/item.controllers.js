@@ -7,9 +7,10 @@ const { imagekit, sendToImageKit } = require("../utils/imageKit.utils");
 
 const Item = db.Item;
 const User = db.User;
+const Sales = db.Sales;
+const Op = db.Sequelize.Op;
 const Category = db.Category;
 const sequelize = db.sequelize;
-const Op = db.Sequelize.Op;
 
 // @desc Get all items
 // @route GET /api/items/
@@ -333,7 +334,11 @@ const addItem = asyncHandler(async (req, res) => {
   const { count } = req.body;
   const item = await Item.findByPk(req.params.id);
   if (item) {
-    await item.increment(["quantity"], { by: count });
+    if (item.quantity !== null && item.quantity !== undefined) {
+      await item.increment(["quantity"], { by: count });
+    } else {
+      await item.update({ quantity: count });
+    }
     await item.reload();
     res.status(200).json(item);
   } else {
@@ -349,9 +354,20 @@ const removeItem = asyncHandler(async (req, res) => {
   const { count } = req.body;
   const item = await Item.findByPk(req.params.id);
   if (item) {
-    await item.decrement(["quantity"], { by: count });
-    await item.reload();
-    res.status(200).json(item);
+    const newSale = await Sales.create({
+      name: item.name,
+      quantity: count,
+      amount: item.price * count,
+    });
+    if (newSale) {
+      await newSale.setItem(item);
+      await item.decrement(["quantity"], { by: count });
+      await item.reload();
+      res.status(200).json(item);
+    } else {
+      res.status(500);
+      throw new Error("Could not register new sale");
+    }
   } else {
     res.status(404);
     throw new Error("Item not found");

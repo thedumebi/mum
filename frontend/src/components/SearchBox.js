@@ -27,21 +27,36 @@ const SearchBox = ({ history, url }) => {
       history.push(
         url.path.includes("/admin/users") && `/admin/users/search/${keyword}`
       );
+      history.push(
+        url.path.includes("/admin/sales") && `/admin/sales/search/${keyword}`
+      );
+      history.push(
+        url.path.includes("/admin/sales/today") &&
+          `/admin/sales/today/search/${keyword}`
+      );
     } else {
       history.push(url.path.includes("/categories") && `/categories`);
       history.push(
         url.path.includes("/faqs") && !url.path.includes("/admin") && `/faqs`
       );
       history.push(
-        url.path.includes("/faqs") && url.path.includes("/admin") && `/faqs`
+        url.path.includes("/faqs") &&
+          url.path.includes("/admin") &&
+          `/admin/faqs`
       );
       history.push(url.path.includes("/items") && `/items`);
       history.push(url.path.includes("/admin/users") && `/admin/users`);
+
+      history.push(url.path.includes("/admin/sales") && `/admin/sales`);
+      history.push(
+        url.path.includes("/admin/sales/today") && `/admin/sales/today`
+      );
       history.push(
         !url.path.includes("/categories") &&
           !url.path.includes("/items") &&
           !url.path.includes("/admin/users") &&
           !url.path.includes("/faqs") &&
+          !url.path.includes("/admin/sales") &&
           "/"
       );
     }

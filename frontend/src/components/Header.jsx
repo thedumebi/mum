@@ -41,6 +41,12 @@ function Header({ mode }) {
                   <NavDropdown.Divider />
                   {userInfo.role === "admin" && (
                     <>
+                      <NavDropdown.Item href="/admin/sales/today">
+                        Today's Sales
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href="/admin/sales">
+                        Sales History
+                      </NavDropdown.Item>
                       <NavDropdown.Item href="/admin/users">
                         Users
                       </NavDropdown.Item>

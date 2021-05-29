@@ -29,6 +29,9 @@ import FaqsAdminList from "./screens/FaqAdminList";
 import FaqEditScreen from "./screens/FaqEditScreen";
 import FaqNew from "./screens/FaqNew";
 import FaqSingle from "./screens/FaqSingle";
+import SalesList from "./screens/SalesList";
+import SalesOfTheDay from "./screens/SalesOfTheDay";
+import SalesSingle from "./screens/SalesSingle";
 
 const App = () => {
   const getCookie = (name) => {
@@ -183,7 +186,39 @@ const App = () => {
             />
             <Route exact path="/admin/faqs" component={FaqsAdminList} />
             <Route exact path="/faqs/:id" component={FaqSingle} />
-
+            <Route
+              exact
+              path="/admin/sales/today/search/:keyword"
+              component={SalesOfTheDay}
+            />
+            <Route
+              exact
+              path="/admin/sales/today/search/:keyword/page/:pageNumber"
+              component={SalesOfTheDay}
+            />
+            <Route
+              exact
+              path="/admin/sales/today/page/:pageNumber"
+              component={SalesOfTheDay}
+            />
+            <Route exact path="/admin/sales/today" component={SalesOfTheDay} />
+            <Route
+              exact
+              path="/admin/sales/search/:keyword"
+              component={SalesList}
+            />
+            <Route
+              exact
+              path="/admin/sales/search/:keyword/page/:pageNumber"
+              component={SalesList}
+            />
+            <Route
+              exact
+              path="/admin/sales/page/:pageNumber"
+              component={SalesList}
+            />
+            <Route exact path="/admin/sales" component={SalesList} />
+            <Route exact path="/admin/sales/sale/:id" component={SalesSingle} />
             <Route component={NotFound} />
           </Switch>
         </Container>

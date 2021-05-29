@@ -35,7 +35,11 @@ const Items = ({ item }) => {
 
   const images = [];
   for (var i = 1; i <= 3; i++) {
-    if (item[`image${i}`] !== null || "" || undefined) {
+    if (
+      item[`image${i}`] !== null &&
+      item[`image${i}`] !== "" &&
+      item[`image${i}`] !== undefined
+    ) {
       images.push(item[`image${i}`]);
     }
   }
@@ -52,7 +56,7 @@ const Items = ({ item }) => {
   }, [user, dispatch, userInfo, history, success]);
 
   const deleteHandler = () => {
-    if (window.confirm("This is an ireversible act. Are you sure?")) {
+    if (window.confirm("This is an irreversible act. Are you sure?")) {
       if (window.confirm("LAST WARNING, DELETE ITEM?")) {
         dispatch(deleteItem(item.id));
       }
@@ -104,28 +108,28 @@ const Items = ({ item }) => {
         <>
           {error && <Message variant="danger">{error}</Message>}
           {url.path === "/item/:id" &&
-            (item.image1 !== null ||
-              "" ||
-              undefined ||
-              item.image2 !== null ||
-              "" ||
-              undefined ||
-              item.image3 !== null ||
-              "" ||
-              undefined) && (
+            ((item.image1 !== null &&
+              item.image1 !== "" &&
+              item.image1 !== undefined) ||
+              (item.image2 !== null &&
+                item.image2 !== "" &&
+                item.image2 !== undefined) ||
+              (item.image3 !== null &&
+                item.image3 !== "" &&
+                item.image3 !== undefined)) && (
               <Message variant="info">
                 Tap the image tile to view the full item image
               </Message>
             )}
-          {(item.image1 !== null ||
-            "" ||
-            undefined ||
-            item.image2 !== null ||
-            "" ||
-            undefined ||
-            item.image3 !== null ||
-            "" ||
-            undefined) && (
+          {((item.image1 !== null &&
+            item.image1 !== "" &&
+            item.image1 !== undefined) ||
+            (item.image2 !== null &&
+              item.image2 !== "" &&
+              item.image2 !== undefined) ||
+            (item.image3 !== null &&
+              item.image3 !== "" &&
+              item.image3 !== undefined)) && (
             <div className="heading">
               {url.path === "/item/:id" ? (
                 <Carousel interval={3000}>
@@ -143,9 +147,13 @@ const Items = ({ item }) => {
                 <Link to={`/item/${item.id}`}>
                   <Image
                     src={
-                      item.image1 !== null || "" || undefined
+                      item.image1 !== null &&
+                      item.image1 !== "" &&
+                      item.image1 !== undefined
                         ? item.image1.thumbnailUrl
-                        : item.image2 !== null || "" || undefined
+                        : item.image2 !== null &&
+                          item.image2 !== "" &&
+                          item.image2 !== undefined
                         ? item.image2.thumbnailUrl
                         : item.image3.thumbnailUrl
                     }

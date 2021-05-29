@@ -1,13 +1,14 @@
 require("dotenv").config();
-const express = require("express");
 const path = require("path");
 const db = require("./models");
+const express = require("express");
+const faqRoutes = require("./routes/faq.routes");
 const userRoutes = require("./routes/user.routes");
 const itemRoutes = require("./routes/item.routes");
-const categoryRoutes = require("./routes/category.routes");
+const salesRoutes = require("./routes/sales.routes");
 const uploadRoute = require("./routes/upload.routes");
 const carouselRoutes = require("./routes/carousel.routes");
-const faqRoutes = require("./routes/faq.routes");
+const categoryRoutes = require("./routes/category.routes");
 const { errorHandler, notFound } = require("./middleware/error.middleware");
 
 const app = express();
@@ -16,12 +17,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use("/api/faqs", faqRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/items", itemRoutes);
-app.use("/api/categories", categoryRoutes);
+app.use("/api/sales", salesRoutes);
 app.use("/api/upload", uploadRoute);
 app.use("/api/carousel", carouselRoutes);
-app.use("/api/faqs", faqRoutes);
+app.use("/api/categories", categoryRoutes);
 
 //Make uploads folder static
 app.use("/backend/uploads", express.static(__dirname + "/uploads"));

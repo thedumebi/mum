@@ -47,6 +47,11 @@ import {
   carouselUpdateReducer,
   createCarouselReducer,
 } from "./reducers/carousel.reducers";
+import {
+  salesListReducer,
+  saleDetailsReducer,
+  salesOfTheDayReducer,
+} from "./reducers/sales.reducers";
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -85,6 +90,9 @@ const reducer = combineReducers({
   carouselDelete: carouselDeleteReducer,
   carouselDetails: carouselDetailsReducer,
   carouselUpdate: carouselUpdateReducer,
+  salesList: salesListReducer,
+  salesDetail: saleDetailsReducer,
+  salesOfTheDay: salesOfTheDayReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
