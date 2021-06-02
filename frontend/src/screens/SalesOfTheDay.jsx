@@ -80,6 +80,13 @@ const SalesOfTheDay = ({ history, match }) => {
                     ))}
                 </tbody>
               </Table>
+
+              <div>
+                Total Sales: NGN{" "}
+                {sales &&
+                  sales.reduce((a, b) => ({ amount: a.amount + b.amount }))
+                    .amount}
+              </div>
             </div>
           )}
 

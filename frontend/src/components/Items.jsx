@@ -177,6 +177,7 @@ const Items = ({ item }) => {
             )}
             <br />
             {item.description && <small>Description: {item.description}</small>}
+            <p>Unit Price: NGN {item.price}</p>
             <p>
               {item.quantity === null || item.quantity === 0
                 ? "Item is out of stock"
