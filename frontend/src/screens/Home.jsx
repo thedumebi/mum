@@ -89,8 +89,11 @@ const Home = () => {
       ) : (
         <Row className="left">
           <Col lg={6}>
-            <h1 className="big-heading">Welcome to Tessy's Fabric Store.</h1>
-            <p>We are here for all your fabric needs.</p>
+            <h1 className="big-heading">Welcome to Dominion Fabrics.</h1>
+            <p>
+              For ankara wholesale, retail and asoebi.
+              <br /> Your outlook, our pride
+            </p>
             <Link to="/categories">
               <Button className="btn btn-lg btn-dark">Get Started</Button>
             </Link>

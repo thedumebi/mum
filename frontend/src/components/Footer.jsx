@@ -8,7 +8,7 @@ const Footer = () => {
 
   return (
     <footer className="colored-section">
-      <a href="tel:+2348028611554">
+      <a href="tel:+2348053205470">
         <Button className="btn-small">
           <i className="fas fa-phone" />
         </Button>
@@ -26,7 +26,7 @@ const Footer = () => {
         <i className="fa fa-whatsapp fa-lg" />
       </Button>
       <p>
-        Copyright &copy; {year} Tessy Chiwuzoh | <Link to="/faqs">FAQS</Link>
+        Copyright &copy; {year} Dominion Fabrics | <Link to="/faqs">FAQS</Link>
       </p>
       <p className="pb-3">
         Designed by <a href="https://chiwuzoh.com.ng">DMB</a>

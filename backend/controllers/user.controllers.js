@@ -15,7 +15,8 @@ const { imagekit, sendToImageKit } = require("../utils/imageKit.utils");
 // @access Public
 const authUser = asyncHandler(async (req, res) => {
   const { input, password } = req.body;
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
   const usernameRegex = /^[a-zA-Z][\w-]+$|^@[a-zA-Z0-9]*/;
   let criteria;
 
@@ -71,14 +72,8 @@ const authUser = asyncHandler(async (req, res) => {
 // @route POST /api/users/signup
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  const {
-    username,
-    email,
-    password,
-    phoneNumber,
-    firstName,
-    lastName,
-  } = req.body;
+  const { username, email, password, phoneNumber, firstName, lastName } =
+    req.body;
 
   const usernameExists = await User.findOne({
     where: {
@@ -115,9 +110,10 @@ const registerUser = asyncHandler(async (req, res) => {
           subject: "Welcome",
           html: `
           <p>Hello ${user.firstName},</p>
-          <p>I am pleased to welcome you to my store. Be sure to check out our <a href="https://tessy.chiwuzoh.com.ng/FAQs">FAQs for any information that you would need.</a></p>
+          <p>I am pleased to welcome you to my store. Be sure to check out our <a href="https://tessy.chiwuzoh.com.ng/items">Items</a>.</a></p>
+          <p>Your outlook, our pride.</p>
           <p>Cheers,</p>
-          <p>Tessy.</p>`,
+          <p>Dominion Fabrics.</p>`,
         };
         const info = await transporter.sendMail(mailOptions);
         const { password, ...otherKeys } = user.dataValues;
@@ -293,7 +289,7 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
       <p>Hello ${user.firstName},</p>
       <p>Your one time password is <strong>${OTP}</strong>. This expires in the next five (5) minutes</p>
       <p>Cheers,</p>
-      <p>Tessy.</p>`,
+      <p>Dominion Fabrics.</p>`,
     };
     const info = await transporter.sendMail(mailOptions);
 

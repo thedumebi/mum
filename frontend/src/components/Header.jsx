@@ -17,7 +17,13 @@ function Header({ mode }) {
     <header className="colored-section">
       <Navbar collapseOnSelect variant="dark" expand="md">
         <Container fluid>
-          <Navbar.Brand href="/">Tessy</Navbar.Brand>
+          <Navbar.Brand href="/">
+            <img
+              src="logo192.png"
+              alt="Dominion Fabrics"
+              style={{ maxHeight: "20%", width: "20%" }}
+            ></img>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="ml-auto">

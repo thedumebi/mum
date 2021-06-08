@@ -52,7 +52,7 @@ const ShareButton = ({ item }) => {
             as={FacebookShareButton}
             url={url}
             quote="Check out this item!"
-            hashtag="#TessyFabricStores"
+            hashtag="#DominionFabrics"
             style={{
               padding: "0.5rem 1rem",
               backgroundColor: "#3b5998",
@@ -65,7 +65,7 @@ const ShareButton = ({ item }) => {
           <Button
             as={LinkedinShareButton}
             url={url}
-            title="Tessy Fabric Stores"
+            title="Dominion Fabrics"
             summary="Why purchase mediocre fabric when you can get quality that makes you look good and lasts for long?"
             source="https:tessy.chiwuzoh.com.ng"
             style={{
@@ -80,7 +80,7 @@ const ShareButton = ({ item }) => {
           <Button
             as={TelegramShareButton}
             url={url}
-            title="Tessy Fabric Stores"
+            title="Dominion Fabrics"
             style={{
               padding: "0.5rem 1rem",
               backgroundColor: "#37aee2",
@@ -93,8 +93,8 @@ const ShareButton = ({ item }) => {
           <Button
             as={TwitterShareButton}
             url={url}
-            title="Tessy Fabric Stores"
-            hashtags={["TessyFabricStores", "Ankara", "Quality", "LookGood"]}
+            title="Dominion Fabrics"
+            hashtags={["DominionFabrics", "Ankara", "Quality", "LookGood"]}
             style={{
               padding: "0.5rem 1rem",
               backgroundColor: "#00aced",
@@ -107,7 +107,7 @@ const ShareButton = ({ item }) => {
           <Button
             as={WhatsappShareButton}
             url={url}
-            title="Tessy Fabric Stores"
+            title="Dominion Fabrics"
             style={{
               padding: "0.5rem 1rem",
               backgroundColor: "#25D366",
