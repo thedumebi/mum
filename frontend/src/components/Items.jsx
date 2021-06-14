@@ -267,7 +267,7 @@ const Items = ({ item }) => {
           {/* whatsapp button */}
           {url.path === "/item/:id" && (
             <>
-              <a href="tel:+2348028611554">
+              <a href="tel:+2348053205470">
                 <Button className="btn-small">
                   <i className="fas fa-phone" />
                 </Button>
