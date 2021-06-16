@@ -41,30 +41,33 @@ const CategoriesList = ({ history, match }) => {
           {categories && categories.length === 0 ? (
             <h1 className="big-heading">Categories are coming soon ;)</h1>
           ) : (
-            <div style={{ textAlign: "center" }}>
-              <Row>
-                {categories &&
-                  categories.map((category) => {
-                    return (
-                      <Col
-                        lg={3}
-                        md={4}
-                        xs={6}
-                        key={category.id}
-                        style={{ padding: 0 }}
-                      >
-                        <Categories category={category} />
-                      </Col>
-                    );
-                  })}
-              </Row>
-              <Paginate
-                pages={pages}
-                page={page}
-                keyword={keyword ? keyword : ""}
-                url={match}
-              />
-            </div>
+            <>
+              <h1 className="big-heading">Categories</h1>
+              <div style={{ textAlign: "center" }}>
+                <Row>
+                  {categories &&
+                    categories.map((category) => {
+                      return (
+                        <Col
+                          lg={3}
+                          md={4}
+                          xs={6}
+                          key={category.id}
+                          style={{ padding: 0 }}
+                        >
+                          <Categories category={category} />
+                        </Col>
+                      );
+                    })}
+                </Row>
+                <Paginate
+                  pages={pages}
+                  page={page}
+                  keyword={keyword ? keyword : ""}
+                  url={match}
+                />
+              </div>
+            </>
           )}
         </>
       )}

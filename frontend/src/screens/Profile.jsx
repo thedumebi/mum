@@ -226,8 +226,18 @@ const Profile = ({ history }) => {
           <Link className="btn btn-dark my-3" to="/createcategory">
             New Category
           </Link>
+
+          <hr />
         </div>
       )}
+
+      <Link className="btn btn-dark my-3" to="/settings">
+        Edit Profile
+      </Link>
+
+      <Link className="btn btn-dark my-3" to="/favorites">
+        View Favorites
+      </Link>
     </div>
   );
 };
