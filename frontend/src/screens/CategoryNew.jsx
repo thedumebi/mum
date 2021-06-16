@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 import { Button, Form } from "react-bootstrap";
 import { createCategory } from "../actions/category.actions";
 import { getUserDetails } from "../actions/user.actions";
+import { CREATE_CATEGORY_RESET } from "../constants/category.constants";
 
 const NewCategory = ({ history }) => {
   const [category, setCategory] = useState({
@@ -33,9 +34,14 @@ const NewCategory = ({ history }) => {
       history.push("/login?redirect=/createcategory");
     } else {
       if (success) {
+        alert("Your category was created successfully");
         history.push("/profile");
       }
     }
+
+    return () => {
+      dispatch({ type: CREATE_CATEGORY_RESET });
+    };
   }, [history, userInfo, user, dispatch, success]);
 
   const handleChange = (event) => {

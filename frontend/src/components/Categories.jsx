@@ -5,6 +5,7 @@ import Items from "./Items";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCategory } from "../actions/category.actions";
 import Message from "./Message";
+import { CATEGORY_DELETE_RESET } from "../constants/category.constants";
 
 const Categories = ({ category }) => {
   const url = useRouteMatch();
@@ -14,7 +15,7 @@ const Categories = ({ category }) => {
   const { userInfo } = userLogin;
 
   const categoryDelete = useSelector((state) => state.categoryDelete);
-  const { success, error } = categoryDelete;
+  const { success, error, message } = categoryDelete;
 
   const dispatch = useDispatch();
 
@@ -28,9 +29,11 @@ const Categories = ({ category }) => {
 
   useEffect(() => {
     if (success) {
+      alert(message);
+      dispatch({ type: CATEGORY_DELETE_RESET });
       history.push("/profile");
     }
-  }, [history, success]);
+  }, [history, success, dispatch, message]);
 
   return (
     <div className="case">

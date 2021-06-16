@@ -19,7 +19,7 @@ function Header({ mode }) {
         <Container fluid>
           <Navbar.Brand href="/">
             <img
-              src="logo192.png"
+              src="/logo192.png"
               alt="Dominion Fabrics"
               style={{ maxHeight: "20%", width: "20%" }}
             ></img>

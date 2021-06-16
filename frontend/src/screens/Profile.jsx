@@ -7,7 +7,6 @@ import { getUserDetails, updateDp } from "../actions/user.actions";
 import { getCategories } from "../actions/category.actions";
 import { Link } from "react-router-dom";
 import Categories from "../components/Categories";
-import { CREATE_CATEGORY_RESET } from "../constants/category.constants";
 import { ITEM_DELETE_RESET } from "../constants/item.constants";
 import { USER_UPDATE_DP_RESET } from "../constants/user.constants";
 
@@ -22,12 +21,6 @@ const Profile = ({ history }) => {
 
   const categoryList = useSelector((state) => state.categoryList);
   const { categories } = categoryList;
-
-  const createCategoryState = useSelector((state) => state.categoryCreate);
-  const { status: categoryCreated } = createCategoryState;
-
-  const categoryDelete = useSelector((state) => state.categoryDelete);
-  const { message: deleteStoreMessage } = categoryDelete;
 
   const itemDelete = useSelector((state) => state.itemDelete);
   const { message: deleteItemMessage } = itemDelete;
@@ -115,7 +108,6 @@ const Profile = ({ history }) => {
       setEdit(false);
     }
     return () => {
-      dispatch({ type: CREATE_CATEGORY_RESET });
       dispatch({ type: ITEM_DELETE_RESET });
     };
   }, [history, userInfo, dispatch, updateDpSuccess]);
@@ -181,14 +173,6 @@ const Profile = ({ history }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          {categoryCreated && (
-            <Message variant="success">
-              Your category was created successfully
-            </Message>
-          )}
-          {deleteStoreMessage && (
-            <Message variant="success">{deleteStoreMessage}</Message>
-          )}
           {deleteItemMessage && (
             <Message variant="success">{deleteItemMessage}</Message>
           )}
