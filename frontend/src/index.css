@@ -489,9 +489,9 @@ body.light-theme .list-group-item {
 }
 
 .home-image {
-  width: 100%;
+  /* width: 100%; */
   position: absolute;
-  right: 10%;
+  right: 30%;
   height: 100%;
 }
 

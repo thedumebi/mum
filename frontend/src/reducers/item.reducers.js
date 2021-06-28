@@ -30,6 +30,7 @@ import {
   ITEM_OF_THE_DAY_REQUEST,
   ITEM_OF_THE_DAY_SUCCESS,
   ITEM_OF_THE_DAY_FAIL,
+  ITEM_OF_THE_DAY_RESET,
   ITEM_FAVORITE_REQUEST,
   ITEM_FAVORITE_SUCCESS,
   ITEM_FAVORITE_FAIL,
@@ -148,7 +149,7 @@ export const removeFromItemReducer = (state = {}, action) => {
   }
 };
 
-export const itemOfTheDayReducer = (state = [], action) => {
+export const itemOfTheDayReducer = (state = {}, action) => {
   switch (action.type) {
     case ITEM_OF_THE_DAY_REQUEST:
       return { loading: true };
@@ -156,6 +157,8 @@ export const itemOfTheDayReducer = (state = [], action) => {
       return { loadin: false, item: action.payload };
     case ITEM_OF_THE_DAY_FAIL:
       return { loading: false, error: action.payload };
+    case ITEM_OF_THE_DAY_RESET:
+      return {};
     default:
       return state;
   }

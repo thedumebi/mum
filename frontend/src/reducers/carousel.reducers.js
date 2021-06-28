@@ -14,6 +14,7 @@ import {
   CAROUSEL_LIST_FAIL,
   CAROUSEL_LIST_REQUEST,
   CAROUSEL_LIST_SUCCESS,
+  CAROUSEL_LIST_RESET,
 } from "../constants/carousel.constants";
 
 export const createCarouselReducer = (state = { carousel: {} }, action) => {
@@ -29,7 +30,7 @@ export const createCarouselReducer = (state = { carousel: {} }, action) => {
   }
 };
 
-export const carouselListReducer = (state = { carousels: [] }, action) => {
+export const carouselListReducer = (state = [], action) => {
   switch (action.type) {
     case CAROUSEL_LIST_REQUEST:
       return { loading: true };
@@ -37,6 +38,8 @@ export const carouselListReducer = (state = { carousels: [] }, action) => {
       return { loading: false, carousels: action.payload };
     case CAROUSEL_LIST_FAIL:
       return { loading: false, error: action.payload };
+    case CAROUSEL_LIST_RESET:
+      return [];
     default:
       return state;
   }

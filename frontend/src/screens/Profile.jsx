@@ -210,6 +210,9 @@ const Profile = ({ history }) => {
           <Link className="btn btn-dark my-3" to="/createcategory">
             New Category
           </Link>
+          <Link className="btn btn-dark my-3" to="/items/newitem">
+            New Item
+          </Link>
 
           <hr />
         </div>

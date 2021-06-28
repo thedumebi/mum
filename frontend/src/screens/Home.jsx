@@ -16,60 +16,78 @@ const Home = () => {
 
   const dispatch = useDispatch();
 
-  const [carousel, setCarousel] = useState({
-    signup: {
-      image: "/images/llama.svg",
-      text: userInfo ? "Visit profile" : "Browse through our items",
-      link: userInfo ? "/profile" : "/categories",
+  const [carousel, setCarousel] = useState([
+    {
+      signup: {
+        image: userInfo
+          ? "/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-FLOWER-PATTERN-07.png"
+          : "/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-FLORAL--DRESS-07.png",
+        text: userInfo ? "Visit profile" : "Browse through our items",
+        link: userInfo ? "/profile" : "/categories",
+      },
     },
-    itemOfTheDay: undefined,
-  });
+    { itemOfTheDay: undefined },
+  ]);
 
   const carouselList = useSelector((state) => state.carouselList);
   const { carousels } = carouselList;
-
-  const adminCarousels = {};
-
-  if (carousels && carousels.length !== 0) {
-    for (let i = 0; i < carousels.length; i++) {
-      adminCarousels[carousels[i].name] = {
-        image: carousels[i].image.url ? carousels[i].image.url : "",
-        text: carousels[i].text,
-        link: carousels[i].link,
-      };
-    }
-    Object.assign(carousel, adminCarousels);
-  }
 
   useEffect(() => {
     if (!item) {
       dispatch(getItemOfTheDay());
     } else {
+      if (Object.keys(item).length !== 0) {
+        setCarousel((prevValues) => {
+          return [
+            ...prevValues,
+            {
+              itemOfTheDay: {
+                image:
+                  item.image1 !== null ||
+                  item.image1 !== "" ||
+                  item.image1 !== undefined
+                    ? item.image1.url
+                    : item.imag2 !== null ||
+                      item.image2 !== "" ||
+                      item.image2 !== undefined
+                    ? item.image2.url
+                    : (item.image3 !== null ||
+                        item.image3 !== "" ||
+                        item.image3 !== undefined) &&
+                      item.image3.url,
+                text: `${item.name} (item of the day)`,
+                link: `/item/${item.id}`,
+              },
+            },
+          ];
+        });
+      }
+    }
+    if (!carousels) {
+      dispatch(listCarousels());
+    } else {
+      const carouselList = carousels.map((carousel) => ({
+        [carousel.name]: {
+          image: carousel.image.url ? carousel.image.url : "",
+          text: carousel.text,
+          link: carousel.link,
+        },
+      }));
       setCarousel((prevValues) => {
-        return {
-          ...prevValues,
-          itemOfTheDay: {
-            image:
-              item.image1 !== null ||
-              item.image1 !== "" ||
-              item.image1 !== undefined
-                ? item.image1.url
-                : item.imag2 !== null ||
-                  item.image2 !== "" ||
-                  item.image2 !== undefined
-                ? item.image2.url
-                : (item.image3 !== null ||
-                    item.image3 !== "" ||
-                    item.image3 !== undefined) &&
-                  item.image3.url,
-            text: `${item.name} (item of the day)`,
-            link: `/item/${item.id}`,
-          },
-        };
+        return [...prevValues, ...carouselList];
       });
     }
-    dispatch(listCarousels());
-  }, [dispatch, item]);
+  }, [dispatch, item, carousels]);
+
+  const isPlainObject = (obj) => {
+    return obj === null ||
+      obj === undefined ||
+      Array.isArray(obj) ||
+      typeof obj === "function" ||
+      obj.construtor === Date
+      ? false
+      : typeof obj === "object";
+  };
 
   return (
     <div>
@@ -83,7 +101,10 @@ const Home = () => {
             </Link>
           </Col>
           <Col lg={6}>
-            <Image src="/images/llama.svg" className="home-image" />
+            <Image
+              src="/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-GEOMETRICAL-DRESS-07.png"
+              className="home-image"
+            />
           </Col>
         </Row>
       ) : (
@@ -99,38 +120,41 @@ const Home = () => {
             </Link>
           </Col>
           <Col lg={6}>
-            <Image src="/images/llama.svg" className="home-image" />
+            <Image
+              src="/images/BLACK-GIRL-AVATAR-CLIPART-POLKA-DOTS-FULL-DRESS-08.png"
+              className="home-image"
+            />
           </Col>
         </Row>
       )}
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
       <Carousel interval={3000} className="home-carousel">
-        {Object.keys(carousel)
-          .filter((item) => carousel[item] !== undefined)
+        {carousel
+          .filter((item) => isPlainObject(item[Object.keys(item)[0]]))
           .map((item, index) => (
             <Carousel.Item key={index}>
-              {carousel[item].link ? (
-                <Link to={carousel[item].link}>
-                  {carousel[item].image && (
+              {item[Object.keys(item)[0]].link ? (
+                <Link to={item[Object.keys(item)[0]].link}>
+                  {item[Object.keys(item)[0]].image && (
                     <Image
-                      src={carousel[item].image}
+                      src={item[Object.keys(item)[0]].image}
                       className="d-block w-100"
                       alt="carousel image"
                     />
                   )}
                 </Link>
               ) : (
-                carousel[item].image && (
+                item[Object.keys(item)[0]].image && (
                   <Image
-                    src={carousel[item].image}
+                    src={item[Object.keys(item)[0]].image}
                     className="d-block w-100"
                     alt="carousel image"
                   />
                 )
               )}
               <Carousel.Caption>
-                <h4>{carousel[item].text}</h4>
+                <h4>{item[Object.keys(item)[0]].text}</h4>
               </Carousel.Caption>
             </Carousel.Item>
           ))}

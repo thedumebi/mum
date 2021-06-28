@@ -307,7 +307,10 @@ const updateItem = asyncHandler(async (req, res, next) => {
 const deleteItem = asyncHandler(async (req, res) => {
   const item = await Item.findByPk(req.params.id);
   if (item) {
+    await item.setFavorites([]);
+    await item.setCategories([]);
     await item.destroy();
+
     res.status(200).json({ message: "Item Deleted" });
   } else {
     res.status(404);
@@ -323,8 +326,9 @@ const getItemOfTheDay = asyncHandler(async (req, res) => {
   const msPerDay = 24 * 60 * 60 * 1000; //number of milliseconds in a day
   let daysSinceEpoch = Math.floor(new Date().getTime() / msPerDay); //number of days since jan 1, 1970
   let itemIndex = daysSinceEpoch % items.length;
+  let itemOfTheDay = items[itemIndex] || {};
 
-  res.status(200).json(items[itemIndex]);
+  res.status(200).json(itemOfTheDay);
 });
 
 // @desc Add to an Item

@@ -14,7 +14,10 @@ const NotFound = ({ history }) => (
         </Button>
       </Col>
       <Col lg={6}>
-        <Image src="/images/llama.svg" className="home-image" />
+        <Image
+          src="/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-PEACOCK-PATTERN-KIDS-07.png"
+          className="home-image"
+        />
       </Col>
     </Row>
   </div>

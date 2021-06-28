@@ -89,13 +89,7 @@ const Categories = ({ category }) => {
         (url.path === "/category/:id" || url.path === "/profile") &&
         userInfo &&
         userInfo.role === "admin" && (
-          <Link
-            to={
-              url.path === "/profile"
-                ? `/items/newitem?category=${category.id}`
-                : `/items/newitem`
-            }
-          >
+          <Link to={`/items/newitem?category=${category.id}`}>
             <Button className="btn-dark" type="button">
               Add a new item
             </Button>
