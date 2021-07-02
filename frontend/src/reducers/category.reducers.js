@@ -11,6 +11,10 @@ import {
   CATEGORY_LIST_SUCCESS,
   CATEGORY_LIST_FAIL,
   CATEGORY_LIST_RESET,
+  CATEGORY_LIST_ALL_REQUEST,
+  CATEGORY_LIST_ALL_SUCCESS,
+  CATEGORY_LIST_ALL_FAIL,
+  CATEGORY_LIST_ALL_RESET,
   CATEGORY_UPDATE_REQUEST,
   CATEGORY_UPDATE_SUCCESS,
   CATEGORY_UPDATE_FAIL,
@@ -65,6 +69,24 @@ export const listCategoryReducer = (state = [], action) => {
     case CATEGORY_LIST_FAIL:
       return { loading: false, error: action.payload };
     case CATEGORY_LIST_RESET:
+      return [];
+    default:
+      return state;
+  }
+};
+
+export const listAllCategoryReducer = (state = [], action) => {
+  switch (action.type) {
+    case CATEGORY_LIST_ALL_REQUEST:
+      return { loading: true };
+    case CATEGORY_LIST_ALL_SUCCESS:
+      return {
+        loading: false,
+        categories: action.payload,
+      };
+    case CATEGORY_LIST_ALL_FAIL:
+      return { loading: false, error: action.payload };
+    case CATEGORY_LIST_ALL_RESET:
       return [];
     default:
       return state;

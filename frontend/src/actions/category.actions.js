@@ -9,6 +9,9 @@ import {
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
   CATEGORY_LIST_FAIL,
+  CATEGORY_LIST_ALL_REQUEST,
+  CATEGORY_LIST_ALL_SUCCESS,
+  CATEGORY_LIST_ALL_FAIL,
   CATEGORY_UPDATE_REQUEST,
   CATEGORY_UPDATE_SUCCESS,
   CATEGORY_UPDATE_FAIL,
@@ -70,23 +73,44 @@ export const getCategoryDetails = (id) => async (dispatch) => {
   }
 };
 
-export const getCategories = (keyword = "", pageNumber = "") => async (
-  dispatch
-) => {
-  try {
-    dispatch({ type: CATEGORY_LIST_REQUEST });
+export const getCategories =
+  (keyword = "", pageNumber = "") =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: CATEGORY_LIST_REQUEST });
 
-    const { data } = await axios.get(
-      `/api/categories?keyword=${keyword}&pageNumber=${pageNumber}`
-    );
+      const { data } = await axios.get(
+        `/api/categories?keyword=${keyword}&pageNumber=${pageNumber}`
+      );
+
+      dispatch({
+        type: CATEGORY_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CATEGORY_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getAllCategories = () => async (dispatch) => {
+  try {
+    dispatch({ type: CATEGORY_LIST_ALL_REQUEST });
+
+    const { data } = await axios.get(`/api/categories/all`);
 
     dispatch({
-      type: CATEGORY_LIST_SUCCESS,
+      type: CATEGORY_LIST_ALL_SUCCESS,
       payload: data,
     });
   } catch (error) {
     dispatch({
-      type: CATEGORY_LIST_FAIL,
+      type: CATEGORY_LIST_ALL_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -20,6 +20,7 @@ import {
   listCategoryReducer,
   updateCategoryReducer,
   deleteCategoryReducer,
+  listAllCategoryReducer,
 } from "./reducers/category.reducers";
 import {
   createFaqReducer,
@@ -68,6 +69,7 @@ const reducer = combineReducers({
   categoryCreate: createCategoryReducer,
   categoryDetails: categoryDetailsReducer,
   categoryList: listCategoryReducer,
+  categoryListAll: listAllCategoryReducer,
   categoryUpdate: updateCategoryReducer,
   categoryDelete: deleteCategoryReducer,
   faqCreate: createFaqReducer,

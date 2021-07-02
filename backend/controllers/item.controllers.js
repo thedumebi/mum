@@ -19,6 +19,21 @@ const getItems = asyncHandler(async (req, res) => {
   const pageSize = 20;
   const page = Number(req.query.pageNumber) || 1;
   const keyword = req.query.keyword;
+
+  const c = req.query.categories;
+  let categoriesList = null;
+  if (c) {
+    const categories = Object.keys(req.query.categories);
+    const categoriesArray = categories.map(async (name) => {
+      const category = await Category.findOne({
+        where: { name },
+        attributes: ["id"],
+      });
+      return category.id;
+    });
+    categoriesList = await Promise.all(categoriesArray);
+  }
+
   let where = {};
   if (keyword) {
     where = {
@@ -30,16 +45,45 @@ const getItems = asyncHandler(async (req, res) => {
       ],
     };
   }
+  const p = req.query.prices;
+  if (p) {
+    const prices = Object.keys(req.query.prices);
+    const pricesArray = prices.map((price) => {
+      const priceSplit = price.split("-");
+      let arr = [];
+      priceSplit.forEach((p) => {
+        if (Number(p)) {
+          arr.push(Number(p));
+        }
+      });
+      return arr;
+    });
+    const pricesList = pricesArray.flat(1);
+    const pricesMin = Math.min(...pricesList);
+    const pricesMax = Math.max(...pricesList);
+
+    where = {
+      [Op.and]: [where, { price: { [Op.between]: [pricesMin, pricesMax] } }],
+    };
+  }
 
   const items = await Item.findAndCountAll({
     where: where,
     include: [
       { model: db.User, as: "user", attributes: { exclude: ["password"] } },
-      "categories",
+      {
+        model: db.Category,
+        as: "categories",
+        ...(c && {
+          required: true,
+          through: { where: { categoryId: { [Op.in]: categoriesList } } },
+        }),
+      },
     ],
     limit: pageSize,
     offset: (page - 1) * pageSize,
   });
+  console.log({ items });
   res.status(200).json({
     items: items.rows,
     page,
@@ -47,10 +91,11 @@ const getItems = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Get an Item
+// @desc Get an Ite
 // @route GET /api/items/:id
 // @access Public
 const getItemByPk = asyncHandler(async (req, res) => {
+  m;
   const item = await Item.findByPk(req.params.id, {
     include: ["user", "categories"],
   });

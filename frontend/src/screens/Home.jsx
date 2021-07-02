@@ -43,18 +43,24 @@ const Home = () => {
             {
               itemOfTheDay: {
                 image:
-                  item.image1 !== null ||
-                  item.image1 !== "" ||
+                  item.image1 !== null &&
+                  item.image1 !== "" &&
                   item.image1 !== undefined
-                    ? item.image1.url
-                    : item.imag2 !== null ||
-                      item.image2 !== "" ||
+                    ? item.image1?.url
+                      ? item.image1?.url
+                      : ""
+                    : item.imag2 !== null &&
+                      item.image2 !== "" &&
                       item.image2 !== undefined
-                    ? item.image2.url
-                    : (item.image3 !== null ||
-                        item.image3 !== "" ||
-                        item.image3 !== undefined) &&
-                      item.image3.url,
+                    ? item.image2?.url
+                      ? item.image2?.url
+                      : ""
+                    : item.image3 !== null &&
+                      item.image3 !== "" &&
+                      item.image3 !== undefined &&
+                      item.image3?.url
+                    ? item.image3?.url
+                    : "",
                 text: `${item.name} (item of the day)`,
                 link: `/item/${item.id}`,
               },

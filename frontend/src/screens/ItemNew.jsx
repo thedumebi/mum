@@ -6,7 +6,7 @@ import Loader from "../components/Loader";
 import { Button, Col, Form, Image } from "react-bootstrap";
 import { createItem } from "../actions/item.actions";
 import { CREATE_ITEM_RESET } from "../constants/item.constants";
-import { getCategories } from "../actions/category.actions";
+import { getAllCategories } from "../actions/category.actions";
 
 const NewItem = ({ history, location }) => {
   const [item, setItem] = useState({
@@ -23,8 +23,8 @@ const NewItem = ({ history, location }) => {
   const createItemState = useSelector((state) => state.itemCreate);
   const { loading, error, status } = createItemState;
 
-  const categoryList = useSelector((state) => state.categoryList);
-  const { categories } = categoryList;
+  const categoryListAll = useSelector((state) => state.categoryListAll);
+  const { categories } = categoryListAll;
 
   const [nameError, setNameError] = useState(null);
 
@@ -32,7 +32,7 @@ const NewItem = ({ history, location }) => {
     if (!userInfo) {
       history.push("/login?redirect=/items/newitem");
     } else {
-      if (!categories) dispatch(getCategories());
+      if (!categories) dispatch(getAllCategories());
       dispatch({ type: CREATE_ITEM_RESET });
       if (status) {
         history.push(`/items`);

@@ -83,25 +83,27 @@ export const getItemDetails = (id) => async (dispatch) => {
   }
 };
 
-export const getItems = (keyword = "", pageNumber = "") => async (dispatch) => {
-  try {
-    dispatch({ type: ITEM_LIST_REQUEST });
+export const getItems =
+  (keyword = "", pageNumber = "", filter = "") =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ITEM_LIST_REQUEST });
 
-    const { data } = await axios.get(
-      `/api/items?keyword=${keyword}&pageNumber=${pageNumber}`
-    );
+      const { data } = await axios.get(
+        `/api/items?keyword=${keyword}&pageNumber=${pageNumber}&${filter}`
+      );
 
-    dispatch({ type: ITEM_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: ITEM_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({ type: ITEM_LIST_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: ITEM_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const updateItem = (id, item) => async (dispatch, getState) => {
   try {

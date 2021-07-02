@@ -37,6 +37,14 @@ const getCategories = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc Get all categories - no pagination
+// @route GET /api/categories/all
+// @access Public
+const getAllCategories = asyncHandler(async (req, res) => {
+  const categories = await Category.findAll();
+  res.status(200).json(categories);
+});
+
 // @desc Get a Category
 // @route GET /api/categories/:id
 // @access Public
@@ -181,6 +189,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
 
 module.exports = {
   getCategories,
+  getAllCategories,
   getCategoryByPk,
   createCategory,
   updateCategory,
