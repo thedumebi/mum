@@ -32,6 +32,7 @@ import FaqSingle from "./screens/FaqSingle";
 import SalesList from "./screens/SalesList";
 import SalesOfTheDay from "./screens/SalesOfTheDay";
 import SalesSingle from "./screens/SalesSingle";
+import CreateSaleScreen from "./screens/CreateSaleScreen";
 
 const App = () => {
   const getCookie = (name) => {
@@ -119,6 +120,7 @@ const App = () => {
             <Route exact path="/reset-password" component={ResetPassword} />
             <Route exact path="/settings" component={Settings} />
             <Route exact path="/change-password" component={ChangePassword} />
+            <Route exact path="/admin/sales/new" component={CreateSaleScreen} />
             <Route
               exact
               path="/admin/carousels"

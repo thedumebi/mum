@@ -52,20 +52,22 @@ const SalesOfTheDay = ({ history, match }) => {
               <Table striped bordered hover responsive className="table-sm">
                 <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>S/N</th>
                     <th>NAME</th>
                     <th>QUANTITY</th>
                     <th>AMOUNT</th>
+                    <th>EXPECTED AMOUNT</th>
+                    <th>PROFIT/LOSS</th>
                     <th>TIME</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sales &&
-                    sales.map((sale) => (
+                    sales.map((sale, index) => (
                       <tr key={sale.id}>
                         <td>
                           <Link to={`/admin/sales/sale/${sale.id}`}>
-                            {sale.id}
+                            {index + 1}
                           </Link>
                         </td>
                         <td>
@@ -75,6 +77,10 @@ const SalesOfTheDay = ({ history, match }) => {
                         </td>
                         <td>{sale.quantity}</td>
                         <td>{sale.amount}</td>
+                        <td>{sale?.item?.price * sale.quantity}</td>
+                        <td>
+                          {sale.amount - sale?.item?.price * sale.quantity}
+                        </td>
                         <td>{new Date(sale.createdAt).toLocaleString()}</td>
                       </tr>
                     ))}
@@ -86,6 +92,37 @@ const SalesOfTheDay = ({ history, match }) => {
                 {sales &&
                   sales.reduce((a, b) => ({ amount: a.amount + b.amount }))
                     .amount}
+              </div>
+              <div>
+                Expected Sales: NGN{" "}
+                {sales &&
+                  sales.reduce(
+                    (a, b) => {
+                      return { amount: a.amount + b?.item?.price * b.quantity };
+                    },
+                    { amount: 0 }
+                  ).amount}
+              </div>
+              <div>
+                Profit/Loss: NGN{" "}
+                {sales &&
+                  sales.reduce(
+                    (a, b) => {
+                      console.log({
+                        acc: a,
+                        1: a.amount + b.amount,
+                        2: a.amount + b?.item?.price * b.quantity,
+                      });
+                      return {
+                        amount:
+                          a.amount +
+                          a.amount +
+                          b.amount -
+                          (a.amount + b?.item?.price * b.quantity),
+                      };
+                    },
+                    { amount: 0 }
+                  ).amount}
               </div>
             </div>
           )}

@@ -10,6 +10,11 @@ import {
   SALES_OF_THE_DAY_REQUEST,
   SALES_OF_THE_DAY_SUCCESS,
   SALES_OF_THE_DAY_FAIL,
+  SALES_OF_THE_DAY_RESET,
+  CREATE_SALES_REQUEST,
+  CREATE_SALES_SUCCESS,
+  CREATE_SALES_FAIL,
+  CREATE_SALES_RESET,
 } from "../constants/sales.constants";
 
 export const saleDetailsReducer = (state = {}, action) => {
@@ -60,6 +65,23 @@ export const salesOfTheDayReducer = (state = [], action) => {
       };
     case SALES_OF_THE_DAY_FAIL:
       return { loading: false, error: action.payload };
+    case SALES_OF_THE_DAY_RESET:
+      return [];
+    default:
+      return state;
+  }
+};
+
+export const createSaleReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CREATE_SALES_REQUEST:
+      return { loading: true };
+    case CREATE_SALES_SUCCESS:
+      return { loading: false, sale: action.payload, success: true };
+    case CREATE_SALES_FAIL:
+      return { loading: false, error: action.payload };
+    case CREATE_SALES_RESET:
+      return {};
     default:
       return state;
   }

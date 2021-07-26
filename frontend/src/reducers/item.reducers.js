@@ -37,6 +37,10 @@ import {
   ITEM_UNFAVORITE_REQUEST,
   ITEM_UNFAVORITE_SUCCESS,
   ITEM_UNFAVORITE_FAIL,
+  ITEM_LIST_ALL_REQUEST,
+  ITEM_LIST_ALL_SUCCESS,
+  ITEM_LIST_ALL_FAIL,
+  ITEM_LIST_ALL_RESET,
 } from "../constants/item.constants";
 
 export const createItemReducer = (state = {}, action) => {
@@ -83,6 +87,21 @@ export const itemListReducer = (state = [], action) => {
     case ITEM_LIST_FAIL:
       return { loading: false, error: action.payload };
     case ITEM_LIST_RESET:
+      return [];
+    default:
+      return state;
+  }
+};
+
+export const itemListAllReducer = (state = [], action) => {
+  switch (action.type) {
+    case ITEM_LIST_ALL_REQUEST:
+      return { loading: true };
+    case ITEM_LIST_ALL_SUCCESS:
+      return { loading: false, items: action.payload };
+    case ITEM_LIST_ALL_FAIL:
+      return { loading: false, error: action.payload };
+    case ITEM_LIST_ALL_RESET:
       return [];
     default:
       return state;

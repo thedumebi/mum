@@ -53,6 +53,9 @@ function Header({ mode }) {
                       <NavDropdown.Item href="/admin/sales">
                         Sales History
                       </NavDropdown.Item>
+                      <NavDropdown.Item href="/admin/sales/new">
+                        New Sale
+                      </NavDropdown.Item>
                       <NavDropdown.Item href="/admin/users">
                         Users
                       </NavDropdown.Item>

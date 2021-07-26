@@ -36,6 +36,7 @@ const SalesSingle = ({ history, match }) => {
   for (var i = 1; i <= 3; i++) {
     if (
       sale &&
+      sale.item &&
       sale.item[`image${i}`] !== null &&
       sale.item[`image${i}`] !== "" &&
       sale.item[`image${i}`] !== undefined
@@ -80,6 +81,7 @@ const SalesSingle = ({ history, match }) => {
           ) : (
             <>
               {sale &&
+                sale.item &&
                 ((sale.item.image1 !== null &&
                   sale.item.image1 !== "" &&
                   sale.item.image1 !== undefined) ||
@@ -94,6 +96,7 @@ const SalesSingle = ({ history, match }) => {
                   </Message>
                 )}
               {sale &&
+                sale.item &&
                 ((sale.item.image1 !== null &&
                   sale.item.image1 !== "" &&
                   sale.item.image1 !== undefined) ||
@@ -121,12 +124,12 @@ const SalesSingle = ({ history, match }) => {
                 )}
               <div className="content">
                 <h1 className="sub-heading">{sale && sale.name}</h1>
-                {sale && sale.item.categories && (
+                {sale && sale?.item?.categories && (
                   <small>
-                    {sale.item.categories.length === 1
+                    {sale?.item?.categories?.length === 1
                       ? "Category: "
                       : "Categories: "}
-                    {sale.item.categories
+                    {sale?.item?.categories
                       .map((category) => {
                         return category.name;
                       })
@@ -134,15 +137,15 @@ const SalesSingle = ({ history, match }) => {
                   </small>
                 )}
                 <br />
-                <p>{sale && `${sale.quantity} sold`}</p>
+                <p>{sale && `${sale?.quantity} sold`}</p>
                 <p>
                   {sale &&
                     sale.item &&
-                    (sale.item.quantity === null || sale.item.quantity === 0
+                    (sale?.item?.quantity === null || sale?.item?.quantity === 0
                       ? "Item is out of stock"
-                      : sale.item.quantity === 1
-                      ? `There is ${sale.item.quantity} left in stock`
-                      : `There are ${sale.item.quantity} left in stock`)}
+                      : sale?.item?.quantity === 1
+                      ? `There is ${sale?.item?.quantity} left in stock`
+                      : `There are ${sale?.item?.quantity} left in stock`)}
                 </p>
               </div>
             </>

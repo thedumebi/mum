@@ -83,7 +83,7 @@ const getItems = asyncHandler(async (req, res) => {
     limit: pageSize,
     offset: (page - 1) * pageSize,
   });
-  console.log({ items });
+
   res.status(200).json({
     items: items.rows,
     page,
@@ -91,11 +91,18 @@ const getItems = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc Get all items - no pagination
+// @route GET /api/items/all
+// @access Public
+const getAllItems = asyncHandler(async (req, res) => {
+  const items = await Item.findAll();
+  res.status(200).json(items);
+});
+
 // @desc Get an Ite
 // @route GET /api/items/:id
 // @access Public
 const getItemByPk = asyncHandler(async (req, res) => {
-  m;
   const item = await Item.findByPk(req.params.id, {
     include: ["user", "categories"],
   });
@@ -403,20 +410,9 @@ const removeItem = asyncHandler(async (req, res) => {
   const { count } = req.body;
   const item = await Item.findByPk(req.params.id);
   if (item) {
-    const newSale = await Sales.create({
-      name: item.name,
-      quantity: count,
-      amount: item.price * count,
-    });
-    if (newSale) {
-      await newSale.setItem(item);
-      await item.decrement(["quantity"], { by: count });
-      await item.reload();
-      res.status(200).json(item);
-    } else {
-      res.status(500);
-      throw new Error("Could not register new sale");
-    }
+    await item.decrement(["quantity"], { by: count });
+    await item.reload();
+    res.status(200).json(item);
   } else {
     res.status(404);
     throw new Error("Item not found");
@@ -484,4 +480,5 @@ module.exports = {
   deleteImage,
   favoriteItem,
   unfavoriteItem,
+  getAllItems,
 };

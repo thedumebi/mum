@@ -1,8 +1,30 @@
 const db = require("../models");
 const asyncHandler = require("express-async-handler");
 
+const Item = db.Item;
 const Sales = db.Sales;
 const Op = db.Sequelize.Op;
+
+// @desc Make sales
+// @route POST /api/sales/
+// @access Admin
+const makeSales = asyncHandler(async (req, res) => {
+  const { itemId, quantity, amount } = req.body;
+  const item = await Item.findByPk(itemId);
+  const newSale = await Sales.create({
+    name: item.name,
+    quantity,
+    amount: amount * quantity,
+  });
+  if (newSale) {
+    await newSale.setItem(item);
+    await item.decrement(["quantity"], { by: quantity });
+    res.status(200).json(newSale);
+  } else {
+    res.status(500);
+    throw new Error("Could not register new sale");
+  }
+});
 
 // @desc Get all sales
 // @route GET /api/sales/
@@ -80,4 +102,5 @@ module.exports = {
   getSales,
   getSalesForADay,
   getSaleByPk,
+  makeSales,
 };

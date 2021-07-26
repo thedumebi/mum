@@ -40,6 +40,7 @@ import {
   itemUpdateReducer,
   removeFromItemReducer,
   unfavoriteItemReducer,
+  itemListAllReducer,
 } from "./reducers/item.reducers";
 import {
   carouselDeleteReducer,
@@ -52,6 +53,7 @@ import {
   salesListReducer,
   saleDetailsReducer,
   salesOfTheDayReducer,
+  createSaleReducer,
 } from "./reducers/sales.reducers";
 
 const reducer = combineReducers({
@@ -80,6 +82,7 @@ const reducer = combineReducers({
   itemCreate: createItemReducer,
   itemDetails: itemDetailsReducer,
   itemList: itemListReducer,
+  itemListAll: itemListAllReducer,
   itemUpdate: itemUpdateReducer,
   itemDelete: itemDeleteReducer,
   itemAdd: addToItemReducer,
@@ -95,6 +98,7 @@ const reducer = combineReducers({
   salesList: salesListReducer,
   salesDetail: saleDetailsReducer,
   salesOfTheDay: salesOfTheDayReducer,
+  salesCreate: createSaleReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

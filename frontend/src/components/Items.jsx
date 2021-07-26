@@ -18,6 +18,7 @@ import { getUserDetails } from "../actions/user.actions";
 import ItemQuantity from "./ItemQuantityEdit";
 import ReactWhatsapp from "react-whatsapp";
 import ShareIcon from "./ShareIcon";
+import ItemSale from "./ItemSale";
 
 const Items = ({ item }) => {
   const url = useRouteMatch();
@@ -191,6 +192,10 @@ const Items = ({ item }) => {
             <ItemQuantity item={item} />
           </Route>
 
+          <Route exact path={`${url.path}/sales`}>
+            <ItemSale item={item} />
+          </Route>
+
           {item.id &&
             url.path === "/item/:id" &&
             user &&
@@ -253,9 +258,14 @@ const Items = ({ item }) => {
             user.role === "admin" &&
             location.pathname === url.url &&
             url.path === "/item/:id" && (
-              <Link to={`/item/${item.id}/quantity`}>
-                <Button className="btn-dark">Add/Remove</Button>
-              </Link>
+              <>
+                <Link to={`/item/${item.id}/quantity`}>
+                  <Button className="btn-dark">Add/Remove</Button>
+                </Link>
+                <Link to={`/item/${item.id}/sales`}>
+                  <Button className="btn-dark">Sales</Button>
+                </Link>
+              </>
             )}
 
           {!user && url.path === "/item/:id" && (

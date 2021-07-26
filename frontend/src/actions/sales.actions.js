@@ -9,7 +9,42 @@ import {
   SALES_OF_THE_DAY_REQUEST,
   SALES_OF_THE_DAY_SUCCESS,
   SALES_OF_THE_DAY_FAIL,
+  CREATE_SALES_REQUEST,
+  CREATE_SALES_SUCCESS,
+  CREATE_SALES_FAIL,
 } from "../constants/sales.constants";
+
+export const createSale = (sale) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CREATE_SALES_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/sales`, sale, config);
+
+    dispatch({
+      type: CREATE_SALES_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CREATE_SALES_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const getSaleDetails = (id) => async (dispatch, getState) => {
   try {

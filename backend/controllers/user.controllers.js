@@ -279,7 +279,6 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   });
   if (user) {
     const OTP = await generateOTP(4, { upperCase: true });
-    console.log({ OTP });
 
     const mailOptions = {
       from: process.env.EMAIL,

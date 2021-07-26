@@ -11,6 +11,7 @@ const {
   deleteImage,
   favoriteItem,
   unfavoriteItem,
+  getAllItems,
 } = require("../controllers/item.controllers");
 const { protect, admin } = require("../middleware/auth.middleware");
 
@@ -18,6 +19,7 @@ const router = express.Router();
 
 router.route("/").get(getItems).post(protect, admin, createItem);
 router.get("/item", getItemOfTheDay);
+router.get("/all", protect, getAllItems);
 router.patch("/:id/add", protect, admin, addItem);
 router.patch("/:id/remove", protect, admin, removeItem);
 router

@@ -30,6 +30,9 @@ import {
   ITEM_UNFAVORITE_REQUEST,
   ITEM_UNFAVORITE_SUCCESS,
   ITEM_UNFAVORITE_FAIL,
+  ITEM_LIST_ALL_REQUEST,
+  ITEM_LIST_ALL_SUCCESS,
+  ITEM_LIST_ALL_FAIL,
 } from "../constants/item.constants";
 import { getUserDetails } from "./user.actions";
 
@@ -104,6 +107,35 @@ export const getItems =
       });
     }
   };
+
+export const getAllItems = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ITEM_LIST_ALL_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/items/all`, config);
+
+    dispatch({ type: ITEM_LIST_ALL_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ITEM_LIST_ALL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const updateItem = (id, item) => async (dispatch, getState) => {
   try {
