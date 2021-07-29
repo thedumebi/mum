@@ -40,7 +40,7 @@ const Categories = ({ category }) => {
       {error && <Message variant="danger">{error}</Message>}
       <div
         className="content"
-        style={{ height: url.path === "/category/:id" && "auto" }}
+        style={{ height: url.path === "/category/:id" ? "auto" : "170px" }}
       >
         <h1 className="sub-heading">{category.name}</h1>
         <small>Description: {category.description}</small>

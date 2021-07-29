@@ -34,6 +34,7 @@ const ResetPassword = ({ history }) => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const otpExists = getOTP("OTP");
     if (otpExists) {
       setShowOTP(true);
@@ -109,93 +110,102 @@ const ResetPassword = ({ history }) => {
       </Button>
 
       <FormContainer>
-        {loading && <Loader />}
-        {error && <Message variant="danger">{error}</Message>}
-        {message && <Message variant="success">{message}</Message>}
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            {message && <Message variant="success">{message}</Message>}
 
-        <Form>
-          <Form.Group>
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="text"
-              name="email"
-              value={email}
-              placeholder="Enter your email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Form.Group>
-
-          {showOTP && (
-            <Form.Group>
-              <Form.Label>OTP</Form.Label>
-              <Form.Control
-                type="text"
-                name="otp"
-                value={userOTP}
-                placeholder="Enter your OTP"
-                onChange={(e) => setUserOTP(e.target.value)}
-              />
-              {otpError && <Message variant="danger">{otpError}</Message>}
-            </Form.Group>
-          )}
-
-          {showPasswordField && (
-            <Form.Group>
-              {passwordLoading && <Loader />}
-              <Form.Label>New Password</Form.Label>
-              <InputGroup>
+            <Form>
+              <Form.Group>
+                <Form.Label>Email</Form.Label>
                 <Form.Control
-                  type={viewPassword ? "text" : "password"}
-                  name="password"
-                  value={password}
-                  placeholder="Enter your new password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  type="text"
+                  name="email"
+                  value={email}
+                  placeholder="Enter your email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
-                <InputGroup.Append>
-                  <InputGroup.Text
-                    onClick={() => setViewPassword(!viewPassword)}
-                  >
-                    {viewPassword ? (
-                      <i className="fas fa-eye-slash"></i>
-                    ) : (
-                      <i className="fas fa-eye"></i>
-                    )}
-                  </InputGroup.Text>
-                </InputGroup.Append>
-              </InputGroup>
-              {passwordError && (
-                <Message variant="danger">{passwordError}</Message>
+              </Form.Group>
+
+              {showOTP && (
+                <Form.Group>
+                  <Form.Label>OTP</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="otp"
+                    value={userOTP}
+                    placeholder="Enter your OTP"
+                    onChange={(e) => setUserOTP(e.target.value)}
+                  />
+                  {otpError && <Message variant="danger">{otpError}</Message>}
+                </Form.Group>
               )}
-            </Form.Group>
-          )}
 
-          {showPasswordField && (
-            <Button type="submit" variant="primary" onClick={submitNewPassword}>
-              Save
-            </Button>
-          )}
+              {showPasswordField && (
+                <Form.Group>
+                  {passwordLoading && <Loader />}
+                  <Form.Label>New Password</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={viewPassword ? "text" : "password"}
+                      name="password"
+                      value={password}
+                      placeholder="Enter your new password"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <InputGroup.Append>
+                      <InputGroup.Text
+                        onClick={() => setViewPassword(!viewPassword)}
+                      >
+                        {viewPassword ? (
+                          <i className="fas fa-eye-slash"></i>
+                        ) : (
+                          <i className="fas fa-eye"></i>
+                        )}
+                      </InputGroup.Text>
+                    </InputGroup.Append>
+                  </InputGroup>
+                  {passwordError && (
+                    <Message variant="danger">{passwordError}</Message>
+                  )}
+                </Form.Group>
+              )}
 
-          {showOTP && (
-            <Button
-              type="submit"
-              variant="primary"
-              className="btn-small"
-              onClick={submitRequest}
-            >
-              Resend OTP
-            </Button>
-          )}
-          {!showPasswordField && showOTP && (
-            <Button type="submit" variant="primary" onClick={checkOTP}>
-              Submit OTP
-            </Button>
-          )}
-          {!showOTP && !showPasswordField && (
-            <Button type="submit" variant="primary" onClick={submitRequest}>
-              Send OTP
-            </Button>
-          )}
-        </Form>
+              {showPasswordField && (
+                <Button
+                  type="submit"
+                  variant="primary"
+                  onClick={submitNewPassword}
+                >
+                  Save
+                </Button>
+              )}
+
+              {showOTP && (
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="btn-small"
+                  onClick={submitRequest}
+                >
+                  Resend OTP
+                </Button>
+              )}
+              {!showPasswordField && showOTP && (
+                <Button type="submit" variant="primary" onClick={checkOTP}>
+                  Submit OTP
+                </Button>
+              )}
+              {!showOTP && !showPasswordField && (
+                <Button type="submit" variant="primary" onClick={submitRequest}>
+                  Send OTP
+                </Button>
+              )}
+            </Form>
+          </>
+        )}
       </FormContainer>
     </div>
   );

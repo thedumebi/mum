@@ -30,6 +30,12 @@ function Header({ mode }) {
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/categories">Categories</Nav.Link>
               <Nav.Link href="/items">Items</Nav.Link>
+              {userInfo?.role === "admin" && (
+                <>
+                  <Nav.Link href="/createcategory">New Category</Nav.Link>
+                  <Nav.Link href="/items/newitem">New Item</Nav.Link>
+                </>
+              )}
               {userInfo ? (
                 <NavDropdown
                   title={userInfo.username}

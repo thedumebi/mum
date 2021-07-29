@@ -26,6 +26,7 @@ const NewFaq = ({ history }) => {
   const { loading, error, status: success } = createFaqState;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!user && userInfo) {
       dispatch(getUserDetails(userInfo.id));
     } else if (user && user.role !== "admin") {
@@ -65,42 +66,50 @@ const NewFaq = ({ history }) => {
 
       <FormContainer>
         <h2>New Faq</h2>
-        {error && <Message variant="danger">{error}</Message>}
-        {loading && <Loader />}
-        {message && <Message variant="danger">{message}</Message>}
-        <Message variant="info">Fields marked with * are compulsory</Message>
-        <Form>
-          <Form.Group>
-            <Form.Label>
-              Question <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              type="text"
-              name="question"
-              value={faq.question}
-              onChange={handleChange}
-              placeholder="Question"
-            />
-          </Form.Group>
 
-          <Form.Group>
-            <Form.Label>
-              Answer <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              as="textarea"
-              onChange={handleChange}
-              name="answer"
-              value={faq.answer}
-              rows={3}
-              placeholder="Answer to the question."
-            />
-          </Form.Group>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            {message && <Message variant="danger">{message}</Message>}
+            <Message variant="info">
+              Fields marked with * are compulsory
+            </Message>
+            <Form>
+              <Form.Group>
+                <Form.Label>
+                  Question <span style={{ color: "red" }}>*</span>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="question"
+                  value={faq.question}
+                  onChange={handleChange}
+                  placeholder="Question"
+                />
+              </Form.Group>
 
-          <Button type="submit" variant="primary" onClick={submitHandler}>
-            Create Faq
-          </Button>
-        </Form>
+              <Form.Group>
+                <Form.Label>
+                  Answer <span style={{ color: "red" }}>*</span>
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  onChange={handleChange}
+                  name="answer"
+                  value={faq.answer}
+                  rows={3}
+                  placeholder="Answer to the question."
+                />
+              </Form.Group>
+
+              <Button type="submit" variant="primary" onClick={submitHandler}>
+                Create Faq
+              </Button>
+            </Form>
+          </>
+        )}
       </FormContainer>
     </div>
   );

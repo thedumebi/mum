@@ -6,7 +6,6 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getItemOfTheDay } from "../actions/item.actions";
 import { listCarousels } from "../actions/carousel.actions";
-
 const Home = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -16,18 +15,16 @@ const Home = () => {
 
   const dispatch = useDispatch();
 
-  const [carousel, setCarousel] = useState([
-    {
-      signup: {
-        image: userInfo
-          ? "/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-FLOWER-PATTERN-07.png"
-          : "/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-FLORAL--DRESS-07.png",
-        text: userInfo ? "Visit profile" : "Browse through our items",
-        link: userInfo ? "/profile" : "/categories",
-      },
+  const [carousel, setCarousel] = useState({
+    signup: {
+      image: userInfo
+        ? "/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-FLOWER-PATTERN-07.png"
+        : "/images/BLACK-GIRL-AVATAR-CLIPART-ANKARA-FLORAL--DRESS-07.png",
+      text: userInfo ? "Visit profile" : "Browse through our items",
+      link: userInfo ? "/profile" : "/categories",
     },
-    { itemOfTheDay: undefined },
-  ]);
+    itemOfTheDay: undefined,
+  });
 
   const carouselList = useSelector((state) => state.carouselList);
   const { carousels } = carouselList;
@@ -38,50 +35,46 @@ const Home = () => {
     } else {
       if (Object.keys(item).length !== 0) {
         setCarousel((prevValues) => {
-          return [
+          return {
             ...prevValues,
-            {
-              itemOfTheDay: {
-                image:
-                  item.image1 !== null &&
-                  item.image1 !== "" &&
-                  item.image1 !== undefined
+            itemOfTheDay: {
+              image:
+                item.image1 !== null &&
+                item.image1 !== "" &&
+                item.image1 !== undefined
+                  ? item.image1?.url
                     ? item.image1?.url
-                      ? item.image1?.url
-                      : ""
-                    : item.imag2 !== null &&
-                      item.image2 !== "" &&
-                      item.image2 !== undefined
+                    : ""
+                  : item.imag2 !== null &&
+                    item.image2 !== "" &&
+                    item.image2 !== undefined
+                  ? item.image2?.url
                     ? item.image2?.url
-                      ? item.image2?.url
-                      : ""
-                    : item.image3 !== null &&
-                      item.image3 !== "" &&
-                      item.image3 !== undefined &&
-                      item.image3?.url
-                    ? item.image3?.url
-                    : "",
-                text: `${item.name} (item of the day)`,
-                link: `/item/${item.id}`,
-              },
+                    : ""
+                  : item.image3 !== null &&
+                    item.image3 !== "" &&
+                    item.image3 !== undefined &&
+                    item.image3?.url
+                  ? item.image3?.url
+                  : "",
+              text: `${item.name} (item of the day)`,
+              link: `/item/${item.id}`,
             },
-          ];
+          };
         });
       }
-    }
-    if (!carousels) {
-      dispatch(listCarousels());
-    } else {
-      const carouselList = carousels.map((carousel) => ({
-        [carousel.name]: {
-          image: carousel.image.url ? carousel.image.url : "",
-          text: carousel.text,
-          link: carousel.link,
-        },
-      }));
-      setCarousel((prevValues) => {
-        return [...prevValues, ...carouselList];
-      });
+      if (!carousels) {
+        dispatch(listCarousels());
+      } else {
+        const carouselList = carousels.map((carousel) => ({
+          [carousel.name]: {
+            image: carousel.image.url ? carousel.image.url : "",
+            text: carousel.text,
+            link: carousel.link,
+          },
+        }));
+        setCarousel((prevValues) => Object.assign(prevValues, ...carouselList));
+      }
     }
   }, [dispatch, item, carousels]);
 
@@ -135,32 +128,33 @@ const Home = () => {
       )}
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
+
       <Carousel interval={3000} className="home-carousel">
-        {carousel
-          .filter((item) => isPlainObject(item[Object.keys(item)[0]]))
+        {Object.keys(carousel)
+          .filter((item) => isPlainObject(carousel[item]))
           .map((item, index) => (
             <Carousel.Item key={index}>
-              {item[Object.keys(item)[0]].link ? (
-                <Link to={item[Object.keys(item)[0]].link}>
-                  {item[Object.keys(item)[0]].image && (
+              {carousel[item].link ? (
+                <Link to={carousel[item].link}>
+                  {carousel[item].image && (
                     <Image
-                      src={item[Object.keys(item)[0]].image}
+                      src={carousel[item].image}
                       className="d-block w-100"
                       alt="carousel image"
                     />
                   )}
                 </Link>
               ) : (
-                item[Object.keys(item)[0]].image && (
+                carousel[item].image && (
                   <Image
-                    src={item[Object.keys(item)[0]].image}
+                    src={carousel[item].image}
                     className="d-block w-100"
                     alt="carousel image"
                   />
                 )
               )}
               <Carousel.Caption>
-                <h4>{item[Object.keys(item)[0]].text}</h4>
+                <h4>{carousel[item].text}</h4>
               </Carousel.Caption>
             </Carousel.Item>
           ))}

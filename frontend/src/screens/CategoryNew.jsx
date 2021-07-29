@@ -28,6 +28,7 @@ const NewCategory = ({ history }) => {
   const { loading, error, status: success } = createCategoryState;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!user) {
       dispatch(getUserDetails(userInfo.id));
     } else if (user.role !== "admin") {
@@ -73,49 +74,57 @@ const NewCategory = ({ history }) => {
 
       <FormContainer>
         <h2>New Category</h2>
-        {error && <Message variant="danger">{error}</Message>}
-        {loading && <Loader />}
-        <Message variant="info">Fields marked with * are compulsory</Message>
-        <Form>
-          <Form.Group>
-            <Form.Label>Name *</Form.Label>
-            <Form.Control
-              type="text"
-              name="name"
-              value={category.name}
-              onChange={handleChange}
-              placeholder="Name of Category e.g. lace, ankara etc."
-            />
-            {message && <Message variant="danger">{message}</Message>}
-          </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Price(NGN)</Form.Label>
-            <Form.Control
-              type="number"
-              name="price"
-              value={category.price}
-              onChange={handleChange}
-              placeholder="Price of items in this category"
-            />
-          </Form.Group>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            <Message variant="info">
+              Fields marked with * are compulsory
+            </Message>
+            <Form>
+              <Form.Group>
+                <Form.Label>Name *</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={category.name}
+                  onChange={handleChange}
+                  placeholder="Name of Category e.g. lace, ankara etc."
+                />
+                {message && <Message variant="danger">{message}</Message>}
+              </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              onChange={handleChange}
-              name="description"
-              value={category.description}
-              rows={3}
-              placeholder="Brief Description of the Category."
-            />
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Price(NGN)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="price"
+                  value={category.price}
+                  onChange={handleChange}
+                  placeholder="Price of items in this category"
+                />
+              </Form.Group>
 
-          <Button type="submit" variant="primary" onClick={submitHandler}>
-            Create Category
-          </Button>
-        </Form>
+              <Form.Group>
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  onChange={handleChange}
+                  name="description"
+                  value={category.description}
+                  rows={3}
+                  placeholder="Brief Description of the Category."
+                />
+              </Form.Group>
+
+              <Button type="submit" variant="primary" onClick={submitHandler}>
+                Create Category
+              </Button>
+            </Form>
+          </>
+        )}
       </FormContainer>
     </div>
   );

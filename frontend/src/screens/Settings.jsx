@@ -31,6 +31,7 @@ const Settings = ({ history }) => {
   const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push("/login?redirect=/settings");
     } else {
@@ -89,68 +90,76 @@ const Settings = ({ history }) => {
 
       <FormContainer>
         <h2>User Settings</h2>
-        {error && <Message variant="danger">{error}</Message>}
-        {updateError && <Message variant="danger">{updateError}</Message>}
-        {successMessage && <Message variant="success">Profile Updated</Message>}
-        {loading && <Loader />}
 
-        <Form>
-          <Form.Row>
-            <Form.Group as={Col}>
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="firstName"
-                value={user.firstName}
-                onChange={handleChange}
-              />
-            </Form.Group>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            {updateError && <Message variant="danger">{updateError}</Message>}
+            {successMessage && (
+              <Message variant="success">Profile Updated</Message>
+            )}
 
-            <Form.Group as={Col}>
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="lastName"
-                value={user.lastName}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Form.Row>
+            <Form>
+              <Form.Row>
+                <Form.Group as={Col}>
+                  <Form.Label>First Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="firstName"
+                    value={user.firstName}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              name="username"
-              value={user.username}
-              onChange={handleChange}
-            />
-          </Form.Group>
+                <Form.Group as={Col}>
+                  <Form.Label>Last Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="lastName"
+                    value={user.lastName}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Form.Row>
 
-          <Form.Group>
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-              value={user.email}
-              onChange={handleChange}
-            ></Form.Control>
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="username"
+                  value={user.username}
+                  onChange={handleChange}
+                />
+              </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Phone Number</Form.Label>
-            <Form.Control
-              onChange={handleChange}
-              name="phoneNumber"
-              type="text"
-              value={user.phoneNumber}
-            />
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Email Address</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
+                ></Form.Control>
+              </Form.Group>
 
-          <Button type="submit" variant="primary" onClick={submitHandler}>
-            Update
-          </Button>
-        </Form>
+              <Form.Group>
+                <Form.Label>Phone Number</Form.Label>
+                <Form.Control
+                  onChange={handleChange}
+                  name="phoneNumber"
+                  type="text"
+                  value={user.phoneNumber}
+                />
+              </Form.Group>
+
+              <Button type="submit" variant="primary" onClick={submitHandler}>
+                Update
+              </Button>
+            </Form>
+          </>
+        )}
       </FormContainer>
       <Link to="/change-password">
         <Button className="btn-sm">Change Password</Button>

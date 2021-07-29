@@ -67,6 +67,14 @@ hr {
   margin-right: 10%;
 }
 
+.pagination .page-item.active .page-link {
+  color: #fff !important;
+}
+
+.pagination .page-link {
+  color: #4f5c4f !important;
+}
+
 .loader {
   width: 100px;
   height: 100px;
@@ -233,7 +241,7 @@ hr {
 .case .content {
   margin-top: 1%;
   padding: 2%;
-  height: 170px;
+  height: 70px;
   width: 100%;
   overflow-y: auto;
   background-color: rgba(0, 0, 0, 0.08);
@@ -501,11 +509,30 @@ body.light-theme .list-group-item {
 }
 
 @media (max-width: 1028px) {
+  .container-fluid {
+    padding: 2% 5% !important;
+  }
+
+  .case .heading {
+    height: 75px
+  }
+
+  .case .content {
+    height: 50px
+  }
+
   .big-heading {
     font-family: "Montserrat";
     font-weight: 700;
     font-size: 2.5rem;
     line-height: 1.5;
+  }
+
+  .sub-heading {
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1;
+    text-transform: none;
   }
 
   .case button {

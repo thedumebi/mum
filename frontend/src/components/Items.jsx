@@ -102,6 +102,7 @@ const Items = ({ item }) => {
             style={{
               border: "3px solid black",
               height: "80%",
+              width: "90vw",
             }}
           />
         </div>
@@ -164,28 +165,39 @@ const Items = ({ item }) => {
               )}
             </div>
           )}
-          <div className="content">
+          <div
+            className="content"
+            style={{ height: url.path === "/item/:id" && "auto" }}
+          >
             <h1 className="sub-heading">{item.name}</h1>
-            {item.categories && (
-              <small>
-                {item.categories.length === 1 ? "Category: " : "Categories: "}
-                {item.categories
-                  .map((category) => {
-                    return category.name;
-                  })
-                  .join(", ")}
-              </small>
+            {url.path === "/item/:id" && (
+              <>
+                {item.categories && (
+                  <small>
+                    {item.categories.length === 1
+                      ? "Category: "
+                      : "Categories: "}
+                    {item.categories
+                      .map((category) => {
+                        return category.name;
+                      })
+                      .join(", ")}
+                  </small>
+                )}
+                <br />
+                {item.description && (
+                  <small>Description: {item.description}</small>
+                )}
+                <p>Unit Price: NGN {item.price}</p>
+                <p>
+                  {item.quantity === null || item.quantity === 0
+                    ? "Item is out of stock"
+                    : item.quantity === 1
+                    ? `There is ${item.quantity} left in stock`
+                    : `There are ${item.quantity} left in stock`}
+                </p>
+              </>
             )}
-            <br />
-            {item.description && <small>Description: {item.description}</small>}
-            <p>Unit Price: NGN {item.price}</p>
-            <p>
-              {item.quantity === null || item.quantity === 0
-                ? "Item is out of stock"
-                : item.quantity === 1
-                ? `There is ${item.quantity} left in stock`
-                : `There are ${item.quantity} left in stock`}
-            </p>
           </div>
 
           <Route exact path={`${url.path}/quantity`}>
@@ -243,14 +255,11 @@ const Items = ({ item }) => {
             )}
 
           {/* visit item button */}
-          {item.id &&
-            (url.path === "/category/:id" ||
-              url.path === "/favorites" ||
-              url.path === "/items") && (
-              <Link to={`/item/${item.id}`}>
-                <Button className="btn-dark">View</Button>
-              </Link>
-            )}
+          {item.id && url.path !== "/item/:id" && (
+            <Link to={`/item/${item.id}`}>
+              <Button className="btn-dark">View</Button>
+            </Link>
+          )}
 
           {/* add/remove item quantity */}
           {item &&

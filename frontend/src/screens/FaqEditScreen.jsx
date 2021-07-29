@@ -27,6 +27,7 @@ const FaqEdit = ({ history, match }) => {
   const { success, error: updateError } = faqUpdate;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/admin/faqs/${match.params.id}/edit`);
     } else {
@@ -72,37 +73,42 @@ const FaqEdit = ({ history, match }) => {
 
       <FormContainer>
         <h2>Edit Faq</h2>
-        {loading && <Loader />}
-        {error && <Message variant="danger">{error}</Message>}
-        {updateError && <Message variant="danger">{updateError}</Message>}
-        {successMessage && <Message variant="success">Faq Updated</Message>}
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            {updateError && <Message variant="danger">{updateError}</Message>}
+            {successMessage && <Message variant="success">Faq Updated</Message>}
 
-        <Form>
-          <Form.Group>
-            <Form.Label>Question</Form.Label>
-            <Form.Control
-              type="text"
-              name="question"
-              value={faq.question}
-              onChange={handleChange}
-            />
-          </Form.Group>
+            <Form>
+              <Form.Group>
+                <Form.Label>Question</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="question"
+                  value={faq.question}
+                  onChange={handleChange}
+                />
+              </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              onChange={handleChange}
-              name="answer"
-              value={faq.answer}
-              rows={3}
-            />
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  onChange={handleChange}
+                  name="answer"
+                  value={faq.answer}
+                  rows={3}
+                />
+              </Form.Group>
 
-          <Button type="submit" variant="primary" onClick={submitHandler}>
-            Update
-          </Button>
-        </Form>
+              <Button type="submit" variant="primary" onClick={submitHandler}>
+                Update
+              </Button>
+            </Form>
+          </>
+        )}
       </FormContainer>
     </div>
   );

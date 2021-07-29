@@ -87,14 +87,14 @@ const ItemsList = ({ history, match }) => {
               ) : (
                 <>
                   <div style={{ textAlign: "center" }}>
-                    <Row>
+                    <Row style={{ justifyContent: "center" }}>
                       {items &&
                         items.map((item) => {
                           return (
                             <Col
-                              lg={3}
+                              lg={2}
                               md={4}
-                              xs={6}
+                              xs={4}
                               key={item.id}
                               style={{ padding: 0 }}
                             >

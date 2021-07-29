@@ -23,6 +23,7 @@ const AddCarouselScrren = ({ history }) => {
   const [objectUrls, setObjectUrls] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push("/login?redirect=/add-carousel");
     } else {
@@ -111,63 +112,68 @@ const AddCarouselScrren = ({ history }) => {
 
       <FormContainer>
         <h2>Create Home Page Carousel</h2>
-        {error && <Message variant="danger">{error}</Message>}
-        {loading && <Loader />}
-        <Form>
-          <Form.Group>
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              onChange={handleChange}
-              name="name"
-              type="text"
-              placeholder="Enter a name for your Carousel"
-              value={carousel.name}
-            />
-            {nameError && <Message variant="danger">{nameError}</Message>}
-          </Form.Group>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            <Form>
+              <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  onChange={handleChange}
+                  name="name"
+                  type="text"
+                  placeholder="Enter a name for your Carousel"
+                  value={carousel.name}
+                />
+                {nameError && <Message variant="danger">{nameError}</Message>}
+              </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Text</Form.Label>
-            <Form.Control
-              onChange={handleChange}
-              name="text"
-              type="text"
-              placeholder="Enter Carousel Text to be displayed"
-            />
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Text</Form.Label>
+                <Form.Control
+                  onChange={handleChange}
+                  name="text"
+                  type="text"
+                  placeholder="Enter Carousel Text to be displayed"
+                />
+              </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Carousel Image</Form.Label>
-            <div
-              className="delete-div"
-              style={{ display: !carousel.image && "none" }}
-            >
-              <Form.Control as={Image} id="image" src="" alt="" />
-              <Form.Control
-                as={deleteIcon}
-                className="delete-icon"
-                name="image"
-              />
-            </div>
-            {!carousel.image && (
-              <Form.File
-                name="image"
-                label="Choose Image"
-                custom
-                onChange={preview}
-              />
-            )}
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Carousel Image</Form.Label>
+                <div
+                  className="delete-div"
+                  style={{ display: !carousel.image && "none" }}
+                >
+                  <Form.Control as={Image} id="image" src="" alt="" />
+                  <Form.Control
+                    as={deleteIcon}
+                    className="delete-icon"
+                    name="image"
+                  />
+                </div>
+                {!carousel.image && (
+                  <Form.File
+                    name="image"
+                    label="Choose Image"
+                    custom
+                    onChange={preview}
+                  />
+                )}
+              </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Link</Form.Label>
-            <Form.Control type="text" name="link" onChange={handleChange} />
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Link</Form.Label>
+                <Form.Control type="text" name="link" onChange={handleChange} />
+              </Form.Group>
 
-          <Button className="btn-md btn-dark" onClick={addCarousel}>
-            Create Carousel
-          </Button>
-        </Form>
+              <Button className="btn-md btn-dark" onClick={addCarousel}>
+                Create Carousel
+              </Button>
+            </Form>
+          </>
+        )}
       </FormContainer>
     </div>
   );

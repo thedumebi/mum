@@ -33,8 +33,10 @@ const ChangePassword = ({ history }) => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.])(?=.{8,})/;
-    const mediumRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
+    const strongRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.])(?=.{8,})/;
+    const mediumRegex =
+      /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
 
     setPassword((prevValues) => {
       return { ...prevValues, [name]: value };
@@ -75,6 +77,7 @@ const ChangePassword = ({ history }) => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push("/login?redirect=/change-password");
     } else if (!user) {
@@ -96,108 +99,113 @@ const ChangePassword = ({ history }) => {
       </Button>
 
       <FormContainer>
-        {loading && <Loader />}
-        {error && <Message variant="danger">{error}</Message>}
-        <Form>
-          <Form.Group>
-            <Form.Label>Old Password</Form.Label>
-            <InputGroup>
-              <Form.Control
-                onChange={handleChange}
-                name="old"
-                type={viewPassword.old ? "text" : "password"}
-                placeholder="Enter your old password"
-                value={password.old}
-              />
-              <InputGroup.Append>
-                <InputGroup.Text
-                  onClick={() =>
-                    setViewPassword({
-                      ...viewPassword,
-                      old: !viewPassword.old,
-                    })
-                  }
-                >
-                  {viewPassword.old ? (
-                    <i className="fas fa-eye-slash"></i>
-                  ) : (
-                    <i className="fas fa-eye"></i>
-                  )}
-                </InputGroup.Text>
-              </InputGroup.Append>
-            </InputGroup>
-          </Form.Group>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            <Form>
+              <Form.Group>
+                <Form.Label>Old Password</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    onChange={handleChange}
+                    name="old"
+                    type={viewPassword.old ? "text" : "password"}
+                    placeholder="Enter your old password"
+                    value={password.old}
+                  />
+                  <InputGroup.Append>
+                    <InputGroup.Text
+                      onClick={() =>
+                        setViewPassword({
+                          ...viewPassword,
+                          old: !viewPassword.old,
+                        })
+                      }
+                    >
+                      {viewPassword.old ? (
+                        <i className="fas fa-eye-slash"></i>
+                      ) : (
+                        <i className="fas fa-eye"></i>
+                      )}
+                    </InputGroup.Text>
+                  </InputGroup.Append>
+                </InputGroup>
+              </Form.Group>
 
-          <Form.Group>
-            <Form.Label>New Password</Form.Label>
-            <InputGroup>
-              <Form.Control
-                onChange={handleChange}
-                name="new"
-                type={viewPassword.new ? "text" : "password"}
-                placeholder="Enter your new password"
-                value={password.new}
-              />
-              <InputGroup.Append>
-                <InputGroup.Text
-                  onClick={() =>
-                    setViewPassword({
-                      ...viewPassword,
-                      new: !viewPassword.new,
-                    })
-                  }
-                >
-                  {viewPassword.new ? (
-                    <i className="fas fa-eye-slash"></i>
-                  ) : (
-                    <i className="fas fa-eye"></i>
-                  )}
-                </InputGroup.Text>
-              </InputGroup.Append>
-            </InputGroup>
-          </Form.Group>
-          {password.new !== "" && (
-            <Form.Group>
-              <Form.Text>Password strength</Form.Text>
-              <Form.Control id="password-strength" readOnly />
-              <Form.Text id="password-strength-text"></Form.Text>
-            </Form.Group>
-          )}
+              <Form.Group>
+                <Form.Label>New Password</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    onChange={handleChange}
+                    name="new"
+                    type={viewPassword.new ? "text" : "password"}
+                    placeholder="Enter your new password"
+                    value={password.new}
+                  />
+                  <InputGroup.Append>
+                    <InputGroup.Text
+                      onClick={() =>
+                        setViewPassword({
+                          ...viewPassword,
+                          new: !viewPassword.new,
+                        })
+                      }
+                    >
+                      {viewPassword.new ? (
+                        <i className="fas fa-eye-slash"></i>
+                      ) : (
+                        <i className="fas fa-eye"></i>
+                      )}
+                    </InputGroup.Text>
+                  </InputGroup.Append>
+                </InputGroup>
+              </Form.Group>
+              {password.new !== "" && (
+                <Form.Group>
+                  <Form.Text>Password strength</Form.Text>
+                  <Form.Control id="password-strength" readOnly />
+                  <Form.Text id="password-strength-text"></Form.Text>
+                </Form.Group>
+              )}
 
-          <Form.Group>
-            <Form.Label>Confirm Password</Form.Label>
-            <InputGroup>
-              <Form.Control
-                onChange={handleChange}
-                name="confirm"
-                type={viewPassword.confirm ? "text" : "password"}
-                placeholder="Confirm password"
-                value={password.confirm}
-              />
-              <InputGroup.Append>
-                <InputGroup.Text
-                  onClick={() =>
-                    setViewPassword({
-                      ...viewPassword,
-                      confirm: !viewPassword.confirm,
-                    })
-                  }
-                >
-                  {viewPassword.confirm ? (
-                    <i className="fas fa-eye-slash"></i>
-                  ) : (
-                    <i className="fas fa-eye"></i>
-                  )}
-                </InputGroup.Text>
-              </InputGroup.Append>
-            </InputGroup>
-            {message && <Message variant="danger">{message}</Message>}
-          </Form.Group>
+              <Form.Group>
+                <Form.Label>Confirm Password</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    onChange={handleChange}
+                    name="confirm"
+                    type={viewPassword.confirm ? "text" : "password"}
+                    placeholder="Confirm password"
+                    value={password.confirm}
+                  />
+                  <InputGroup.Append>
+                    <InputGroup.Text
+                      onClick={() =>
+                        setViewPassword({
+                          ...viewPassword,
+                          confirm: !viewPassword.confirm,
+                        })
+                      }
+                    >
+                      {viewPassword.confirm ? (
+                        <i className="fas fa-eye-slash"></i>
+                      ) : (
+                        <i className="fas fa-eye"></i>
+                      )}
+                    </InputGroup.Text>
+                  </InputGroup.Append>
+                </InputGroup>
+                {message && <Message variant="danger">{message}</Message>}
+              </Form.Group>
 
-          <Button type="submit" onClick={submitHandler}>
-            Change Password
-          </Button>
-        </Form>
+              <Button type="submit" onClick={submitHandler}>
+                Change Password
+              </Button>
+            </Form>
+          </>
+        )}
       </FormContainer>
       <small>
         Forgotten Password?

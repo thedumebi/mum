@@ -30,6 +30,7 @@ const CreateSaleScreen = ({ history, match }) => {
   const { items } = itemListAll;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/admin/sales/new`);
     } else {

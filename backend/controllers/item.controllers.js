@@ -82,6 +82,7 @@ const getItems = asyncHandler(async (req, res) => {
     ],
     limit: pageSize,
     offset: (page - 1) * pageSize,
+    order: [["id", "DESC"]],
   });
 
   res.status(200).json({
@@ -95,7 +96,7 @@ const getItems = asyncHandler(async (req, res) => {
 // @route GET /api/items/all
 // @access Public
 const getAllItems = asyncHandler(async (req, res) => {
-  const items = await Item.findAll();
+  const items = await Item.findAll({ order: [["id", "DESC"]] });
   res.status(200).json(items);
 });
 
@@ -140,50 +141,39 @@ const createItem = asyncHandler(async (req, res, next) => {
           },
         });
 
-        const itemExists = await Item.findOne({
-          where: {
-            name: sequelize.where(
-              sequelize.fn("LOWER", sequelize.col("name")),
-              "LIKE",
-              `${name.toLowerCase()}`
-            ),
-          },
+        const item = await Item.create({
+          name,
+          price,
+          quantity,
+          description,
         });
-        if (itemExists) {
-          res.status(400);
-          throw new Error("Sorry, you already have an item with that name!");
-        } else {
-          const item = await Item.create({
-            name,
-            price,
-            quantity,
-            description,
+        if (
+          (item.price === undefined || item.price === "") &&
+          itemCategories.length > 0
+        ) {
+          await item.update({ price: itemCategories[0].price });
+        }
+        await item.setUser(req.user);
+        await item.addCategories(itemCategories);
+        if (item) {
+          let imageKit1, imageKit2, imageKit3;
+          if (image1) imageKit1 = sendToImageKit(image1[0]);
+          if (image2) imageKit2 = sendToImageKit(image2[0]);
+          if (image3) imageKit3 = sendToImageKit(image3[0]);
+          const [result1, result2, result3] = await Promise.all([
+            imageKit1,
+            imageKit2,
+            imageKit3,
+          ]);
+          await item.update({
+            image1: result1,
+            image2: result2,
+            image3: result3,
           });
-          if (item.price === undefined) {
-            await item.update({ price: itemCategories[0].price });
-          }
-          await item.setUser(req.user);
-          await item.addCategories(itemCategories);
-          if (item) {
-            let imageKit1, imageKit2, imageKit3;
-            if (image1) imageKit1 = sendToImageKit(image1[0]);
-            if (image2) imageKit2 = sendToImageKit(image2[0]);
-            if (image3) imageKit3 = sendToImageKit(image3[0]);
-            const [result1, result2, result3] = await Promise.all([
-              imageKit1,
-              imageKit2,
-              imageKit3,
-            ]);
-            await item.update({
-              image1: result1,
-              image2: result2,
-              image3: result3,
-            });
-            res.status(200).json(item);
-          } else {
-            res.status(401);
-            throw new Error("Invalid input");
-          }
+          res.status(200).json(item);
+        } else {
+          res.status(401);
+          throw new Error("Invalid input");
         }
       }
     } catch (err) {

@@ -51,7 +51,7 @@ const CategoriesList = ({ history, match }) => {
                         <Col
                           lg={3}
                           md={4}
-                          xs={6}
+                          xs={4}
                           key={category.id}
                           style={{ padding: 0 }}
                         >

@@ -41,6 +41,7 @@ const ItemEdit = ({ history, match }) => {
   const [objectUrls, setObjectUrls] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/item/${match.params.id}/edit`);
     } else {
@@ -48,7 +49,7 @@ const ItemEdit = ({ history, match }) => {
       if (success) {
         setSuccessMessage(success);
       }
-      if (!itemDetail || !itemDetail.name || success) {
+      if (!itemDetail || success) {
         dispatch({ type: ITEM_UPDATE_RESET });
         dispatch(getItemDetails(match.params.id));
       } else {
@@ -189,229 +190,248 @@ const ItemEdit = ({ history, match }) => {
 
           <FormContainer>
             <h2>Edit Item</h2>
-            {loading && <Loader />}
-            {error && <Message variant="danger">{error}</Message>}
-            {updateError && <Message variant="danger">{updateError}</Message>}
-            {successMessage && (
-              <Message variant="success">Item Updated</Message>
-            )}
+            {loading ? (
+              <Loader />
+            ) : (
+              <>
+                {error && <Message variant="danger">{error}</Message>}
+                {updateError && (
+                  <Message variant="danger">{updateError}</Message>
+                )}
+                {successMessage && (
+                  <Message variant="success">Item Updated</Message>
+                )}
 
-            <Form>
-              <Form.Group>
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="name"
-                  value={item.name}
-                  onChange={handleChange}
-                />
-                {nameError && <Message variant="danger">{nameError}</Message>}
-              </Form.Group>
+                <Form>
+                  <Form.Group>
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      value={item.name}
+                      onChange={handleChange}
+                    />
+                    {nameError && (
+                      <Message variant="danger">{nameError}</Message>
+                    )}
+                  </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Price(NGN)</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="price"
-                  value={item.price}
-                  onChange={handleChange}
-                />
-              </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Price(NGN)</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="price"
+                      value={item.price}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Quantity</Form.Label>
-                <Form.Control
-                  type="number"
-                  onChange={handleChange}
-                  name="quantity"
-                  value={item.quantity}
-                />
-              </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control
+                      type="number"
+                      onChange={handleChange}
+                      name="quantity"
+                      value={item.quantity}
+                    />
+                  </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  onChange={handleChange}
-                  name="description"
-                  value={item.description}
-                  rows={3}
-                />
-              </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      onChange={handleChange}
+                      name="description"
+                      value={item.description}
+                      rows={3}
+                    />
+                  </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Item Categories</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={
-                    categories
-                      ? categories
-                          .filter(
-                            (category) =>
-                              item.categories &&
-                              item.categories.find(
-                                (el) => Number(el) === category.id
+                  <Form.Group>
+                    <Form.Label>Item Categories</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={
+                        categories
+                          ? categories
+                              .filter(
+                                (category) =>
+                                  item.categories &&
+                                  item.categories.find(
+                                    (el) => Number(el) === category.id
+                                  )
                               )
-                          )
-                          .map((category) => {
-                            return category.name;
-                          })
-                      : ""
-                  }
-                  readOnly
-                />
-              </Form.Group>
+                              .map((category) => {
+                                return category.name;
+                              })
+                          : ""
+                      }
+                      readOnly
+                    />
+                  </Form.Group>
 
-              <Form.Row>
-                <Form.Group as={Col}>
-                  <Form.Label>Select Category</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="categories"
-                    onChange={addToCategoryArray}
-                  >
-                    <option value="">Select Category ...</option>
-                    {categories &&
-                      categories
-                        .filter(
-                          (category) =>
-                            item.categories &&
-                            !item.categories.find(
-                              (el) => Number(el) === category.id
+                  <Form.Row>
+                    <Form.Group as={Col}>
+                      <Form.Label>Select Category</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="categories"
+                        onChange={addToCategoryArray}
+                      >
+                        <option value="">Select Category ...</option>
+                        {categories &&
+                          categories
+                            .filter(
+                              (category) =>
+                                item.categories &&
+                                !item.categories.find(
+                                  (el) => Number(el) === category.id
+                                )
                             )
-                        )
-                        .map((category) => {
-                          return (
-                            <option key={category.id} value={category.id}>
-                              {category.name}
-                            </option>
-                          );
-                        })}
-                  </Form.Control>
-                </Form.Group>
+                            .map((category) => {
+                              return (
+                                <option key={category.id} value={category.id}>
+                                  {category.name}
+                                </option>
+                              );
+                            })}
+                      </Form.Control>
+                    </Form.Group>
 
-                <Form.Group as={Col}>
-                  <Form.Label>Remove Category</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="categories"
-                    onChange={removeFromCategoryArray}
-                  >
-                    <option value="">Select Category ...</option>
-                    {categories &&
-                      categories
-                        .filter(
-                          (category) =>
-                            item.categories &&
-                            item.categories.find(
-                              (el) => Number(el) === category.id
+                    <Form.Group as={Col}>
+                      <Form.Label>Remove Category</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="categories"
+                        onChange={removeFromCategoryArray}
+                      >
+                        <option value="">Select Category ...</option>
+                        {categories &&
+                          categories
+                            .filter(
+                              (category) =>
+                                item.categories &&
+                                item.categories.find(
+                                  (el) => Number(el) === category.id
+                                )
                             )
-                        )
-                        .map((category) => {
-                          return (
-                            <option key={category.id} value={category.id}>
-                              {category.name}
-                            </option>
-                          );
-                        })}
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
+                            .map((category) => {
+                              return (
+                                <option key={category.id} value={category.id}>
+                                  {category.name}
+                                </option>
+                              );
+                            })}
+                      </Form.Control>
+                    </Form.Group>
+                  </Form.Row>
 
-              <Form.Group>
-                <Form.Label>Item Image</Form.Label>
-                <div
-                  className="delete-div"
-                  style={{ display: !item.image1 && "none" }}
-                >
-                  <Form.Control
-                    as={Image}
-                    id="image1"
-                    src={
-                      itemDetail && itemDetail.image1 && itemDetail.image1.url
-                    }
-                    alt={item.image1}
-                  />
-                  <Form.Control
-                    as={deleteIcon}
-                    className="delete-icon"
-                    name="image1"
-                  />
-                </div>
-                {!item.image1 && (
-                  <Form.File
-                    name="image1"
-                    label="Choose Image"
-                    custom
-                    onChange={preview}
-                  />
-                )}
-              </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Item Image</Form.Label>
+                    <div
+                      className="delete-div"
+                      style={{ display: !item.image1 && "none" }}
+                    >
+                      <Form.Control
+                        as={Image}
+                        id="image1"
+                        src={
+                          itemDetail &&
+                          itemDetail.image1 &&
+                          itemDetail.image1.url
+                        }
+                        alt={item.image1}
+                      />
+                      <Form.Control
+                        as={deleteIcon}
+                        className="delete-icon"
+                        name="image1"
+                      />
+                    </div>
+                    {!item.image1 && (
+                      <Form.File
+                        name="image1"
+                        label="Choose Image"
+                        custom
+                        onChange={preview}
+                      />
+                    )}
+                  </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Second Image</Form.Label>
-                <div
-                  className="delete-div"
-                  style={{ display: !item.image2 && "none" }}
-                >
-                  <Form.Control
-                    as={Image}
-                    id="image2"
-                    src={
-                      itemDetail && itemDetail.image2 && itemDetail.image2.url
-                    }
-                    alt={item.image2}
-                  />
-                  <Form.Control
-                    as={deleteIcon}
-                    className="delete-icon"
-                    name="image2"
-                  />
-                </div>
-                {!item.image2 && (
-                  <Form.File
-                    name="image2"
-                    label="Choose Image"
-                    custom
-                    onChange={preview}
-                  />
-                )}
-              </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Second Image</Form.Label>
+                    <div
+                      className="delete-div"
+                      style={{ display: !item.image2 && "none" }}
+                    >
+                      <Form.Control
+                        as={Image}
+                        id="image2"
+                        src={
+                          itemDetail &&
+                          itemDetail.image2 &&
+                          itemDetail.image2.url
+                        }
+                        alt={item.image2}
+                      />
+                      <Form.Control
+                        as={deleteIcon}
+                        className="delete-icon"
+                        name="image2"
+                      />
+                    </div>
+                    {!item.image2 && (
+                      <Form.File
+                        name="image2"
+                        label="Choose Image"
+                        custom
+                        onChange={preview}
+                      />
+                    )}
+                  </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Third Image</Form.Label>
-                <div
-                  className="delete-div"
-                  style={{ display: !item.image3 && "none" }}
-                >
-                  <Form.Control
-                    as={Image}
-                    id="image3"
-                    src={
-                      itemDetail && itemDetail.image3 && itemDetail.image3.url
-                    }
-                    alt={item.image3}
-                  />
-                  <Form.Control
-                    as={deleteIcon}
-                    className="delete-icon"
-                    name="image3"
-                  />
-                </div>
-                {!item.image3 && (
-                  <Form.File
-                    name="image3"
-                    label="Choose Image"
-                    custom
-                    onChange={preview}
-                  />
-                )}
-              </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Third Image</Form.Label>
+                    <div
+                      className="delete-div"
+                      style={{ display: !item.image3 && "none" }}
+                    >
+                      <Form.Control
+                        as={Image}
+                        id="image3"
+                        src={
+                          itemDetail &&
+                          itemDetail.image3 &&
+                          itemDetail.image3.url
+                        }
+                        alt={item.image3}
+                      />
+                      <Form.Control
+                        as={deleteIcon}
+                        className="delete-icon"
+                        name="image3"
+                      />
+                    </div>
+                    {!item.image3 && (
+                      <Form.File
+                        name="image3"
+                        label="Choose Image"
+                        custom
+                        onChange={preview}
+                      />
+                    )}
+                  </Form.Group>
 
-              <Button type="submit" variant="primary" onClick={submitHandler}>
-                Update
-              </Button>
-            </Form>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    onClick={submitHandler}
+                  >
+                    Update
+                  </Button>
+                </Form>
+              </>
+            )}
           </FormContainer>
         </div>
       )}

@@ -35,6 +35,7 @@ const Login = ({ location, history, match }) => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (userInfo) {
       history.push(redirect);
     }
@@ -42,8 +43,10 @@ const Login = ({ location, history, match }) => {
 
   function handleRegister(event) {
     const { name, value } = event.target;
-    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.])(?=.{8,})/;
-    const mediumRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
+    const strongRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.])(?=.{8,})/;
+    const mediumRegex =
+      /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
 
     setRegisterUser((prevValue) => {
       return { ...prevValue, [name]: value };
@@ -100,74 +103,50 @@ const Login = ({ location, history, match }) => {
   return (
     <FormContainer>
       <h2>{url === "/login" ? "Welcome back" : "Get Started"}</h2>
-      {error && <Message variant="danger">{error}</Message>}
-      {loading && <Loader />}
-      {registerError && <Message variant="danger">{registerError}</Message>}
-      {registerLoading && <Loader />}
-      <Form className="form">
-        <Form.Group>
-          <Form.Label>
-            {url === "/login" ? "Email address or Username" : "Email address"}
-          </Form.Label>
-          <Form.Control
-            onChange={url === "/login" ? handleLogin : handleRegister}
-            name={url === "/login" ? "input" : "email"}
-            type={url === "/login" ? "text" : "email"}
-            placeholder={
-              url === "/login" ? "Enter email or username" : "Enter email"
-            }
-            value={url === "/login" ? loginUser.input : registerUser.email}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>Password</Form.Label>
-          <InputGroup>
-            <Form.Control
-              onChange={url === "/login" ? handleLogin : handleRegister}
-              name="password"
-              type={viewPassword ? "text" : "password"}
-              placeholder="Password"
-              value={
-                url === "/login" ? loginUser.password : registerUser.password
-              }
-            />
-            <InputGroup.Append>
-              <InputGroup.Text onClick={() => setViewPassword(!viewPassword)}>
-                {viewPassword ? (
-                  <i className="fas fa-eye-slash"></i>
-                ) : (
-                  <i className="fas fa-eye"></i>
-                )}
-              </InputGroup.Text>
-            </InputGroup.Append>
-          </InputGroup>
-        </Form.Group>
 
-        {url === "/register" && (
-          <div>
-            {registerUser.password !== "" && (
-              <Form.Group>
-                <Form.Text>Password strength</Form.Text>
-                <Form.Control id="password-strength" readOnly />
-                <Form.Text id="password-strength-text"></Form.Text>
-              </Form.Group>
-            )}
-
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          {error && <Message variant="danger">{error}</Message>}
+          {registerError && <Message variant="danger">{registerError}</Message>}
+          {registerLoading && <Loader />}
+          <Form className="form">
             <Form.Group>
-              <Form.Label>Confirm Password</Form.Label>
+              <Form.Label>
+                {url === "/login"
+                  ? "Email address or Username"
+                  : "Email address"}
+              </Form.Label>
+              <Form.Control
+                onChange={url === "/login" ? handleLogin : handleRegister}
+                name={url === "/login" ? "input" : "email"}
+                type={url === "/login" ? "text" : "email"}
+                placeholder={
+                  url === "/login" ? "Enter email or username" : "Enter email"
+                }
+                value={url === "/login" ? loginUser.input : registerUser.email}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
               <InputGroup>
                 <Form.Control
-                  type={viewConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                  value={registerUser.confirmPassword}
-                  onChange={handleRegister}
+                  onChange={url === "/login" ? handleLogin : handleRegister}
+                  name="password"
+                  type={viewPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={
+                    url === "/login"
+                      ? loginUser.password
+                      : registerUser.password
+                  }
                 />
                 <InputGroup.Append>
                   <InputGroup.Text
-                    onClick={() => setViewConfirmPassword(!viewConfirmPassword)}
+                    onClick={() => setViewPassword(!viewPassword)}
                   >
-                    {viewConfirmPassword ? (
+                    {viewPassword ? (
                       <i className="fas fa-eye-slash"></i>
                     ) : (
                       <i className="fas fa-eye"></i>
@@ -175,56 +154,95 @@ const Login = ({ location, history, match }) => {
                   </InputGroup.Text>
                 </InputGroup.Append>
               </InputGroup>
-              {message && <Message variant="danger">{message}</Message>}
             </Form.Group>
-            <Form.Row>
-              <Form.Group as={Col}>
-                <Form.Label>First Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="John"
-                  name="firstName"
-                  onChange={handleRegister}
-                  value={registerUser.firstName}
-                />
-              </Form.Group>
-              <Form.Group as={Col}>
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Doe"
-                  name="lastName"
-                  onChange={handleRegister}
-                  value={registerUser.lastName}
-                />
-              </Form.Group>
-            </Form.Row>
-            <Form.Group>
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                onChange={handleRegister}
-                name="username"
-                type="text"
-                placeholder="Pick a username"
-                value={registerUser.username}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Phone Number</Form.Label>
-              <Form.Control
-                onChange={handleRegister}
-                name="phoneNumber"
-                type="text"
-                placeholder="Phone number"
-                value={registerUser.phoneNumber}
-              />
-            </Form.Group>
-          </div>
-        )}
-        <Button variant="primary" onClick={submitHandler} type="button">
-          {url === "/login" ? "Login" : "Register"}
-        </Button>
-      </Form>
+
+            {url === "/register" && (
+              <div>
+                {registerUser.password !== "" && (
+                  <Form.Group>
+                    <Form.Text>Password strength</Form.Text>
+                    <Form.Control id="password-strength" readOnly />
+                    <Form.Text id="password-strength-text"></Form.Text>
+                  </Form.Group>
+                )}
+
+                <Form.Group>
+                  <Form.Label>Confirm Password</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={viewConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      placeholder="Confirm password"
+                      value={registerUser.confirmPassword}
+                      onChange={handleRegister}
+                    />
+                    <InputGroup.Append>
+                      <InputGroup.Text
+                        onClick={() =>
+                          setViewConfirmPassword(!viewConfirmPassword)
+                        }
+                      >
+                        {viewConfirmPassword ? (
+                          <i className="fas fa-eye-slash"></i>
+                        ) : (
+                          <i className="fas fa-eye"></i>
+                        )}
+                      </InputGroup.Text>
+                    </InputGroup.Append>
+                  </InputGroup>
+                  {message && <Message variant="danger">{message}</Message>}
+                </Form.Group>
+                <Form.Row>
+                  <Form.Group as={Col}>
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="John"
+                      name="firstName"
+                      onChange={handleRegister}
+                      value={registerUser.firstName}
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col}>
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Doe"
+                      name="lastName"
+                      onChange={handleRegister}
+                      value={registerUser.lastName}
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Group>
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    onChange={handleRegister}
+                    name="username"
+                    type="text"
+                    placeholder="Pick a username"
+                    value={registerUser.username}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Control
+                    onChange={handleRegister}
+                    name="phoneNumber"
+                    type="text"
+                    placeholder="Phone number"
+                    value={registerUser.phoneNumber}
+                  />
+                </Form.Group>
+              </div>
+            )}
+            <Button variant="primary" onClick={submitHandler} type="button">
+              {url === "/login" ? "Login" : "Register"}
+            </Button>
+          </Form>
+        </>
+      )}
+
       <small>
         Forgot password?
         <Link to="/reset-password">

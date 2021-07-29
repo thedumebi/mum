@@ -31,6 +31,7 @@ const CategoryEdit = ({ history, match }) => {
   const { success, error: updateError } = categoryUpdate;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/category/${match.params.id}/edit`);
     } else {
@@ -88,59 +89,64 @@ const CategoryEdit = ({ history, match }) => {
 
       <FormContainer>
         <h2>Edit Category</h2>
-        {loading && <Loader />}
-        {error && <Message variant="danger">{error}</Message>}
-        {updateError && <Message variant="danger">{updateError}</Message>}
-        {successMessage && (
-          <Message variant="success">Category Updated</Message>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            {error && <Message variant="danger">{error}</Message>}
+            {updateError && <Message variant="danger">{updateError}</Message>}
+            {successMessage && (
+              <Message variant="success">Category Updated</Message>
+            )}
+
+            <Form>
+              <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={category.name}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Price(NGN)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="price"
+                  value={category.price}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  onChange={handleChange}
+                  name="description"
+                  value={category.description}
+                  rows={3}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Check
+                  type="checkbox"
+                  label="Apply Price to all Items in this Category"
+                  onChange={handleCheck}
+                  name="setPrice"
+                  value={category.setPrice}
+                />
+              </Form.Group>
+
+              <Button type="submit" variant="primary" onClick={submitHandler}>
+                Update
+              </Button>
+            </Form>
+          </>
         )}
-
-        <Form>
-          <Form.Group>
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              name="name"
-              value={category.name}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Price(NGN)</Form.Label>
-            <Form.Control
-              type="number"
-              name="price"
-              value={category.price}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              onChange={handleChange}
-              name="description"
-              value={category.description}
-              rows={3}
-            />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Check
-              type="checkbox"
-              label="Apply Price to all Items in this Category"
-              onChange={handleCheck}
-              name="setPrice"
-              value={category.setPrice}
-            />
-          </Form.Group>
-
-          <Button type="submit" variant="primary" onClick={submitHandler}>
-            Update
-          </Button>
-        </Form>
       </FormContainer>
     </div>
   );
