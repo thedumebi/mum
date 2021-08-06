@@ -88,15 +88,17 @@ const Items = ({ item }) => {
         <div
           className="overlay"
           id="overlay"
-          onClick={() =>
-            setOverlay({ src: "", status: false, display: "none" })
-          }
+          onClick={(e) => {
+            if (!document.getElementById("carousel-div").contains(e.target)) {
+              setOverlay({ src: "", status: false, display: "none" });
+            }
+          }}
           style={{
             display: overlay.display,
           }}
         >
-          <Message variant="info">Tap on the image to exit full screen</Message>
-          <Image
+          <Message variant="info">Tap on me to exit full screen</Message>
+          {/* <Image
             src={overlay.src}
             alt={item.name}
             style={{
@@ -104,7 +106,21 @@ const Items = ({ item }) => {
               height: "80%",
               width: "90vw",
             }}
-          />
+          /> */}
+          <Carousel interval={5000} id="carousel-div">
+            {images.map((image, index) => (
+              <Carousel.Item key={index}>
+                <Image
+                  src={image.url}
+                  alt={item.name}
+                  style={{
+                    height: "80%",
+                    width: "90vw",
+                  }}
+                />
+              </Carousel.Item>
+            ))}
+          </Carousel>
         </div>
       ) : (
         <>
@@ -132,7 +148,10 @@ const Items = ({ item }) => {
             (item.image3 !== null &&
               item.image3 !== "" &&
               item.image3 !== undefined)) && (
-            <div className="heading">
+            <div
+              className="heading"
+              style={{ height: url.path === "/item/:id" && "300px" }}
+            >
               {url.path === "/item/:id" ? (
                 <Carousel interval={3000}>
                   {images.map((image, index) => (

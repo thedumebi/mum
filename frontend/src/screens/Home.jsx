@@ -57,7 +57,7 @@ const Home = () => {
                     item.image3?.url
                   ? item.image3?.url
                   : "",
-              text: `${item.name} (item of the day)`,
+              text: `${item?.name ? item?.name : ""} (item of the day)`,
               link: `/item/${item.id}`,
             },
           };
@@ -154,7 +154,7 @@ const Home = () => {
                 )
               )}
               <Carousel.Caption>
-                <h4>{carousel[item].text}</h4>
+                <h4>{carousel[item]?.text ? carousel[item]?.text : ""}</h4>
               </Carousel.Caption>
             </Carousel.Item>
           ))}

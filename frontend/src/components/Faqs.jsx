@@ -36,10 +36,13 @@ const Faqs = ({ faq }) => {
       {error && <Message variant="danger">{error}</Message>}
       <div
         className="content"
-        style={{ height: url.path === "/faq/:id" && "auto" }}
+        style={{ height: url.path === "/faqs/:id" ? "auto" : "100px" }}
       >
-        <h1 className="sub-heading">Question: {faq.question}</h1>
-        <small>Answer: {faq.answer}</small>
+        <h1 className="sub-heading">
+          <strong>Question:</strong> {faq.question}
+        </h1>
+        <hr />
+        <small style={{ lineHeight: "1" }}>Answer: {faq.answer}</small>
       </div>
 
       {faq.id &&

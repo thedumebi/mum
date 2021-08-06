@@ -43,7 +43,10 @@ const Categories = ({ category }) => {
         style={{ height: url.path === "/category/:id" ? "auto" : "170px" }}
       >
         <h1 className="sub-heading">{category.name}</h1>
-        <small>Description: {category.description}</small>
+        <hr />
+        <small>
+          Description: {category?.description ? category?.description : "N/A"}
+        </small>
         {url.path === "/category/:id" && (
           <>
             {" "}
@@ -51,10 +54,10 @@ const Categories = ({ category }) => {
             <h4 className="sub-heading">Items:</h4>
           </>
         )}
-        {category.items && category.items.length === 0 ? (
+        {category?.items && category?.items.length === 0 ? (
           <h1 className="sub-heading">There are no items in this category</h1>
         ) : (
-          category.items && (
+          category?.items && (
             <Row>
               {category.items.map((item) => {
                 return (

@@ -50,7 +50,13 @@ const getAllCategories = asyncHandler(async (req, res) => {
 // @access Public
 const getCategoryByPk = asyncHandler(async (req, res) => {
   const category = await Category.findByPk(req.params.id, {
-    include: ["items"],
+    include: [
+      {
+        model: Item,
+        as: "items",
+      },
+    ],
+    order: [["items", "id", "DESC"]],
   });
   if (category) {
     res.status(200).json(category);

@@ -98,9 +98,38 @@ const getSaleByPk = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Edit a Sale
+// @route PATCH /api/sales/:id
+// @access Admin
+const editSale = asyncHandler(async (req, res) => {
+  const sale = await Sales.findByPk(req.params.id);
+  if (sale) {
+    const updatedSale = await sales.update(req.body)
+    res.status(200).json(updatedSale)
+  } else {
+    res.status(401)
+    throw new Error("Sale not found")
+  }
+})
+
+// @desc Delete a Sale
+// @route DELETE /api/sales/:id
+// @access Admin
+const deleteSale = asyncHandler(async (req, res) => {
+  const sale = await Sales.findByPk(req.params.id)
+  if (sale) {
+    await sale.destroy()
+  } else {
+    res.status(401)
+    throw new Error("Sale does not exist")
+  }
+})
+
 module.exports = {
   getSales,
   getSalesForADay,
   getSaleByPk,
   makeSales,
+  editSale,
+  deleteSale
 };

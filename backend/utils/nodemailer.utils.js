@@ -12,12 +12,5 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-transporter.verify((err, success) => {
-  if (err) {
-    console.log({ err });
-  } else {
-    console.log({ success });
-  }
-});
 
 module.exports = transporter;
