@@ -15,6 +15,14 @@ import {
   CREATE_SALES_SUCCESS,
   CREATE_SALES_FAIL,
   CREATE_SALES_RESET,
+  SALES_DELETE_REQUEST,
+  SALES_DELETE_SUCCESS,
+  SALES_DELETE_FAIL,
+  SALES_DELETE_RESET,
+  SALES_UPDATE_REQUEST,
+  SALES_UPDATE_SUCCESS,
+  SALES_UPDATE_FAIL,
+  SALES_UPDATE_RESET,
 } from "../constants/sales.constants";
 
 export const saleDetailsReducer = (state = {}, action) => {
@@ -81,6 +89,36 @@ export const createSaleReducer = (state = {}, action) => {
     case CREATE_SALES_FAIL:
       return { loading: false, error: action.payload };
     case CREATE_SALES_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const saleUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SALES_UPDATE_REQUEST:
+      return { loading: true };
+    case SALES_UPDATE_SUCCESS:
+      return { loading: false, sale: action.payload, success: true };
+    case SALES_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case SALES_UPDATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const saleDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SALES_DELETE_REQUEST:
+      return { loading: true };
+    case SALES_DELETE_SUCCESS:
+      return { loading: false, success: true, message: action.payload.message };
+    case SALES_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+    case SALES_DELETE_RESET:
       return {};
     default:
       return state;

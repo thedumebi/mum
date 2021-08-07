@@ -33,6 +33,7 @@ import SalesList from "./screens/SalesList";
 import SalesOfTheDay from "./screens/SalesOfTheDay";
 import SalesSingle from "./screens/SalesSingle";
 import CreateSaleScreen from "./screens/CreateSaleScreen";
+import SaleEditScreen from "./screens/SaleEditScreen";
 
 const App = () => {
   const getCookie = (name) => {
@@ -221,6 +222,11 @@ const App = () => {
             />
             <Route exact path="/admin/sales" component={SalesList} />
             <Route exact path="/admin/sales/sale/:id" component={SalesSingle} />
+            <Route
+              exact
+              path="/admin/sales/sale/:id/edit"
+              component={SaleEditScreen}
+            />
             <Route component={NotFound} />
           </Switch>
         </Container>

@@ -55,5 +55,5 @@ db.sequelize
     });
   })
   .catch((err) => {
-    console.error(err);
+    console.error({ err });
   });

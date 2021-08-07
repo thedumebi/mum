@@ -102,28 +102,39 @@ const getSaleByPk = asyncHandler(async (req, res) => {
 // @route PATCH /api/sales/:id
 // @access Admin
 const editSale = asyncHandler(async (req, res) => {
-  const sale = await Sales.findByPk(req.params.id);
+  const sale = await Sales.findByPk(req.params.id, {
+    include: [{ model: db.Item, as: "item" }],
+  });
   if (sale) {
-    const updatedSale = await sales.update(req.body)
-    res.status(200).json(updatedSale)
+    const item = await Item.findByPk(sale.item.id);
+    await item.increment(["quantity"], { by: sale.quantity });
+    await item.decrement(["quantity"], { by: req.body.quantity });
+    const updatedSale = await sale.update(req.body);
+    res.status(200).json(updatedSale);
   } else {
-    res.status(401)
-    throw new Error("Sale not found")
+    res.status(401);
+    throw new Error("Sale not found");
   }
-})
+});
 
 // @desc Delete a Sale
 // @route DELETE /api/sales/:id
 // @access Admin
 const deleteSale = asyncHandler(async (req, res) => {
-  const sale = await Sales.findByPk(req.params.id)
+  const sale = await Sales.findByPk(req.params.id, {
+    include: [{ model: db.Item, as: "item" }],
+  });
   if (sale) {
-    await sale.destroy()
+    const item = await Item.findByPk(sale.item.id);
+    await item.increment(["quantity"], { by: sale.quantity });
+    await sale.destroy();
+
+    res.status(200).json({ message: "Sale Deleted" });
   } else {
-    res.status(401)
-    throw new Error("Sale does not exist")
+    res.status(401);
+    throw new Error("Sale does not exist");
   }
-})
+});
 
 module.exports = {
   getSales,

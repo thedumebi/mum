@@ -54,6 +54,8 @@ import {
   saleDetailsReducer,
   salesOfTheDayReducer,
   createSaleReducer,
+  saleUpdateReducer,
+  saleDeleteReducer,
 } from "./reducers/sales.reducers";
 
 const reducer = combineReducers({
@@ -99,6 +101,8 @@ const reducer = combineReducers({
   salesDetail: saleDetailsReducer,
   salesOfTheDay: salesOfTheDayReducer,
   salesCreate: createSaleReducer,
+  salesUpdate: saleUpdateReducer,
+  salesDelete: saleDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

@@ -12,6 +12,12 @@ import {
   CREATE_SALES_REQUEST,
   CREATE_SALES_SUCCESS,
   CREATE_SALES_FAIL,
+  SALES_DELETE_REQUEST,
+  SALES_DELETE_SUCCESS,
+  SALES_DELETE_FAIL,
+  SALES_UPDATE_REQUEST,
+  SALES_UPDATE_SUCCESS,
+  SALES_UPDATE_FAIL,
 } from "../constants/sales.constants";
 
 export const createSale = (sale) => async (dispatch, getState) => {
@@ -142,3 +148,67 @@ export const getSalesOfTheDay =
       });
     }
   };
+
+export const deleteSale = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: SALES_DELETE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.delete(`/api/sales/${id}`, config);
+
+    dispatch({
+      type: SALES_DELETE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SALES_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateSale = (id, sale) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: SALES_UPDATE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.patch(`/api/sales/${id}`, sale, config);
+
+    dispatch({
+      type: SALES_UPDATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SALES_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
