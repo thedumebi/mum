@@ -105,8 +105,8 @@ const reducer = combineReducers({
   salesDelete: saleDeleteReducer,
 });
 
-const userInfoFromStorage = localStorage.getItem("userInfo")
-  ? JSON.parse(localStorage.getItem("userInfo"))
+const userInfoFromStorage = localStorage.getItem("u__dominionfb")
+  ? JSON.parse(localStorage.getItem("u__dominionfb"))
   : null;
 
 const initialState = {

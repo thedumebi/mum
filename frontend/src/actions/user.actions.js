@@ -57,7 +57,7 @@ export const login = (user) => async (dispatch) => {
       payload: data,
     });
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("u__dominionfb", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -70,7 +70,7 @@ export const login = (user) => async (dispatch) => {
 };
 
 export const logout = () => (dispatch) => {
-  localStorage.removeItem("userInfo");
+  localStorage.removeItem("u__dominionfb");
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: USER_LIST_RESET });
@@ -98,7 +98,7 @@ export const register = (user) => async (dispatch) => {
       payload: data,
     });
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("u__dominionfb", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
@@ -168,7 +168,7 @@ export const updateUserProfile = (id, user) => async (dispatch, getState) => {
       payload: data,
     });
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("u__dominionfb", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
@@ -290,7 +290,7 @@ export const resetPassword = (user) => async (dispatch) => {
       payload: data,
     });
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("u__dominionfb", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_RESET_PASSWORD_FAIL,
