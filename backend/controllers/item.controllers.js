@@ -23,7 +23,7 @@ const getItems = asyncHandler(async (req, res) => {
   const c = req.query.categories;
   let categoriesList = null;
   if (c) {
-    const categories = Object.keys(req.query.categories);
+    const categories = Object.keys(c);
     const categoriesArray = categories.map(async (name) => {
       const category = await Category.findOne({
         where: { name },
@@ -47,7 +47,7 @@ const getItems = asyncHandler(async (req, res) => {
   }
   const p = req.query.prices;
   if (p) {
-    const prices = Object.keys(req.query.prices);
+    const prices = Object.keys(p);
     const pricesArray = prices.map((price) => {
       const priceSplit = price.split("-");
       let arr = [];
