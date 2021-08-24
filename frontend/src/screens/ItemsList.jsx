@@ -11,9 +11,10 @@ import { Route } from "react-router-dom";
 import { getAllCategories } from "../actions/category.actions";
 import ItemFilter from "../components/ItemFilter";
 
-const ItemsList = ({ history, match }) => {
+const ItemsList = ({ history, match, location }) => {
   const keyword = match.params.keyword;
   const pageNumber = match.params.pageNumber || 1;
+  const filter = location.search.slice(1);
 
   const [overlay, setOverlay] = useState(false);
 
@@ -26,9 +27,9 @@ const ItemsList = ({ history, match }) => {
   const { categories } = categoryListAll;
 
   useEffect(() => {
-    dispatch(getItems(keyword, pageNumber));
+    dispatch(getItems(keyword, pageNumber, filter));
     dispatch(getAllCategories());
-  }, [dispatch, keyword, pageNumber]);
+  }, [dispatch, keyword, pageNumber, filter]);
 
   const filterItems = (string) => {
     dispatch(getItems(keyword, pageNumber, string));
@@ -46,12 +47,15 @@ const ItemsList = ({ history, match }) => {
             height: "100vh",
           }}
         >
-          {categories && (
+          {categories && pageNumber === 1 && (
             <ItemFilter
               categories={categories}
               output={filterItems}
               overlay={overlay}
               setOverlay={setBGOverlay}
+              history={history}
+              location={location}
+              match={match}
             />
           )}
         </div>
@@ -69,12 +73,15 @@ const ItemsList = ({ history, match }) => {
             <Message variant="danger">{error}</Message>
           ) : (
             <>
-              {categories && (
+              {categories && pageNumber === 1 && (
                 <ItemFilter
                   categories={categories}
                   output={filterItems}
                   overlay={overlay}
                   setOverlay={setBGOverlay}
+                  history={history}
+                  location={location}
+                  match={match}
                 />
               )}
               <Route

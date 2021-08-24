@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import { parseQueryString } from "./parseQueryString";
 
-const ItemFilter = ({ categories, output, setOverlay, overlay }) => {
+const ItemFilter = ({
+  categories,
+  output,
+  setOverlay,
+  overlay,
+  history,
+  location,
+  match,
+}) => {
+  const { categories: categoriesFilter, prices: priceFilter } =
+    parseQueryString(location?.search);
+
   const [filter, setFilter] = useState({
-    categories: [],
-    prices: [],
+    categories: Array.isArray(categoriesFilter) ? [...categoriesFilter] : [],
+    prices: Array.isArray(priceFilter) ? [...priceFilter] : [],
   });
 
   const handleView = () => {
@@ -72,7 +84,9 @@ const ItemFilter = ({ categories, output, setOverlay, overlay }) => {
       }
     }
 
-    output(filterString);
+    history.push(`${match?.url}?${filterString}`);
+    handleView()
+    // output(filterString);
   };
 
   return (
@@ -106,6 +120,18 @@ const ItemFilter = ({ categories, output, setOverlay, overlay }) => {
                         ? filter.categories[category.name]?.checked
                         : ""
                     }
+                    defaultChecked={
+                      Array.isArray(categoriesFilter) &&
+                      categoriesFilter.findIndex((c) =>
+                        c.hasOwnProperty(category.name)
+                      ) > -1
+                        ? Object.values(
+                            categoriesFilter.find((c) =>
+                              c.hasOwnProperty(category.name)
+                            )
+                          )[0]
+                        : false
+                    }
                     onChange={filterCategories}
                   />
                 ))}
@@ -125,6 +151,18 @@ const ItemFilter = ({ categories, output, setOverlay, overlay }) => {
                         filter.prices[price]?.checked
                           ? filter.prices[price]?.checked
                           : ""
+                      }
+                      defaultChecked={
+                        Array.isArray(priceFilter) &&
+                        priceFilter.findIndex((c) =>
+                          c.hasOwnProperty(price.replace(/,/g, ""))
+                        ) > -1
+                          ? Object.values(
+                              priceFilter.find((c) =>
+                                c.hasOwnProperty(price.replace(/,/g, ""))
+                              )
+                            )[0]
+                          : false
                       }
                       onChange={filterPrice}
                     />
