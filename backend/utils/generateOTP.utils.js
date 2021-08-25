@@ -1,4 +1,4 @@
-const generateOTP = async (length, args) => {
+const generateOTP = (length, args) => {
   const {
     digits = true,
     lowerCase = false,

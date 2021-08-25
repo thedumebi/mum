@@ -62,7 +62,6 @@ const getSalesForADay = asyncHandler(async (req, res) => {
   const currentDate = new Date();
   const startTime = currentDate.setHours(0, 0, 0, 0);
   const endTime = Date.now();
-  console.log({ startTime, endTime });
   let where = {
     created_at: { [Op.between]: [startTime, endTime] },
   };

@@ -278,7 +278,7 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     attributes: { exclude: ["password"] },
   });
   if (user) {
-    const OTP = await generateOTP(4, { upperCase: true });
+    const OTP = generateOTP(4, { upperCase: true });
 
     const mailOptions = {
       from: process.env.EMAIL,

@@ -47,7 +47,7 @@ const ItemsList = ({ history, match, location }) => {
             height: "100vh",
           }}
         >
-          {categories && pageNumber === 1 && (
+          {categories && Number(pageNumber) === 1 && (
             <ItemFilter
               categories={categories}
               output={filterItems}
@@ -73,7 +73,7 @@ const ItemsList = ({ history, match, location }) => {
             <Message variant="danger">{error}</Message>
           ) : (
             <>
-              {categories && pageNumber === 1 && (
+              {categories && Number(pageNumber) === 1 && (
                 <ItemFilter
                   categories={categories}
                   output={filterItems}
@@ -115,6 +115,7 @@ const ItemsList = ({ history, match, location }) => {
                       page={page}
                       keyword={keyword ? keyword : ""}
                       url={match}
+                      filter={filter}
                     />
                   </div>
                 </>

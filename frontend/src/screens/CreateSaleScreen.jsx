@@ -115,10 +115,12 @@ const CreateSaleScreen = ({ history, match }) => {
                       <option value="">Select Item</option>
                       {items &&
                         items
-                          .filter((i) =>
-                            i.name
-                              .toLowerCase()
-                              .includes(itemType.toLowerCase())
+                          .filter(
+                            (i) =>
+                              i.name &&
+                              i.name
+                                .toLowerCase()
+                                .includes(itemType.toLowerCase())
                           )
                           .map((i) => (
                             <option key={i.id} value={i.id}>
