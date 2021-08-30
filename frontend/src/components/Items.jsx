@@ -313,7 +313,7 @@ const Items = ({ item }) => {
               <Button
                 as={ReactWhatsapp}
                 number="+2348022111180"
-                message={`Good Day, I would like to make an enquiry about this item https://tessy.chiwuzoh.com/item/${item.id}`}
+                message={`Good Day, I would like to make an enquiry about this item https://tessy.chiwuzoh.com.ng/item/${item.id}`}
               >
                 <i className="fa fa-whatsapp fa-lg" />
               </Button>
