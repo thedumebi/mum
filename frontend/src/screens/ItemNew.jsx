@@ -158,7 +158,7 @@ const NewItem = ({ history, location }) => {
 
             <Form>
               <Form.Group>
-                <Form.Label>Name *</Form.Label>
+                <Form.Label>Name</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
