@@ -59,12 +59,14 @@ hr {
 .pagination {
   text-align: center;
   padding: 2% !important;
-  display: inline-flex !important;
-  color: #fff;
+  display: inline-block !important;
+  width: 100%
 }
 
 .pagination .page-item {
-  margin-right: 10%;
+  margin-right: 2%;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .pagination .page-item.active .page-link {
@@ -73,6 +75,7 @@ hr {
 
 .pagination .page-link {
   color: #4f5c4f !important;
+  font-weight: bold;
 }
 
 .loader {
