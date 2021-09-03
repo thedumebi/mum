@@ -196,11 +196,13 @@ const Items = ({ item }) => {
                     {item.categories.length === 1
                       ? "Category: "
                       : "Categories: "}
-                    {item.categories
-                      .map((category) => {
-                        return category.name;
-                      })
-                      .join(", ")}
+                    {item.categories.map((category) => {
+                      return (
+                        <Link to={`/category/${category.id}`}>
+                          {category.name} ,
+                        </Link>
+                      );
+                    })}
                   </small>
                 )}
                 <br />

@@ -1,3 +1,4 @@
+const moment = require("moment");
 const db = require("../models");
 const asyncHandler = require("express-async-handler");
 
@@ -59,11 +60,10 @@ const getSalesForADay = asyncHandler(async (req, res) => {
   const pageSize = 20;
   const page = Number(req.query.pageNumber) || 1;
   const keyword = req.query.keyword;
-  const currentDate = new Date();
-  const startTime = currentDate.setHours(0, 0, 0, 0);
-  const endTime = Date.now();
+  const endTime = moment().unix();
+  const startTime = moment().startOf("day").unix();
   let where = {
-    created_at: { [Op.between]: [startTime, endTime] },
+    time: { [Op.between]: [startTime, endTime] },
   };
   if (keyword) {
     where = { [Op.and]: [where, { name: { [Op.like]: `%${keyword}%` } }] };
@@ -142,5 +142,5 @@ module.exports = {
   getSaleByPk,
   makeSales,
   editSale,
-  deleteSale
+  deleteSale,
 };

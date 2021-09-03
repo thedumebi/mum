@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 module.exports = (sequelize, DataTypes) => {
   const Sales = sequelize.define(
     "Sales",
@@ -19,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       amount: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      time: {
+        type: DataTypes.BIGINT(11),
+        defaultValue: moment().unix(),
       },
       createdAt: {
         type: "TIMESTAMP",

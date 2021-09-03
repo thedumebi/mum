@@ -378,9 +378,11 @@ body.dark-theme .dropdown-menu {
 }
 body.dark-theme a {
   color: #fff;
+  text-decoration: none;
 }
+body.dark-theme a:hover,
 body.dark-theme a:hover {
-  color: #222;
+  color: #999;
 }
 body.dark-theme .colored-section {
   background-color: #222;
@@ -500,6 +502,11 @@ body.light-theme .form-control {
 }
 body.light-theme a {
   color: #4f5c4f;
+  text-decoration: none;
+}
+body.light-theme a:hover,
+body.light-theme a:hover {
+  color:#111
 }
 body.light-theme .btn {
   color: #fff;
@@ -562,7 +569,7 @@ body.light-theme .list-group-item {
   }
 
   .nav-link {
-    padding: 0.5rem 0 !important;
+    padding: 0.5rem 0.5rem !important;
     margin: 0% !important;
   }
 
