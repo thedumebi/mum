@@ -11,7 +11,8 @@
     "dev": " concurrently \"npm run server\"  \"npm run client\"",
     "build": "npm install --prefix frontend && npm run build --prefix frontend",
     "init-seq": "sequelize init",
-    "data:import": "sequelize db:seed:all"
+    "data:import": "sequelize db:seed:all",
+    "update-tables": "npx sequelize db:migrate"
   },
   "repository": {
     "type": "git",
