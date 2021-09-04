@@ -37,11 +37,11 @@
     "nodemailer": "^6.5.0",
     "sequelize": "^6.5.1",
     "sharp": "^0.28.0",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
     "concurrently": "^6.2.0",
-    "nodemon": "^2.0.12",
-    "sequelize-cli": "^6.2.0"
+    "nodemon": "^2.0.12"
   }
 }
