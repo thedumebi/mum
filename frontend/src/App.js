@@ -75,8 +75,8 @@ const App = () => {
 
   return (
     <Router>
+      <Header mode={theme} />
       <ScrollToTop>
-        <Header mode={theme} />
         <main>
           <Container fluid>
             <Switch>
