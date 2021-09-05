@@ -34,6 +34,7 @@ import SalesOfTheDay from "./screens/SalesOfTheDay";
 import SalesSingle from "./screens/SalesSingle";
 import CreateSaleScreen from "./screens/CreateSaleScreen";
 import SaleEditScreen from "./screens/SaleEditScreen";
+import ScrollToTop from "./hooks/scrollToTop";
 
 const App = () => {
   const getCookie = (name) => {
@@ -74,164 +75,186 @@ const App = () => {
 
   return (
     <Router>
-      <Header mode={theme} />
-      <main>
-        <Container fluid>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/register" component={Login} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/profile" component={Profile} />
-            <Route exact path="/createcategory" component={NewCategory} />
-            <Route
-              exact
-              path="/categories/search/:keyword"
-              component={CategoriesList}
-            />
-            <Route
-              exact
-              path="/categories/search/:keyword/page/:pageNumber"
-              component={CategoriesList}
-            />
-            <Route
-              exact
-              path="/categories/page/:pageNumber"
-              component={CategoriesList}
-            />
-            <Route exact path="/categories" component={CategoriesList} />
-            <Route exact path="/category/:id" component={Category} />
-            <Route exact path="/category/:id/edit" component={CategoryEdit} />
-            <Route exact path="/items/search/:keyword" component={ItemsList} />
-            <Route
-              exact
-              path="/items/search/:keyword/page/:pageNumber"
-              component={ItemsList}
-            />
-            <Route exact path="/items/page/:pageNumber" component={ItemsList} />
-            <Route exact path="/items" component={ItemsList} />
-            <Route
-              exact
-              path="/items/newitem?category=:id"
-              component={NewItem}
-            />
-            <Route exact path="/items/newitem" component={NewItem} />
-            <Route exact path="/item/:id/edit" component={ItemEdit} />
-            <Route path="/item/:id" component={Item} />
-            <Route exact path="/favorites" component={Favorites} />
-            <Route exact path="/reset-password" component={ResetPassword} />
-            <Route exact path="/settings" component={Settings} />
-            <Route exact path="/change-password" component={ChangePassword} />
-            <Route exact path="/admin/sales/new" component={CreateSaleScreen} />
-            <Route
-              exact
-              path="/admin/carousels"
-              component={CarouselListScreen}
-            />
-            <Route
-              exact
-              path="/admin/carousels/add"
-              component={AddCarouselScrren}
-            />
-            <Route
-              exact
-              path="/admin/carousels/:id/edit"
-              component={CarouselEditScreen}
-            />
-            <Route
-              exact
-              path="/admin/users/search/:keyword"
-              component={UserListScreen}
-            />
-            <Route
-              exact
-              path="/admin/users/search/:keyword/page/:pageNumber"
-              component={UserListScreen}
-            />
-            <Route
-              exact
-              path="/admin/users/page/:pageNumber"
-              component={UserListScreen}
-            />
-            <Route
-              exact
-              path="/admin/user/:id/edit"
-              component={UserEditScreen}
-            />
-            <Route exact path="/admin/users" component={UserListScreen} />
-            <Route exact path="/faqs/search/:keyword/" component={FaqsList} />
-            <Route
-              exact
-              path="/faqs/search/:keyword/page/:pageNumber"
-              component={FaqsList}
-            />
-            <Route exact path="/faqs/page/:pageNumber" component={FaqsList} />
-            <Route exact path="/faqs" component={FaqsList} />
-            <Route exact path="/admin/faqs/add" component={FaqNew} />
-            <Route
-              exact
-              path="/admin/faqs/:id/edit"
-              component={FaqEditScreen}
-            />
-            <Route
-              exact
-              path="/admin/faqs/search/:keyword"
-              component={FaqsAdminList}
-            />
-            <Route
-              exact
-              path="/admin/faqs/search/:keyword/page/:pageNumber"
-              component={FaqsAdminList}
-            />
-            <Route
-              exact
-              path="/admin/faqs/page/:pageNumber"
-              component={FaqsAdminList}
-            />
-            <Route exact path="/admin/faqs" component={FaqsAdminList} />
-            <Route exact path="/faqs/:id" component={FaqSingle} />
-            <Route
-              exact
-              path="/admin/sales/today/search/:keyword"
-              component={SalesOfTheDay}
-            />
-            <Route
-              exact
-              path="/admin/sales/today/search/:keyword/page/:pageNumber"
-              component={SalesOfTheDay}
-            />
-            <Route
-              exact
-              path="/admin/sales/today/page/:pageNumber"
-              component={SalesOfTheDay}
-            />
-            <Route exact path="/admin/sales/today" component={SalesOfTheDay} />
-            <Route
-              exact
-              path="/admin/sales/search/:keyword"
-              component={SalesList}
-            />
-            <Route
-              exact
-              path="/admin/sales/search/:keyword/page/:pageNumber"
-              component={SalesList}
-            />
-            <Route
-              exact
-              path="/admin/sales/page/:pageNumber"
-              component={SalesList}
-            />
-            <Route exact path="/admin/sales" component={SalesList} />
-            <Route exact path="/admin/sales/sale/:id" component={SalesSingle} />
-            <Route
-              exact
-              path="/admin/sales/sale/:id/edit"
-              component={SaleEditScreen}
-            />
-            <Route component={NotFound} />
-          </Switch>
-        </Container>
-      </main>
-      <Footer />
+      <ScrollToTop>
+        <Header mode={theme} />
+        <main>
+          <Container fluid>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/register" component={Login} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/profile" component={Profile} />
+              <Route exact path="/createcategory" component={NewCategory} />
+              <Route
+                exact
+                path="/categories/search/:keyword"
+                component={CategoriesList}
+              />
+              <Route
+                exact
+                path="/categories/search/:keyword/page/:pageNumber"
+                component={CategoriesList}
+              />
+              <Route
+                exact
+                path="/categories/page/:pageNumber"
+                component={CategoriesList}
+              />
+              <Route exact path="/categories" component={CategoriesList} />
+              <Route exact path="/category/:id" component={Category} />
+              <Route exact path="/category/:id/edit" component={CategoryEdit} />
+              <Route
+                exact
+                path="/items/search/:keyword"
+                component={ItemsList}
+              />
+              <Route
+                exact
+                path="/items/search/:keyword/page/:pageNumber"
+                component={ItemsList}
+              />
+              <Route
+                exact
+                path="/items/page/:pageNumber"
+                component={ItemsList}
+              />
+              <Route exact path="/items" component={ItemsList} />
+              <Route
+                exact
+                path="/items/newitem?category=:id"
+                component={NewItem}
+              />
+              <Route exact path="/items/newitem" component={NewItem} />
+              <Route exact path="/item/:id/edit" component={ItemEdit} />
+              <Route path="/item/:id" component={Item} />
+              <Route exact path="/favorites" component={Favorites} />
+              <Route exact path="/reset-password" component={ResetPassword} />
+              <Route exact path="/settings" component={Settings} />
+              <Route exact path="/change-password" component={ChangePassword} />
+              <Route
+                exact
+                path="/admin/sales/new"
+                component={CreateSaleScreen}
+              />
+              <Route
+                exact
+                path="/admin/carousels"
+                component={CarouselListScreen}
+              />
+              <Route
+                exact
+                path="/admin/carousels/add"
+                component={AddCarouselScrren}
+              />
+              <Route
+                exact
+                path="/admin/carousels/:id/edit"
+                component={CarouselEditScreen}
+              />
+              <Route
+                exact
+                path="/admin/users/search/:keyword"
+                component={UserListScreen}
+              />
+              <Route
+                exact
+                path="/admin/users/search/:keyword/page/:pageNumber"
+                component={UserListScreen}
+              />
+              <Route
+                exact
+                path="/admin/users/page/:pageNumber"
+                component={UserListScreen}
+              />
+              <Route
+                exact
+                path="/admin/user/:id/edit"
+                component={UserEditScreen}
+              />
+              <Route exact path="/admin/users" component={UserListScreen} />
+              <Route exact path="/faqs/search/:keyword/" component={FaqsList} />
+              <Route
+                exact
+                path="/faqs/search/:keyword/page/:pageNumber"
+                component={FaqsList}
+              />
+              <Route exact path="/faqs/page/:pageNumber" component={FaqsList} />
+              <Route exact path="/faqs" component={FaqsList} />
+              <Route exact path="/admin/faqs/add" component={FaqNew} />
+              <Route
+                exact
+                path="/admin/faqs/:id/edit"
+                component={FaqEditScreen}
+              />
+              <Route
+                exact
+                path="/admin/faqs/search/:keyword"
+                component={FaqsAdminList}
+              />
+              <Route
+                exact
+                path="/admin/faqs/search/:keyword/page/:pageNumber"
+                component={FaqsAdminList}
+              />
+              <Route
+                exact
+                path="/admin/faqs/page/:pageNumber"
+                component={FaqsAdminList}
+              />
+              <Route exact path="/admin/faqs" component={FaqsAdminList} />
+              <Route exact path="/faqs/:id" component={FaqSingle} />
+              <Route
+                exact
+                path="/admin/sales/today/search/:keyword"
+                component={SalesOfTheDay}
+              />
+              <Route
+                exact
+                path="/admin/sales/today/search/:keyword/page/:pageNumber"
+                component={SalesOfTheDay}
+              />
+              <Route
+                exact
+                path="/admin/sales/today/page/:pageNumber"
+                component={SalesOfTheDay}
+              />
+              <Route
+                exact
+                path="/admin/sales/today"
+                component={SalesOfTheDay}
+              />
+              <Route
+                exact
+                path="/admin/sales/search/:keyword"
+                component={SalesList}
+              />
+              <Route
+                exact
+                path="/admin/sales/search/:keyword/page/:pageNumber"
+                component={SalesList}
+              />
+              <Route
+                exact
+                path="/admin/sales/page/:pageNumber"
+                component={SalesList}
+              />
+              <Route exact path="/admin/sales" component={SalesList} />
+              <Route
+                exact
+                path="/admin/sales/sale/:id"
+                component={SalesSingle}
+              />
+              <Route
+                exact
+                path="/admin/sales/sale/:id/edit"
+                component={SaleEditScreen}
+              />
+              <Route component={NotFound} />
+            </Switch>
+          </Container>
+        </main>
+        <Footer />
+      </ScrollToTop>
     </Router>
   );
 };

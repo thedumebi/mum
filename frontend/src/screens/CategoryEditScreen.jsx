@@ -31,7 +31,6 @@ const CategoryEdit = ({ history, match }) => {
   const { success, error: updateError } = categoryUpdate;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/category/${match.params.id}/edit`);
     } else {

@@ -34,7 +34,6 @@ const ResetPassword = ({ history }) => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     const otpExists = getOTP("OTP");
     if (otpExists) {
       setShowOTP(true);

@@ -31,7 +31,6 @@ const UserEditScreen = ({ match, history }) => {
   } = userUpdate;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/admin/user/${userId}/edit`);
     } else {

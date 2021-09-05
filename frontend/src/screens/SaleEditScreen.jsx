@@ -27,7 +27,6 @@ const SaleEditScreen = ({ history, match }) => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (userInfo && userInfo.role === "admin") {
       if (success) {
         dispatch({ type: SALES_UPDATE_RESET });

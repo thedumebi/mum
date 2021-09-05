@@ -26,7 +26,6 @@ const NewFaq = ({ history }) => {
   const { loading, error, status: success } = createFaqState;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!user && userInfo) {
       dispatch(getUserDetails(userInfo.id));
     } else if (user && user.role !== "admin") {

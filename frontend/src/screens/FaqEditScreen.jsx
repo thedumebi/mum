@@ -27,7 +27,6 @@ const FaqEdit = ({ history, match }) => {
   const { success, error: updateError } = faqUpdate;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/admin/faqs/${match.params.id}/edit`);
     } else {

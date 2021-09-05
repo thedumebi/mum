@@ -28,7 +28,6 @@ const NewCategory = ({ history }) => {
   const { loading, error, status: success } = createCategoryState;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!user) {
       dispatch(getUserDetails(userInfo.id));
     } else if (user.role !== "admin") {

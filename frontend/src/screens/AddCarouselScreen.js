@@ -23,7 +23,6 @@ const AddCarouselScrren = ({ history }) => {
   const [objectUrls, setObjectUrls] = useState([]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push("/login?redirect=/add-carousel");
     } else {

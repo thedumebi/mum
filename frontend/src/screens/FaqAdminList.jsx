@@ -25,7 +25,6 @@ const FaqsAdminList = ({ history, match }) => {
   const { success: successDelete } = faqDelete;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (userInfo && userInfo.role === "admin") {
       dispatch(getFaqs(keyword, pageNumber));
       if (successDelete) {

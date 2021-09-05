@@ -37,7 +37,6 @@ const CarouselEditScreen = ({ match, history }) => {
   const [nameError, setNameError] = useState(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (!userInfo) {
       history.push(`/login?redirect=/carousels/${carouselId}/edit`);
     } else {
