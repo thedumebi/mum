@@ -5,7 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSaleDetails, deleteSale } from "../actions/sales.actions";
 import { Button, Carousel, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { SALES_DELETE_RESET, SALES_DETAILS_RESET } from "../constants/sales.constants";
+import {
+  SALES_DELETE_RESET,
+  SALES_DETAILS_RESET,
+} from "../constants/sales.constants";
 
 const SalesSingle = ({ history, match }) => {
   const [overlay, setOverlay] = useState({
@@ -29,7 +32,7 @@ const SalesSingle = ({ history, match }) => {
     if (userInfo && userInfo.role === "admin") {
       if (success) {
         alert(message);
-        dispatch({type: SALES_DELETE_RESET})
+        dispatch({ type: SALES_DELETE_RESET });
         history.push("/admin/sales");
       }
       dispatch(getSaleDetails(match.params.id));
@@ -140,7 +143,7 @@ const SalesSingle = ({ history, match }) => {
                     (sale.item.image3 !== null &&
                       sale.item.image3 !== "" &&
                       sale.item.image3 !== undefined)) && (
-                    <div className="heading">
+                    <div className="heading" style={{ height: "300px" }}>
                       {
                         <Carousel interval={3000}>
                           {images.map((image, index) => (
