@@ -85,22 +85,32 @@ const SalesSingle = ({ history, match }) => {
               <div
                 className="overlay"
                 id="overlay"
-                onClick={() =>
-                  setOverlay({ src: "", status: false, display: "none" })
-                }
-                style={{ display: overlay.display }}
+                onClick={(e) => {
+                  if (
+                    !document.getElementById("carousel-div").contains(e.target)
+                  ) {
+                    setOverlay({ src: "", status: false, display: "none" });
+                  }
+                }}
+                style={{
+                  display: overlay.display,
+                }}
               >
-                <Message variant="info">
-                  Tap on the image to exit full screen
-                </Message>
-                <Image
-                  src={overlay.src}
-                  alt={sale.item.name}
-                  style={{
-                    border: "3px solid black",
-                    height: "80%",
-                  }}
-                />
+                <Message variant="info">Tap on me to exit full screen</Message>
+                <Carousel interval={5000} id="carousel-div">
+                  {images.map((image, index) => (
+                    <Carousel.Item key={index}>
+                      <Image
+                        src={image.url}
+                        alt={sale.item.name}
+                        style={{
+                          height: "80%",
+                          width: "90vw",
+                        }}
+                      />
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
               </div>
             ) : (
               <>
